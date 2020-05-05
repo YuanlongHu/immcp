@@ -12,6 +12,7 @@
 setClass("ScoreResult",
          slots = list(
            ScoreResult = "data.frame",
+           Fingerprint = "data.frame",
            DiseaseNetwork = "data.frame",
            DiseaseBiomarker = "character",
            Target = "data.frame",
