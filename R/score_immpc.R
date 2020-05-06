@@ -110,11 +110,13 @@ score_immpc <- function(disease_biomarker,
 
   cat("Calculate the Tanimoto coefficient \n")
   res_Tanimoto <- Tanimoto_f(f = res_enrich0)
-
+  res_Tanimoto2 <- Tanimoto_f(f = res_enrich0[res_enrich0$disease == 1,])
+  names(res_Tanimoto2) <- c("Drug", "Tanimoto2")
   if(!is.null(disease_network)){
     cat("Calculate the characteristics of network topology \n")
     res_network <- score_change(disease_network = disease_network, target = target)
     result <- merge(res_Tanimoto, res_network, by = "Drug")
+    result <- merge(result, res_Tanimoto2, by = "Drug")
   }else{
     result <- res_Tanimoto
   }
