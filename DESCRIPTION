@@ -5,7 +5,7 @@ Version: 0.2.0
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
-           role = c("aut", "cre"),
+           role = c("aut", "cre", "cph"),
            email = "huyuanlong1996@163.com")
 Description: The purpose of the R package is candidate prescriptions discovery integrating the similarity of immune profile fingerprints and the topological characteristics of disease networks
 License: GPL-3
