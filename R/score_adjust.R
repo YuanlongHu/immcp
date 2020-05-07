@@ -9,34 +9,25 @@
 #          signature(result = "ScoreResult", n = "integer"),
 score_adjust <- function(result, n = 100){
 
-  disease <- result@Fingerprint$disease
-  drug <- result@Fingerprint[,-1]
+  #disease <- result@Fingerprint$disease
+  #drug <- result@Fingerprint[-1]
 
-  cat("Adjust Tanimoto \n")
+  if(result@Adjust == TRUE){
+    stop("This result has been adjusted !")
+  }
+
   Tanimoto_f <- function(disease, drug){
     f <- rbind(disease, drug)
-    f <- Matrix::Matrix(f)
-    res_Tanimoto <- proxyC::simil(f, method = "jaccard")
-    res_Tanimoto <- res_Tanimoto[1, 2]
-    return(res_Tanimoto)
+    res_f <- as.matrix(f) %>%
+      Matrix::Matrix() %>%
+      proxyC::simil(method = "jaccard") %>%
+      as.matrix() %>%
+      as.data.frame()
+    res_f <- res_f[1,2]
+    return(res_f)
   }
-  res_rep0 <- NULL
-  pb <- tkProgressBar(title="Progress",label="Completed %", min=0, max=100, initial = 0, width = 300)
-  u <- c(1:ncol(drug))
-  for (i in u) {
-    res_rep <- replicate(n,Tanimoto_f(disease=sample(disease), drug=drug[,i]))
-    res_rep <- (result@ScoreResult$Tanimoto[i] - mean(res_rep))/sd(res_rep)
-    names(res_rep) <- colnames(drug)[i]
-    res_rep0 <- c(res_rep0, res_rep)
 
-    info <- sprintf("Completed %d%%", round(i*100/length(u)))
-    setTkProgressBar(pb, value = i*100/length(u), title = sprintf("Progress (%s)",info),label = info)
-  }
-  close(pb)
-  result@ScoreResult$Tanimoto_adj <- res_rep0
-
-  # target is character
-  score_network <- function(disease_network = disease_network, target = target, method = "degree"){
+  score_network <- function(disease_network = disease_network, target = target, method){
 
     disease_network <- as.data.frame(disease_network[,1:2])
     colnames(disease_network)<- c("node1","node2")
@@ -51,7 +42,7 @@ score_adjust <- function(result, n = 100){
     if (method == "degree") {
       degree <- (mean(igraph::centr_degree(g2)$res) - mean(igraph::centr_degree(g1)$res))/mean(igraph::centr_degree(g1)$res)
       return(degree)
-     }
+    }
 
     if (method == "distance") {
       distance <- (igraph::mean_distance(g2, directed = F, unconnected = TRUE) - igraph::mean_distance(g1, directed = F, unconnected = TRUE))/igraph::mean_distance(g1, directed = F, unconnected = TRUE)
@@ -59,67 +50,74 @@ score_adjust <- function(result, n = 100){
     }
 
     if (method == "total") {
+      degree <- (mean(igraph::centr_degree(g2)$res) - mean(igraph::centr_degree(g1)$res))/mean(igraph::centr_degree(g1)$res)
+      distance <- (igraph::mean_distance(g2, directed = F, unconnected = TRUE) - igraph::mean_distance(g1, directed = F, unconnected = TRUE))/igraph::mean_distance(g1, directed = F, unconnected = TRUE)
       total_disturbance_rate <- distance - degree
       return(total_disturbance_rate)
     }
   }
 
-  cat("Adjust Network")
-  degree0 <- NULL
-  distance0 <- NULL
-  total_disturbance_rate0 <- NULL
+  cat("Adjust Tanimoto \n")
+  res2_list <- pbapply::pblapply(result@Fingerprint[-1], function(x){
+    res_r <- replicate(n, Tanimoto_f(disease = sample(result@Fingerprint$disease), drug = x))
+    res_r <- c(mean(res_r), sd(res_r))
+    names(res_r) <- c("mean", "sd")
+    res_r
+  })
 
-  Target <- result@Target
-  pb <- tkProgressBar(title="Progress",label="Completed %", min=0, max=100, initial = 0, width = 300)
-  u <- c(1:length(unique(Target[,1])))
-  for (i in u) {
-    j <- as.character(unique(Target[,1])[i])
+  res2_list <- as.data.frame(res2_list) %>%
+    t() %>%
+    as.data.frame()
+
+  res2_list <- data.frame(Drug = names(result@Target),
+                          mean= res2_list$mean,
+                          sd = res2_list$sd)
+
+  res2_list <- merge(res2_list, result@ScoreResult, by="Drug")
+  res2_list$Tanimoto_adjust <- (res2_list$Tanimoto - res2_list$mean)/ res2_list$sd
+
+  cat("Adjust Network \n")
+  res3_list <- pbapply::pblapply(result@Target, function(x){
     degree <- replicate(n, score_network(disease_network = data.frame(node1 = sample(result@DiseaseNetwork[,1]),
                                                                       node2 = sample(result@DiseaseNetwork[,2]),
-                                                                      stringsAsFactors = F
-    ),
-    target = as.character(Target$c2[Target$c1 == j]),
-    method = "degree")
-    )
-    degree
+                                                                      stringsAsFactors = F),
+                                         target = x,
+                                         method = "degree"))
+
     distance <- replicate(n, score_network(disease_network = data.frame(node1 = sample(result@DiseaseNetwork[,1]),
                                                                         node2 = sample(result@DiseaseNetwork[,2]),
                                                                         stringsAsFactors = F
     ),
-    target = Target$c2[Target$c1 == j],
-    method = "distance")
-    )
+    target = x,
+    method = "distance"))
+
     total <- replicate(n, score_network(disease_network = data.frame(node1 = sample(result@DiseaseNetwork[,1]),
                                                                      node2 = sample(result@DiseaseNetwork[,2]),
-                                                                     stringsAsFactors = F
-    ),
-    target = Target$c2[Target$c1 == j],
-    method = "total")
-    )
+                                                                     stringsAsFactors = F),
+                                        target = x,
+                                        method = "total"))
 
-    degree <- (result@ScoreResult$Degree_disturbance_rate[result@ScoreResult$Drug == j] - mean(degree))/sd(degree)
-    distance <- (result@ScoreResult$Mean_distance_disturbance_rate[result@ScoreResult$Drug == j] - mean(distance))/sd(distance)
-    total <- (result@ScoreResult$Total_disturbance_rate[result@ScoreResult$Drug == j] - mean(total))/sd(total)
+    res_r2 <- c(mean(degree), sd(degree),
+                mean(distance), sd(distance),
+                mean(total), sd(total))
+    names(res_r2) <- c("mean_degree", "sd_degree",
+                       "mean_distance", "sd_distance",
+                       "mean_total", "sd_total")
+    res_r2
+  })
 
-    names(degree) <- j
-    names(distance) <- j
-    names(total) <- j
+  res3_list <- as.data.frame(res3_list) %>%
+    t() %>%
+    as.data.frame()
 
-    degree0 <- c(degree0, degree)
-    distance0 <- c(distance0, distance)
-    total_disturbance_rate0 <- c(total_disturbance_rate0, total)
+  res3_list$Drug <- names(result@Target)
+  res3_list <- merge(res3_list, res2_list, by="Drug",sort = F)
 
-    info <- sprintf("Completed %d%%", round(i*100/length(u)))
-    setTkProgressBar(pb, value = i*100/length(u), title = sprintf("Progress (%s)",info),label = info)
+  res3_list$Mean_degree_adjust <- (res3_list$Mean_degree_disturbance_rate - res3_list$mean_degree)/res3_list$sd_degree
+  res3_list$Mean_distance_adjust <- (res3_list$Mean_distance_disturbance_rate - res3_list$mean_distance)/res3_list$sd_distance
+  res3_list$Total_adjust <- (res3_list$Total_disturbance_rate - res3_list$mean_total)/res3_list$sd_total
 
-  }
-   close(pb)
-   res_network <- data.frame(Drug = names(degree0),
-                             degree_adj = degree0,
-                             distance_adj = distance0,
-                             total_disturbance_rate_adj = total_disturbance_rate0)
-   res_network
-   result@ScoreResult <- merge(result@ScoreResult, res_network, by="Drug")
-
-   return(result)
+  result@ScoreResult <- res3_list[,-c(2:9)]
+  result@Adjust <- TRUE
+  return(result)
 }

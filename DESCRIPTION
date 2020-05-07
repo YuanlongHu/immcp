@@ -1,7 +1,7 @@
 Package: immcp
 Type: package
 Title: candidate prescriptions discovery based on immune and disease networks
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
@@ -17,10 +17,9 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     igraph,
-    reshape2,
     clusterProfiler,
     DOSE,
     proxyC,
-    tcltk,
     pbapply,
-    Matrix
+    Matrix,
+    dplyr
