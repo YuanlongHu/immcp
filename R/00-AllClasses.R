@@ -12,10 +12,10 @@
 setClass("ScoreResult",
          slots = list(
            ScoreResult = "data.frame",
-           Fingerprint = "data.frame",
+           Fingerprint = "list",
            DiseaseNetwork = "data.frame",
            DiseaseBiomarker = "character",
-           Target = "data.frame",
+           Target = "list",
            Adjust = "logical"
          )
 )

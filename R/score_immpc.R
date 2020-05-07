@@ -10,10 +10,10 @@
 #' @author Yuanlong Hu
 
 
-score_immpc <- function(disease_biomarker,
-                        disease_network,
-                        target,
-                        geneset = NULL){
+score_immpc2 <- function(disease_biomarker,
+                         disease_network,
+                         target,
+                         geneset = NULL){
   # geneset list to data.frame
 
   if(is.null(geneset)){
@@ -28,9 +28,18 @@ score_immpc <- function(disease_biomarker,
     }
   }
 
-  target <- target[,c(1,2)]
-  names(target) <- c("c1", "c2")
-  disease <- data.frame(c1 = rep("disease", length(disease_biomarker)), c2 = disease_biomarker)
+  output_list <- function(disease_biomarker, target){
+    target <- target[,c(1,2)]
+    names(target) <- c("c1", "c2")
+    target0 <- list(disease_biomarker)
+    for (i in unique(target[,1])) {
+      target1 <- target$c2[target$c1 == i]
+      target1 <- list(target1)
+      target0 <- c(target0, target1)
+    }
+    names(target0) <- c("disease", unique(target[,1]))
+    return(target0)
+  }
 
   enrich_f <- function(target_character, geneset = geneset0){
     names(geneset) <- c("c1", "c2")
@@ -41,93 +50,78 @@ score_immpc <- function(disease_biomarker,
                                              qvalueCutoff = 0.1)
     enrich_drug <- enrich_drug@result
     enrich_drug <- enrich_drug[enrich_drug$pvalue<0.05 & enrich_drug$qvalue<0.1,]
-    fingerprint_drug <- data.frame(feature = unique(geneset$c1), var = ifelse(unique(geneset$c1) %in% enrich_drug$ID, 1, 0))
-    names(fingerprint_drug) <- c("feature","drug")
+
+    fingerprint_drug <- ifelse(unique(geneset$c1) %in% enrich_drug$ID, 1, 0)
+    names(fingerprint_drug) <- unique(geneset$c1)
     return(fingerprint_drug)
   }
 
-  cat("Extract immune fingerprint \n")
-  res_enrich0 <- enrich_f(disease$c2)
-  names(res_enrich0) <- c("feature", "disease")
-  for (i in unique(target$c1)) {
-    res_enrich <- enrich_f(target$c2[target$c1 == i])
-    names(res_enrich) <- c("feature", i)
-    res_enrich0 <- merge(res_enrich0, res_enrich)
-  }
-  rownames(res_enrich0) <- res_enrich0$feature
-  res_enrich0 <- res_enrich0[,-1]
-
-  # target is a data frame; disease is a data frame
-  Tanimoto_f <- function(f = res_enrich0){
-    f <- t(f)
-    res_Tanimoto <- 1 - philentropy::distance(as.matrix(f), method="jaccard", use.row.names = TRUE)
-    res_Tanimoto <- reshape2::melt(res_Tanimoto,value.name = "Tanimoto")
-    res_Tanimoto <- res_Tanimoto[res_Tanimoto$Var1 == "disease" & res_Tanimoto$Var2 != "disease",]
-    res_Tanimoto <- res_Tanimoto[,c(2,3)]
-    names(res_Tanimoto) <- c("Drug", "Tanimoto")
-    return(res_Tanimoto)
-  }
-
-  score_change <- function(disease_network = disease_network, target = target){
+  score_network <- function(disease_network = disease_network, target = target){
 
     disease_network <- as.data.frame(disease_network[,1:2])
+    colnames(disease_network)<- c("node1","node2")
 
-      colnames(disease_network)<- c("node1","node2")
-      target <- as.data.frame(target[,1:2])
-      colnames(target) <- c("herb","target")
+    target <- intersect(target, unique(c(disease_network$node1, disease_network$node2)))
 
-      degree0 <- NULL
-      mean_distance0 <- NULL
-      Total_disturbance_rate0 <- NULL
-      for (i in unique(target[,1])) {
-        target_drug <- unique(target$target[target$herb == i])
-        target_drug <- intersect(target_drug, unique(c(disease_network$node1, disease_network$node2)))
-        disease_network2 <- disease_network[!disease_network$node1 %in% target_drug,]
-        disease_network2 <- disease_network2[!disease_network2$node2 %in% target_drug,]
-        g1 <- igraph::graph.data.frame(disease_network, directed = F)
-        g2 <- igraph::graph.data.frame(disease_network2, directed = F)
-        degree <- (mean(igraph::centr_degree(g2)$res) - mean(igraph::centr_degree(g1)$res))/mean(igraph::centr_degree(g1)$res)
-        mean_distance <- (igraph::mean_distance(g2, directed = F, unconnected = TRUE) - igraph::mean_distance(g1, directed = F, unconnected = TRUE))/igraph::mean_distance(g1, directed = F, unconnected = TRUE)
-        Total_disturbance_rate <- mean_distance - degree
+    disease_network2 <- disease_network[!disease_network$node1 %in% target,]
+    disease_network2 <- disease_network2[!disease_network2$node2 %in% target,]
 
-        names(degree) <- i
-        names(mean_distance) <- i
-        names(Total_disturbance_rate) <- i
+    g1 <- igraph::graph.data.frame(disease_network, directed = F)
+    g2 <- igraph::graph.data.frame(disease_network2, directed = F)
 
-        degree0 <- c(degree0, degree)
-        mean_distance0 <- c(mean_distance0, mean_distance)
-        Total_disturbance_rate0 <- c(Total_disturbance_rate0, Total_disturbance_rate)
-    }
+    degree <- (mean(igraph::centr_degree(g2)$res) - mean(igraph::centr_degree(g1)$res))/mean(igraph::centr_degree(g1)$res)
+    mean_distance <- (igraph::mean_distance(g2, directed = F, unconnected = TRUE) - igraph::mean_distance(g1, directed = F, unconnected = TRUE))/igraph::mean_distance(g1, directed = F, unconnected = TRUE)
+    Total_disturbance_rate <- mean_distance - degree
 
+    res_network <- c(degree, mean_distance, Total_disturbance_rate)
 
-    res_network <- data.frame(Drug = names(degree0),
-                              Degree_disturbance_rate = degree0,
-                              Mean_distance_disturbance_rate = mean_distance0,
-                              Total_disturbance_rate = Total_disturbance_rate0)
-
+    names(res_network) <- c("Mean_degree_disturbance_rate",
+                            "Mean_distance_disturbance_rate",
+                            "Total_disturbance_rate")
     return(res_network)
   }
 
+  cat("Extract immune fingerprint \n")
+
+  target <- output_list(disease_biomarker, target)
+  f <- pbapply::pblapply(target, function(x){
+    enrich_f(x, geneset = geneset0)
+  })
+
   cat("Calculate the Tanimoto coefficient \n")
-  res_Tanimoto <- Tanimoto_f(f = res_enrich0)
-  res_Tanimoto2 <- Tanimoto_f(f = res_enrich0[res_enrich0$disease == 1,])
-  names(res_Tanimoto2) <- c("Drug", "Tanimoto2")
-  if(!is.null(disease_network)){
-    cat("Calculate the characteristics of network topology \n")
-    res_network <- score_change(disease_network = disease_network, target = target)
-    result <- merge(res_Tanimoto, res_network, by = "Drug")
-    result <- merge(result, res_Tanimoto2, by = "Drug")
-  }else{
-    result <- res_Tanimoto
-  }
+  f1 <- as.data.frame(f) %>%
+    t() %>%
+    Matrix::Matrix() %>%
+    proxyC::simil(method = "jaccard") %>%
+    as.matrix() %>%
+    as.data.frame()
+  f1 <- data.frame(Drug = names(f[-1]), Tanimoto = f1[-1,1], stringsAsFactors = F)
+
+
+
+  cat("Calculate the characteristics of network topology \n")
+  net1 <- pbapply::pblapply(target[-1], function(x){
+    score_network(disease_network = disease_network, target = x)
+  })
+
+  net2 <- as.data.frame(net1) %>%
+    t() %>%
+    as.data.frame()
+
+  net2 <- data.frame(Drug = names(target)[-1],
+                     Mean_degree_disturbance_rate = net2$Mean_degree_disturbance_rate,
+                     Mean_distance_disturbance_rate = net2$Mean_distance_disturbance_rate,
+                     Total_disturbance_rate = net2$Total_disturbance_rate)
+
+  result <- merge(f1, net2, by = "Drug")
 
   res_ScoreResult <- new("ScoreResult",
-                            ScoreResult = as.data.frame(result),
-                            Fingerprint = as.data.frame(res_enrich0),
-                            DiseaseNetwork = as.data.frame(disease_network),
-                            DiseaseBiomarker = as.character(disease$c2),
-                            Target = as.data.frame(target),
-                            Adjust = FALSE)
+                         ScoreResult = as.data.frame(result),
+                         Fingerprint = f,
+                         DiseaseNetwork = as.data.frame(disease_network),
+                         DiseaseBiomarker = as.character(target[[1]]),
+                         Target = target[-1],
+                         Adjust = FALSE)
   return(res_ScoreResult)
 }
 

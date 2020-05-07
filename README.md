@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of immcp is to discovery candidate prescriptions.
+The goal of immcp is to discovery candidate prescriptions of Traditional Chinese Medician..
 
 ## Installation
 

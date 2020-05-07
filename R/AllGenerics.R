@@ -8,8 +8,5 @@
 
 
 setGeneric("score_adjust",  function(result, n){
-   value <- standardGeneric("score_adjust")
-   value
-}
-
-  )
+   standardGeneric("score_adjust")
+})
