@@ -25,8 +25,11 @@ library(immcp)
 # demo data
 data("COVID19")
 # basic example code
-res <- score_immcp()
+res <- (disease_biomarker = COVID19$disease_biomarker,
+        disease_network = COVID19$disease_network,
+        target = COVID19$herb_target,
+        geneset = NULL)
 # adjust score
-res_adj <- score_adjust()
+res_adj <- score_adjust(result = res, n = 100)
 ```
 
