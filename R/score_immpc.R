@@ -2,15 +2,16 @@
 #'
 #'
 #' @title score_immpc
-#' @param disease_biomarker
+#' @param disease_biomarker A character.
 #' @param disease_network A data frame of disease network.This data frame containing a symbolic edge list in the first two columns.
 #' @param target A data frame of drug target.
+#' @param geneset A list.
 #' @return ScoreResult object
 #' @export
 #' @author Yuanlong Hu
 
 
-score_immpc2 <- function(disease_biomarker,
+score_immpc <- function(disease_biomarker,
                          disease_network,
                          target,
                          geneset = NULL){
