@@ -1,4 +1,4 @@
-#' Extract fingerprint
+#' Calculate the Drug Fingerprints
 #'
 #'
 #' @title extrFP
@@ -6,6 +6,8 @@
 #' @param drug_target A data frame of drug target.
 #' @param geneset A list.
 #' @return ScoreResult object
+#' @importFrom clusterProfiler enricher
+#' @importFrom pbapply pblapply
 #' @export
 #' @author Yuanlong Hu
 
@@ -40,7 +42,7 @@ extrFP <- function(disease_biomarker, drug_target, geneset){
 
   enrich_f <- function(target_character, geneset = geneset0){
     names(geneset) <- c("c1", "c2")
-    enrich_drug <- clusterProfiler::enricher(target_character,
+    enrich_drug <- enricher(target_character,
                                              TERM2GENE = geneset,
                                              minGSSize = 2,maxGSSize = Inf,
                                              pvalueCutoff = 0.05,
@@ -54,7 +56,7 @@ extrFP <- function(disease_biomarker, drug_target, geneset){
   }
 
   target <- output_list(disease_biomarker, drug_target)
-  f <- pbapply::pblapply(target, function(x){
+  f <- pblapply(target, function(x){
     enrich_f(x, geneset = geneset0)
   })
 

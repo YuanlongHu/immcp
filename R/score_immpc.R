@@ -11,51 +11,53 @@
 #' @author Yuanlong Hu
 
 
-score_immpc <- function(disease_biomarker,
+score_immpc <- function(FP,
                          disease_network,
-                         target,
-                         geneset = NULL){
+                         target){
+
+  f <- FP@Fingerprint
+  target <- FP@Target
   # geneset list to data.frame
 
-  if(is.null(geneset)){
-    geneset0 <- genesetlist
-  }
+  #if(is.null(geneset)){
+  #  geneset0 <- genesetlist
+  #}
 
-  if(class(geneset) == "list"){
-    for(i in names(geneset)){
-      geneset1 <- data.frame(feature = rep(i, length(geneset[i])), genesymbol = geneset[i])
-      names(geneset1) <- c("feature", "genesymbol")
-      geneset0 <- rbind(geneset0, geneset1)
-    }
-  }
+  #if(class(geneset) == "list"){
+  #  for(i in names(geneset)){
+  #    geneset1 <- data.frame(feature = rep(i, length(geneset[i])), genesymbol = geneset[i])
+  #    names(geneset1) <- c("feature", "genesymbol")
+  #    geneset0 <- rbind(geneset0, geneset1)
+  # }
+  #}
 
-  output_list <- function(disease_biomarker, target){
-    target <- target[,c(1,2)]
-    names(target) <- c("c1", "c2")
-    target0 <- list(disease_biomarker)
-    for (i in unique(target[,1])) {
-      target1 <- target$c2[target$c1 == i]
-      target1 <- list(target1)
-      target0 <- c(target0, target1)
-    }
-    names(target0) <- c("disease", unique(target[,1]))
-    return(target0)
-  }
+  #  output_list <- function(disease_biomarker, target){
+  #    target <- target[,c(1,2)]
+  #    names(target) <- c("c1", "c2")
+  #    target0 <- list(disease_biomarker)
+  #   for (i in unique(target[,1])) {
+  #    target1 <- target$c2[target$c1 == i]
+  #    target1 <- list(target1)
+  #    target0 <- c(target0, target1)
+  #  }
+  # names(target0) <- c("disease", unique(target[,1]))
+  #  return(target0)
+  #}
 
-  enrich_f <- function(target_character, geneset = geneset0){
-    names(geneset) <- c("c1", "c2")
-    enrich_drug <- clusterProfiler::enricher(target_character,
-                                             TERM2GENE = geneset,
-                                             minGSSize = 2,maxGSSize = Inf,
-                                             pvalueCutoff = 0.05,
-                                             qvalueCutoff = 0.1)
-    enrich_drug <- enrich_drug@result
-    enrich_drug <- enrich_drug[enrich_drug$pvalue<0.05 & enrich_drug$qvalue<0.1,]
+#  enrich_f <- function(target_character, geneset = geneset0){
+#    names(geneset) <- c("c1", "c2")
+  #    enrich_drug <- clusterProfiler::enricher(target_character,
+  #                                             TERM2GENE = geneset,
+                                             #                                             minGSSize = 2,maxGSSize = Inf,
+  #                                             pvalueCutoff = 0.05,
+  #                                            qvalueCutoff = 0.1)
+  #   enrich_drug <- enrich_drug@result
+  #   enrich_drug <- enrich_drug[enrich_drug$pvalue<0.05 & enrich_drug$qvalue<0.1,]
 
-    fingerprint_drug <- ifelse(unique(geneset$c1) %in% enrich_drug$ID, 1, 0)
-    names(fingerprint_drug) <- unique(geneset$c1)
-    return(fingerprint_drug)
-  }
+  #   fingerprint_drug <- ifelse(unique(geneset$c1) %in% enrich_drug$ID, 1, 0)
+  #  names(fingerprint_drug) <- unique(geneset$c1)
+  #  return(fingerprint_drug)
+  # }
 
   score_network <- function(disease_network = disease_network, target = target){
 
@@ -82,12 +84,12 @@ score_immpc <- function(disease_biomarker,
     return(res_network)
   }
 
-  cat("Extract immune fingerprint \n")
+  #  cat("Extract immune fingerprint \n")
 
-  target <- output_list(disease_biomarker, target)
-  f <- pbapply::pblapply(target, function(x){
-    enrich_f(x, geneset = geneset0)
-  })
+  #  target <- output_list(disease_biomarker, target)
+  #  f <- pbapply::pblapply(target, function(x){
+    #    enrich_f(x, geneset = geneset0)
+#  })
 
   cat("Calculate the Tanimoto coefficient \n")
   f1 <- as.data.frame(f) %>%
@@ -101,7 +103,7 @@ score_immpc <- function(disease_biomarker,
 
 
   cat("Calculate the characteristics of network topology \n")
-  net1 <- pbapply::pblapply(target[-1], function(x){
+  net1 <- pbapply::pblapply(target, function(x){
     score_network(disease_network = disease_network, target = x)
   })
 
@@ -109,20 +111,23 @@ score_immpc <- function(disease_biomarker,
     t() %>%
     as.data.frame()
 
-  net2 <- data.frame(Drug = names(target)[-1],
+  net2 <- data.frame(Drug = names(target),
                      Mean_degree_disturbance_rate = net2$Mean_degree_disturbance_rate,
                      Mean_distance_disturbance_rate = net2$Mean_distance_disturbance_rate,
                      Total_disturbance_rate = net2$Total_disturbance_rate)
 
   result <- merge(f1, net2, by = "Drug")
 
-  res_ScoreResult <- new("ScoreResult",
-                         ScoreResult = as.data.frame(result),
-                         Fingerprint = f,
-                         DiseaseNetwork = as.data.frame(disease_network),
-                         DiseaseBiomarker = as.character(target[[1]]),
-                         Target = target[-1],
-                         Adjust = FALSE)
-  return(res_ScoreResult)
+#  res_ScoreResult <- new("ScoreResult",
+ #                        ScoreResult = as.data.frame(result),
+ #                        Fingerprint = f,
+ #                        DiseaseNetwork = as.data.frame(disease_network),
+ #                        DiseaseBiomarker = as.character(target[[1]]),
+  #                       Target = target[-1],
+  #                       Adjust = FALSE)
+
+  FP@ScoreResult <- as.data.frame(result)
+  FP@Adjust <- FALSE
+  return(FP)
 }
 
