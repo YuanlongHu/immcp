@@ -4,12 +4,16 @@
 \alias{score_immpc}
 \title{score_immpc}
 \usage{
-score_immpc(disease_biomarker, disease_network, target, geneset = NULL)
+score_immpc(FP, disease_network, target)
 }
 \arguments{
 \item{disease_network}{A data frame of disease network.This data frame containing a symbolic edge list in the first two columns.}
 
 \item{target}{A data frame of drug target.}
+
+\item{disease_biomarker}{A character.}
+
+\item{geneset}{A list.}
 }
 \value{
 ScoreResult object
