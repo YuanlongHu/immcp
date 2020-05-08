@@ -7,6 +7,11 @@
 #' @param target A data frame of drug target.
 #' @param geneset A list.
 #' @return ScoreResult object
+#' @importFrom igraph graph.data.frame
+#' @importFrom igraph centr_degree
+#' @importFrom igraph mean_distance
+#' @importFrom Matrix Matrix
+#' @importFrom proxyC simil
 #' @export
 #' @author Yuanlong Hu
 
@@ -99,8 +104,6 @@ score_immpc <- function(FP,
     as.matrix() %>%
     as.data.frame()
   f1 <- data.frame(Drug = names(f[-1]), Tanimoto = f1[-1,1], stringsAsFactors = F)
-
-
 
   cat("Calculate the characteristics of network topology \n")
   net1 <- pbapply::pblapply(target, function(x){
