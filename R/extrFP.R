@@ -36,17 +36,17 @@ extrFP <- function(disease_biomarker, drug_target, geneset){
       target1 <- list(target1)
       target0 <- c(target0, target1)
     }
-    names(target0) <- c("disease", unique(target[,1]))
+    names(target0) <- c("disease", unique(drug_target[,1]))
     return(target0)
   }
 
   enrich_f <- function(target_character, geneset = geneset0){
     names(geneset) <- c("c1", "c2")
     enrich_drug <- enricher(target_character,
-                                             TERM2GENE = geneset,
-                                             minGSSize = 2,maxGSSize = Inf,
-                                             pvalueCutoff = 0.05,
-                                             qvalueCutoff = 0.1)
+                            TERM2GENE = geneset,
+                            minGSSize = 2,maxGSSize = Inf,
+                            pvalueCutoff = 0.05,
+                            qvalueCutoff = 0.1)
     enrich_drug <- enrich_drug@result
     enrich_drug <- enrich_drug[enrich_drug$pvalue<0.05 & enrich_drug$qvalue<0.1,]
 
@@ -60,12 +60,16 @@ extrFP <- function(disease_biomarker, drug_target, geneset){
     enrich_f(x, geneset = geneset0)
   })
 
-  res_ScoreResult <- new("ScoreResult",
-                         ScoreResult = NULL,
-                         Fingerprint = f,
-                         DiseaseNetwork = as.data.frame(disease_network),
-                         DiseaseBiomarker = as.character(target[[1]]),
-                         Target = target[-1],
-                         Adjust = NULL)
-  return(res_ScoreResult)
+  res_ScoreFP1 <- new("ScoreFP1",
+                      Fingerprint = f,
+                      DiseaseBiomarker = as.character(target[[1]]),
+                      DrugTarget = target[-1],
+                      FPType = "enrich"
+                         #Fingerprint = f,
+                        # DiseaseNetwork = NULL,
+                        # DiseaseBiomarker = ,
+                         #Target = ,
+                         #Adjust = NULL
+                        )
+  return(res_ScoreFP1)
 }

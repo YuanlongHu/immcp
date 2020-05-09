@@ -58,8 +58,8 @@ score_adjust <- function(result, n = 100){
   }
 
   cat("Adjust Tanimoto \n")
-  res2_list <- pbapply::pblapply(result@Fingerprint[-1], function(x){
-    res_r <- replicate(n, Tanimoto_f(disease = sample(result@Fingerprint$disease), drug = x))
+  res2_list <- pbapply::pblapply(result@Fingerprint@Fingerprint[-1], function(x){
+    res_r <- replicate(n, Tanimoto_f(disease = sample(result@Fingerprint@Fingerprint$disease), drug = x))
     res_r <- c(mean(res_r), sd(res_r))
     names(res_r) <- c("mean", "sd")
     res_r
@@ -69,7 +69,7 @@ score_adjust <- function(result, n = 100){
     t() %>%
     as.data.frame()
 
-  res2_list <- data.frame(Drug = names(result@Target),
+  res2_list <- data.frame(Drug = names(result@Fingerprint@DrugTarget),
                           mean= res2_list$mean,
                           sd = res2_list$sd)
 
@@ -77,7 +77,7 @@ score_adjust <- function(result, n = 100){
   res2_list$Tanimoto_adjust <- (res2_list$Tanimoto - res2_list$mean)/ res2_list$sd
 
   cat("Adjust Network \n")
-  res3_list <- pbapply::pblapply(result@Target, function(x){
+  res3_list <- pbapply::pblapply(result@Fingerprint@DrugTarget, function(x){
     degree <- replicate(n, score_network(disease_network = data.frame(node1 = sample(result@DiseaseNetwork[,1]),
                                                                       node2 = sample(result@DiseaseNetwork[,2]),
                                                                       stringsAsFactors = F),
@@ -110,7 +110,7 @@ score_adjust <- function(result, n = 100){
     t() %>%
     as.data.frame()
 
-  res3_list$Drug <- names(result@Target)
+  res3_list$Drug <- names(result@Fingerprint@DrugTarget)
   res3_list <- merge(res3_list, res2_list, by="Drug",sort = F)
 
   res3_list$Mean_degree_adjust <- (res3_list$Mean_degree_disturbance_rate - res3_list$mean_degree)/res3_list$sd_degree

@@ -16,12 +16,10 @@
 #' @author Yuanlong Hu
 
 
-score_immpc <- function(FP,
-                         disease_network,
-                         target){
+score_immpc <- function(FP,disease_network){
 
   f <- FP@Fingerprint
-  target <- FP@Target
+  target <- FP@DrugTarget
   # geneset list to data.frame
 
   #if(is.null(geneset)){
@@ -121,16 +119,16 @@ score_immpc <- function(FP,
 
   result <- merge(f1, net2, by = "Drug")
 
-#  res_ScoreResult <- new("ScoreResult",
- #                        ScoreResult = as.data.frame(result),
- #                        Fingerprint = f,
- #                        DiseaseNetwork = as.data.frame(disease_network),
- #                        DiseaseBiomarker = as.character(target[[1]]),
-  #                       Target = target[-1],
-  #                       Adjust = FALSE)
+res_ScoreResult <- new("ScoreResult",
+                       ScoreResult = as.data.frame(result),
+                       Fingerprint = FP,
+                       DiseaseNetwork = disease_network,
+                      # Adjust = "logical"
+                       Adjust = FALSE)
 
-  FP@ScoreResult <- as.data.frame(result)
-  FP@Adjust <- FALSE
-  return(FP)
+#  FP@ScoreResult <- as.data.frame(result)
+ # FP@Adjust <- FALSE
+ # FP@DiseaseNetwork <- disease_network
+  return(res_ScoreResult)
 }
 
