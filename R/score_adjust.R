@@ -59,6 +59,7 @@ score_adjust <- function(result, n = 100){
 
   cat("Adjust Tanimoto \n")
   res2_list <- pbapply::pblapply(result@Fingerprint@Fingerprint[-1], function(x){
+    set.seed(123)
     res_r <- replicate(n, Tanimoto_f(disease = sample(result@Fingerprint@Fingerprint$disease), drug = x))
     res_r <- c(mean(res_r), sd(res_r))
     names(res_r) <- c("mean", "sd")
@@ -78,6 +79,7 @@ score_adjust <- function(result, n = 100){
 
   cat("Adjust Network \n")
   res3_list <- pbapply::pblapply(result@Fingerprint@DrugTarget, function(x){
+    set.seed(1234)
     degree <- replicate(n, score_network(disease_network = data.frame(node1 = sample(result@DiseaseNetwork[,1]),
                                                                       node2 = sample(result@DiseaseNetwork[,2]),
                                                                       stringsAsFactors = F),
