@@ -51,8 +51,22 @@ setClass("ScoreFP2",
 setClass("ScoreResult",
          slots = list(
            ScoreResult = "data.frame",
-           Fingerprint = "ScoreFP",
-           DiseaseNetwork = "data.frame",
            Adjust = "logical"
+         )
+)
+
+setClass("ScoreResultFP",
+         contains = "ScoreResult",
+         slots = list(
+           Fingerprint = "ScoreFP"
+         )
+)
+
+
+setClass("ScoreResultNet",
+         contains = "ScoreResult",
+         slots = list(
+           DiseaseNetwork = "data.frame",
+           Targetlist = "list"
          )
 )

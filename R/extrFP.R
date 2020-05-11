@@ -12,7 +12,7 @@
 #' @author Yuanlong Hu
 
 
-extrFP <- function(disease_biomarker, drug_target, geneset){
+extrFP <- function(disease_biomarker, drug_target, geneset = NULL){
 
   if(is.null(geneset)){
     geneset0 <- genesetlist
@@ -24,20 +24,6 @@ extrFP <- function(disease_biomarker, drug_target, geneset){
       names(geneset1) <- c("feature", "genesymbol")
       geneset0 <- rbind(geneset0, geneset1)
     }
-  }
-
-
-  output_list <- function(disease_biomarker, drug_target){
-    drug_target <- drug_target[,c(1,2)]
-    names(drug_target) <- c("c1", "c2")
-    target0 <- list(disease_biomarker)
-    for (i in unique(drug_target[,1])) {
-      target1 <- drug_target$c2[drug_target$c1 == i]
-      target1 <- list(target1)
-      target0 <- c(target0, target1)
-    }
-    names(target0) <- c("disease", unique(drug_target[,1]))
-    return(target0)
   }
 
   enrich_f <- function(target_character, geneset = geneset0){
@@ -55,7 +41,13 @@ extrFP <- function(disease_biomarker, drug_target, geneset){
     return(fingerprint_drug)
   }
 
-  target <- output_list(disease_biomarker, drug_target)
+  #names(drug_target) <- c("Drug", "Target")
+
+  #dataframe <- rbind(data,frame(Drug = rep("disease", length(disease_biomarker)), Target = disease_biomarker),
+    #                 drug_target)
+ # target <- get_list(dataframe)
+
+  target <- c(disease=list(disease_biomarker), drug_target)
   f <- pblapply(target, function(x){
     enrich_f(x, geneset = geneset0)
   })
@@ -65,11 +57,6 @@ extrFP <- function(disease_biomarker, drug_target, geneset){
                       DiseaseBiomarker = as.character(target[[1]]),
                       DrugTarget = target[-1],
                       FPType = "enrich"
-                         #Fingerprint = f,
-                        # DiseaseNetwork = NULL,
-                        # DiseaseBiomarker = ,
-                         #Target = ,
-                         #Adjust = NULL
                         )
   return(res_ScoreFP1)
 }
