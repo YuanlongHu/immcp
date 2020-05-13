@@ -32,7 +32,8 @@ simFP <- function(FP){
 #' @importFrom ggcorrplot ggcorrplot
 #' @export
 #' @author Yuanlong Hu
-#'
+
+
 Heatmap_simFP <- function(data, ...){
   ggcorrplot(data, ...)
 }

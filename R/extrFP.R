@@ -15,7 +15,7 @@
 extrFP <- function(disease_biomarker, drug_target, geneset = NULL){
 
   if(is.null(geneset)){
-    geneset0 <- genesetlist
+    geneset0 <- genesetlist$ImmGenTop150
   }
 
   if(class(geneset) == "list"){

@@ -25,4 +25,5 @@ Imports:
     dplyr,
     ggcorrplot,
     ggplot2,
-    ggsci
+    ggsci,
+    enrichplot
