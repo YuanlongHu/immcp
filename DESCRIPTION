@@ -22,4 +22,7 @@ Imports:
     proxyC,
     pbapply,
     Matrix,
-    dplyr
+    dplyr,
+    ggcorrplot,
+    ggplot2,
+    ggsci
