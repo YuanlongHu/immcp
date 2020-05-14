@@ -9,6 +9,8 @@
 #' @importFrom igraph graph.data.frame
 #' @importFrom igraph centr_degree
 #' @importFrom igraph mean_distance
+#' @importFrom magrittr %>%
+#' @importFrom stats sd
 #' @export
 #' @author Yuanlong Hu
 

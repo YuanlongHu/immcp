@@ -6,6 +6,7 @@
 #' @return a matrix
 #' @importFrom Matrix Matrix
 #' @importFrom proxyC simil
+#' @importFrom magrittr %>%
 #' @export
 #' @author Yuanlong Hu
 

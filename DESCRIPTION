@@ -1,5 +1,4 @@
 Package: immcp
-Type: package
 Title: candidate prescriptions discovery based on immune and disease networks
 Version: 0.2.0
 Authors@R: 
@@ -17,13 +16,14 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     igraph,
-    clusterProfiler,
-    DOSE,
     proxyC,
     pbapply,
     Matrix,
-    dplyr,
     ggcorrplot,
     ggplot2,
     ggsci,
-    enrichplot
+    limma,
+    magrittr,
+    stats,
+    utils,
+    clusterProfiler

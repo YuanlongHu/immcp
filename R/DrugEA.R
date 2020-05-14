@@ -35,13 +35,12 @@ DrugEA <- function(gene, internal_geneset = "L1000_UP",input_geneset, output_df 
                          gene,
                          pvalueCutoff = pvalueCutoff,
                          pAdjustMethod = pAdjustMethod,
-                        # universe,
                         minGSSize = 10, maxGSSize = Inf,
                         qvalueCutoff = qvalueCutoff,
                         TERM2GENE = geneset
   )
 
-  if (output_df = T){
+  if (output_df == TRUE){
     res_enrich <- res_enrich@result
     return(res_enrich)
   }else{

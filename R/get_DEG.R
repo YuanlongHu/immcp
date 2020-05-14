@@ -5,14 +5,21 @@
 #' @param data data frame of expression values where rows correspond to genes and columns correspond to samples.
 #' @param pdata character vector of phenotype
 #' @param contrasts character vector specifying contrasts
-#' @return Feature object
+#' @return list object
+#' @importFrom magrittr %>%
+#' @importFrom stats model.matrix
+#' @importFrom limma makeContrasts
+#' @importFrom limma lmFit
+#' @importFrom limma contrasts.fit
+#' @importFrom limma eBayes
+#' @importFrom limma topTable
 #' @export
 #' @author Yuanlong Hu
 
 
 get_DEG <- function(data, pdata, contrasts){
-  Group <-  factor(pdata)
-  design <-  model.matrix(~0 + Group)
+  Group <- factor(pdata)
+  design <- model.matrix(~0 + Group)
   colnames(design) <- unique(pdata)
   contrast_matrix <- makeContrasts(contrasts,
                                    levels = design)

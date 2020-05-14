@@ -4,7 +4,7 @@
 \alias{extrFP}
 \title{extrFP}
 \usage{
-extrFP(disease_biomarker, drug_target, geneset)
+extrFP(disease_biomarker, drug_target, geneset = NULL)
 }
 \arguments{
 \item{disease_biomarker}{A character.}

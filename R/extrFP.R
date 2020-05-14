@@ -6,8 +6,8 @@
 #' @param drug_target A data frame of drug target.
 #' @param geneset A list.
 #' @return ScoreResult object
-#' @importFrom clusterProfiler enricher
 #' @importFrom pbapply pblapply
+#' @importFrom clusterProfiler enricher
 #' @export
 #' @author Yuanlong Hu
 
@@ -30,9 +30,9 @@ extrFP <- function(disease_biomarker, drug_target, geneset = NULL){
     names(geneset) <- c("c1", "c2")
     enrich_drug <- enricher(target_character,
                             TERM2GENE = geneset,
-                            minGSSize = 2,maxGSSize = Inf,
-                            pvalueCutoff = 0.05,
-                            qvalueCutoff = 0.1)
+                                     minGSSize = 2,maxGSSize = Inf,
+                                     pvalueCutoff = 0.05,
+                                     qvalueCutoff = 0.1)
     enrich_drug <- enrich_drug@result
     enrich_drug <- enrich_drug[enrich_drug$pvalue<0.05 & enrich_drug$qvalue<0.1,]
 
@@ -40,12 +40,6 @@ extrFP <- function(disease_biomarker, drug_target, geneset = NULL){
     names(fingerprint_drug) <- unique(geneset$c1)
     return(fingerprint_drug)
   }
-
-  #names(drug_target) <- c("Drug", "Target")
-
-  #dataframe <- rbind(data,frame(Drug = rep("disease", length(disease_biomarker)), Target = disease_biomarker),
-    #                 drug_target)
- # target <- get_list(dataframe)
 
   target <- c(disease=list(disease_biomarker), drug_target)
   f <- pblapply(target, function(x){

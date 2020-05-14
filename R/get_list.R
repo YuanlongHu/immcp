@@ -11,10 +11,10 @@
 
 get_list <- function(dataframe){
   dataframe <- dataframe[,c(1,2)]
-  names(dataframe) <- c("c1", "c2")
+  names(dataframe) <- c("terms", "gene")
   target0 <- list()
   for (i in unique(dataframe[,1])) {
-    target1 <- dataframe$c2[dataframe$c1 == i]
+    target1 <- dataframe$c2[dataframe$terms == i]
     target1 <- list(target1)
     target0 <- c(target0, target1)
   }
@@ -77,11 +77,26 @@ write_gmt <- function(geneset, gmt_file){
 #' @title write_gmt
 #' @param gmtfile gmt file
 #' @return data.frame
-#' @importFrom clusterProfiler read.gmt
+#' @importFrom utils stack
 #' @export
 #' @author Yuanlong Hu
 
 
-read_gmt <- function(gmtfile){
-  read.gmt(gmtfile)
+read_gmt <- function(gmtfile, input_list = FALSE){
+  x <- readLines(gmtfile)
+  res <- strsplit(x, "\t")
+  names(res) <- vapply(res, function(y) y[1], character(1))
+  res <- lapply(res, "[", -c(1:2))
+
+  geneset <- stack(res)
+  geneset <- geneset[, c("ind", "values")]
+  colnames(geneset) <- c("terms", "gene")
+
+  if (input_list) {
+    geneset <- get_list(geneset)
+  }else(
+    return(geneset)
+  )
+
+
 }

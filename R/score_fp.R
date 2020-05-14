@@ -12,6 +12,7 @@
 #' @importFrom igraph mean_distance
 #' @importFrom Matrix Matrix
 #' @importFrom proxyC simil
+#' @importFrom magrittr %>%
 #' @export
 #' @author Yuanlong Hu
 
