@@ -1,5 +1,5 @@
 ##' Class "ScoreFP"
-##' This class represents the FP.
+##' This class represents the pathway fingerprint.
 ##'
 ##'
 ##' @name ScoreFP-class

@@ -2,14 +2,13 @@
 #'
 #'
 #' @title get_list
-#' @param dataframe A data frame of drug target. The first column is drug name, and the second column is drug target.
+#' @param dataframe a data frame of 2 column with term/drug and gene
 #' @return list
 #' @export
 #' @author Yuanlong Hu
 
 
-
-get_list <- function(dataframe){
+to_list <- function(dataframe){
   dataframe <- dataframe[,c(1,2)]
   names(dataframe) <- c("terms", "gene")
   target0 <- list()
@@ -26,15 +25,15 @@ get_list <- function(dataframe){
 #' Convert list to data.frame
 #'
 #'
-#' @title list_to_df
-#' @param list A list
+#' @title to_df
+#' @param list a list containing gene sets
 #' @return data frame
 #' @export
 #' @author Yuanlong Hu
 
 
 
-list_to_df <- function(list){
+to_df <- function(list){
   list0 <- NULL
   for (i in 1:length(list)) {
     list1 <- data.frame(term = rep(names(list)[i]),
@@ -50,7 +49,7 @@ list_to_df <- function(list){
 #'
 #'
 #' @title write_gmt
-#' @param geneset A data frame
+#' @param geneset A data.frame of 2 column with term/drug and gene
 #' @param gmt_file A character of gmt file name.
 #' @return gmt file
 #' @export
@@ -75,28 +74,20 @@ write_gmt <- function(geneset, gmt_file){
 #'
 #'
 #' @title write_gmt
-#' @param gmtfile gmt file
-#' @return data.frame
+#' @param gmtfile A GMT file name or URL containing gene sets.
+#' @param out_type A character vector of object name. one of "data.frame", "list", "GeneSetCollection"
+#' @return data.frame, list or GeneSetCollection
 #' @importFrom utils stack
+#' @importFrom GSEABase getGmt
+#' @importFrom clusterProfiler read.gmt
 #' @export
 #' @author Yuanlong Hu
 
 
-read_gmt <- function(gmtfile, input_list = FALSE){
-  x <- readLines(gmtfile)
-  res <- strsplit(x, "\t")
-  names(res) <- vapply(res, function(y) y[1], character(1))
-  res <- lapply(res, "[", -c(1:2))
+read_gmt <- function(gmtfile, out_type = "data.frame"){
 
-  geneset <- stack(res)
-  geneset <- geneset[, c("ind", "values")]
-  colnames(geneset) <- c("terms", "gene")
-
-  if (input_list) {
-    geneset <- get_list(geneset)
-  }else(
-    return(geneset)
-  )
-
-
+ if (out_type == "list") geneset <- to_list(read.gmt(gmtfile))
+ if (out_type == "data.frame") geneset <- read.gmt(gmtfile)
+ if (out_type == "GeneSetCollection") geneset <- getGmt(gmtfile)
+ return(geneset)
 }

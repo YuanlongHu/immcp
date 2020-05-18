@@ -2,9 +2,9 @@
 #'
 #'
 #' @title get_DEG
-#' @param data data frame of expression values where rows correspond to genes and columns correspond to samples.
-#' @param pdata character vector of phenotype
-#' @param contrasts character vector specifying contrasts
+#' @param data a data frame of expression values where rows correspond to genes and columns correspond to samples.
+#' @param pdata a character vector of phenotype
+#' @param contrasts a character vector specifying contrasts
 #' @return list object
 #' @importFrom magrittr %>%
 #' @importFrom stats model.matrix
