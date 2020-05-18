@@ -26,4 +26,5 @@ Imports:
     magrittr,
     stats,
     utils,
-    clusterProfiler
+    clusterProfiler,
+    GSEABase

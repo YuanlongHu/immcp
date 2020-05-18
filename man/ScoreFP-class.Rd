@@ -4,10 +4,10 @@
 \name{ScoreFP-class}
 \alias{ScoreFP-class}
 \title{Class "ScoreFP"
-This class represents the FP.}
+This class represents the pathway fingerprint.}
 \description{
 Class "ScoreFP"
-This class represents the FP.
+This class represents the pathway fingerprint.
 }
 \author{
 Yuanlong Hu

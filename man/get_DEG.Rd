@@ -7,11 +7,11 @@
 get_DEG(data, pdata, contrasts)
 }
 \arguments{
-\item{data}{data frame of expression values where rows correspond to genes and columns correspond to samples.}
+\item{data}{a data frame of expression values where rows correspond to genes and columns correspond to samples.}
 
-\item{pdata}{character vector of phenotype}
+\item{pdata}{a character vector of phenotype}
 
-\item{contrasts}{character vector specifying contrasts}
+\item{contrasts}{a character vector specifying contrasts}
 }
 \value{
 list object
