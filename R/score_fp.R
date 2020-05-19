@@ -1,11 +1,9 @@
-#' Calculate the similarity of immune fingerprint and the characteristics of network topology
+#' Calculate the pathway fingerprint.similarity between disease and prescription.
 #'
 #'
 #' @title score_immpc
-#' @param disease_biomarker A character.
-#' @param disease_network A data frame of disease network.This data frame containing a symbolic edge list in the first two columns.
-#' @param target A data frame of drug target.
-#' @param geneset A list.
+#' @param FP A ScoreFP.
+#' @param n The number of times random permutation sampling.
 #' @return ScoreResult object
 #' @importFrom igraph graph.data.frame
 #' @importFrom igraph centr_degree
@@ -15,9 +13,17 @@
 #' @importFrom magrittr %>%
 #' @export
 #' @author Yuanlong Hu
+#' @examples
+#' \dontrun{
+#'   data(drugSample)
+#'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+#'                drug_target = drugSample$disease_biomarker,
+#'                geneset = "ImmGenTop150")
+#'   res <- score_fp(FP, n=100)
+#' }
 
 
-score_fp <- function(FP,n=100){
+score_fp <- function(FP, n = 100){
 
   f <- FP@Fingerprint
   target <- FP@DrugTarget

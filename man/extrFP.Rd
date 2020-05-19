@@ -4,17 +4,17 @@
 \alias{extrFP}
 \title{extrFP}
 \usage{
-extrFP(disease_biomarker, drug_target, geneset = NULL)
+extrFP(disease_biomarker, drug_target, geneset = "ImmGenTop150")
 }
 \arguments{
 \item{disease_biomarker}{A character.}
 
 \item{drug_target}{A data frame of drug target.}
 
-\item{geneset}{A list.}
+\item{geneset}{one of "ImmGenTop150" and "KEGG"}
 }
 \value{
-ScoreResult object
+ScoreFP object
 }
 \description{
 Calculate the Drug Fingerprints

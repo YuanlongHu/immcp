@@ -1,12 +1,12 @@
 Package: immcp
 Title: candidate prescriptions discovery based on immune and disease networks
-Version: 0.2.0
+Version: 1.0.0
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
            role = c("aut", "cre"),
            email = "huyuanlong1996@163.com")
-Description: The purpose of the R package is candidate prescriptions discovery integrating the transcriptome fingerprints similarity and the topological characteristics of disease networks
+Description: The package implements methods to analyze and screen candidate prescription related to disease based pathway fingerprints.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -19,7 +19,6 @@ Imports:
     proxyC,
     pbapply,
     Matrix,
-    ggcorrplot,
     ggplot2,
     ggsci,
     limma,
@@ -27,4 +26,5 @@ Imports:
     stats,
     utils,
     clusterProfiler,
-    GSEABase
+    GSEABase,
+    methods

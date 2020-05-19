@@ -9,7 +9,9 @@ score_network(targetlist, disease_network, n = 100)
 \arguments{
 \item{targetlist}{A list containing drug target and disease biomarker.}
 
-\item{drug_target}{A data frame of drug target.}
+\item{disease_network}{A data frame of disease network containing two columns.}
+
+\item{n}{The number of times random permutation sampling.}
 }
 \value{
 ScoreResultNet object

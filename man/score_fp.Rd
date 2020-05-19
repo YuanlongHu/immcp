@@ -7,19 +7,24 @@
 score_fp(FP, n = 100)
 }
 \arguments{
-\item{disease_biomarker}{A character.}
+\item{FP}{A ScoreFP.}
 
-\item{disease_network}{A data frame of disease network.This data frame containing a symbolic edge list in the first two columns.}
-
-\item{target}{A data frame of drug target.}
-
-\item{geneset}{A list.}
+\item{n}{The number of times random permutation sampling.}
 }
 \value{
 ScoreResult object
 }
 \description{
-Calculate the similarity of immune fingerprint and the characteristics of network topology
+Calculate the pathway fingerprint.similarity between disease and prescription.
+}
+\examples{
+\dontrun{
+  data(drugSample)
+  FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+               drug_target = drugSample$disease_biomarker,
+               geneset = "ImmGenTop150")
+  res <- score_fp(FP, n=100)
+}
 }
 \author{
 Yuanlong Hu

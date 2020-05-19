@@ -3,7 +3,8 @@
 #'
 #' @title score_network
 #' @param targetlist A list containing drug target and disease biomarker.
-#' @param drug_target A data frame of drug target.
+#' @param disease_network A data frame of disease network containing two columns.
+#' @param n The number of times random permutation sampling.
 #' @return ScoreResultNet object
 #' @importFrom pbapply pblapply
 #' @importFrom igraph graph.data.frame

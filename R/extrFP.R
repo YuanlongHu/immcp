@@ -4,18 +4,22 @@
 #' @title extrFP
 #' @param disease_biomarker A character.
 #' @param drug_target A data frame of drug target.
-#' @param geneset A list.
-#' @return ScoreResult object
+#' @param geneset one of "ImmGenTop150" and "KEGG"
+#' @return ScoreFP object
 #' @importFrom pbapply pblapply
 #' @importFrom clusterProfiler enricher
 #' @export
 #' @author Yuanlong Hu
 
 
-extrFP <- function(disease_biomarker, drug_target, geneset = NULL){
+extrFP <- function(disease_biomarker, drug_target, geneset = "ImmGenTop150"){
 
-  if(is.null(geneset)){
+  if(geneset == "ImmGenTop150"){
     geneset0 <- genesetlist$ImmGenTop150
+  }
+
+  if(geneset == "KEGG"){
+    geneset0 <- genesetlist$KEGGPATHID2EXTID
   }
 
   if(class(geneset) == "list"){

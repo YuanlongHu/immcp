@@ -23,19 +23,3 @@ simFP <- function(FP){
  return(f1)
 }
 
-
-#' Visualization of a drug fingerprints similarity matrix using ggplot2
-#'
-#'
-#' @title Heatmap_simFP
-#' @param data A drug fingerprints similarity matrix
-#' @return a ggplot2
-#' @importFrom ggcorrplot ggcorrplot
-#' @export
-#' @author Yuanlong Hu
-
-
-Heatmap_simFP <- function(data, ...){
-  ggcorrplot(data, ...)
-}
-
