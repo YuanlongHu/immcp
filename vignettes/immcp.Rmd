@@ -1,0 +1,27 @@
+---
+title: "_immcp_: Discovery Candidate Herbal Prescription based on Similarity of Pathway Fingerprints"
+author: "Authors: Yuanlong Hu"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+vignette: >
+  %\VignetteIndexEntry{immcp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+library(immcp)
+```
+
+Introduction
+============
+
+`immcp` is a polypharmacology package for candidate herbal prescription discovery.Pathway Fingerprints[@article{ye2012study]

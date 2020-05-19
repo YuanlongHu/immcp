@@ -25,3 +25,7 @@ Imports:
     clusterProfiler,
     GSEABase,
     methods
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

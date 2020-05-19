@@ -1,6 +1,8 @@
-##' @method as.data.frame enrichResult
+##' @method as.data.frame ScoreResult
 ##' @export
-as.data.frame.ScoreResult <- function(x, ...) {
+
+
+setMethod(f="as.data.frame", signature = "ScoreResult", function(x){
   x <- x@ScoreResult
-  as.data.frame(x, ...)
-}
+  as.data.frame(x)
+})

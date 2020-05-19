@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of immcp is to discovery candidate prescriptions of Traditional Chinese Medicine.
+
 
 ## Installation
 
@@ -22,14 +22,11 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(immcp)
-# demo data
-data("COVID19")
-# basic example code
-res <- score_immcp(disease_biomarker = COVID19$disease_biomarker,
-                   disease_network = COVID19$disease_network,
-                   target = COVID19$herb_target,
-                   geneset = NULL)
-# adjust score
-res_adj <- score_adjust(result = res, n = 100)
+data("drugSample")
+FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+               drug_target = drugSample$herb_target,
+               geneset = "ImmGenTop150")
+res <- score_fp(FP, n=100)
+res <- as.data.frame(res)
 ```
 

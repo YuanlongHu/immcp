@@ -15,11 +15,12 @@
 #' @author Yuanlong Hu
 #' @examples
 #' \dontrun{
-#'   data(drugSample)
+#'   data("drugSample")
 #'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-#'                drug_target = drugSample$disease_biomarker,
+#'                drug_target = drugSample$herb_target,
 #'                geneset = "ImmGenTop150")
 #'   res <- score_fp(FP, n=100)
+#'   res <- as.data.frame(res)
 #' }
 
 
@@ -74,7 +75,8 @@ score_fp <- function(FP, n = 100){
   cat("Done \n")
 
   result <- res2_list[,-c(2,3)]
-
+  colnames(result) <- c("Drug", "Score", "adj_Score")
+  result <- result[order(result$adj_Score, decreasing = T),]
   res_ScoreResultFP <- new("ScoreResultFP",
                        ScoreResult = as.data.frame(result),
                        Fingerprint = FP,

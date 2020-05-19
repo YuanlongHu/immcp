@@ -1,7 +1,7 @@
 #' Create a new list from a data.frame of drug target and disease biomarker as input
 #'
 #'
-#' @title get_list
+#' @title to_list
 #' @param dataframe a data frame of 2 column with term/drug and gene
 #' @return list
 #' @export
@@ -13,7 +13,7 @@ to_list <- function(dataframe){
   names(dataframe) <- c("terms", "gene")
   target0 <- list()
   for (i in unique(dataframe[,1])) {
-    target1 <- dataframe$c2[dataframe$terms == i]
+    target1 <- dataframe$gene[dataframe$terms == i]
     target1 <- list(target1)
     target0 <- c(target0, target1)
   }
