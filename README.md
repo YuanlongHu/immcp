@@ -27,6 +27,8 @@ FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
                drug_target = drugSample$herb_target,
                geneset = "ImmGenTop150")
 res <- score_fp(FP, n=100)
-res <- as.data.frame(res)
+plot_density(res, drug="BAN_XIA_XIE_XIN_TANG")
+
+res_df <- as.data.frame(res)
 ```
 

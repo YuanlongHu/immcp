@@ -50,15 +50,15 @@ setClass("ScoreFP2",
 
 setClass("ScoreResult",
          slots = list(
-           ScoreResult = "data.frame",
-           Adjust = "logical"
+           ScoreResult = "data.frame"
          )
 )
 
 setClass("ScoreResultFP",
          contains = "ScoreResult",
          slots = list(
-           Fingerprint = "ScoreFP"
+           Fingerprint = "ScoreFP",
+           adj = "list"
          )
 )
 

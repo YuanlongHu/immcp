@@ -40,47 +40,42 @@ score_fp <- function(FP, n = 100){
     return(res_f)
   }
 
-  cat("Calculating \n")
 
-  f1 <- as.data.frame(f) %>%
-    t() %>%
-    Matrix::Matrix() %>%
-    proxyC::simil(method = "jaccard") %>%
-    as.matrix() %>%
-    as.data.frame()
-  f1 <- data.frame(Drug = names(f[-1]), Tanimoto = f1[-1,1], stringsAsFactors = F)
-  cat("Done \n")
-
-  cat("Adjusting \n")
-  res2_list <- pbapply::pblapply(f[-1], function(x){
+  cat("Scoring and Resampling(1/2) \n")
+  adj_list <- pbapply::pblapply(f[-1], function(x){
+    score_T <- Tanimoto_f(disease = f$disease, drug = x)
     set.seed(123)
     res_r <- replicate(n, Tanimoto_f(disease = sample(f$disease), drug = x))
-    res_r <- c(mean(res_r), sd(res_r))
-    names(res_r) <- c("mean", "sd")
+    res_r <- c(score_T, res_r)
     res_r
   })
 
-  res2_list <- as.data.frame(res2_list) %>%
-    t() %>%
-    as.data.frame()
-
-  res2_list <- data.frame(Drug = names(f)[-1],
-                          mean= res2_list$mean,
-                          sd = res2_list$sd)
-
-
-  res2_list <- merge(res2_list, f1, by="Drug")
-  res2_list$Tanimoto_adjust <- (res2_list$Tanimoto - res2_list$mean)/ res2_list$sd
+  cat("Summarizing(2/2) \n")
+  result <- pbapply::pblapply(adj_list, function(x){
+    res_r <- x[-1]
+    score_T <- x[1]
+    adj_score <- (score_T - mean(res_r))/sd(res_r)
+    p_value <- length(res_r[res_r>score_T])/n
+    p_value <- signif(p_value*2, 3)
+    res_r <- c(score_T, adj_score, p_value)
+    names(res_r) <- c("Score","adj_score", "p_value")
+    res_r
+  })
 
   cat("Done \n")
 
-  result <- res2_list[,-c(2,3)]
-  colnames(result) <- c("Drug", "Score", "adj_Score")
-  result <- result[order(result$adj_Score, decreasing = T),]
+
+  result <- as.data.frame(result) %>%
+    t() %>%
+    as.data.frame()
+
+  result <- result[order(result$adj_score, decreasing = T),]
+  head(result)
+
   res_ScoreResultFP <- new("ScoreResultFP",
-                       ScoreResult = as.data.frame(result),
-                       Fingerprint = FP,
-                       Adjust = FALSE)
+                           ScoreResult = as.data.frame(result),
+                           Fingerprint = FP,
+                           adj = adj_list)
 
   return(res_ScoreResultFP)
 }
