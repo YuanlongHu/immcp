@@ -6,6 +6,11 @@
 #' @param drug a character of drug name.
 #' @param fill fill color.
 #' @return a ggplot
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes_
+#' @importFrom ggplot2 geom_density
+#' @importFrom ggplot2 geom_vline
+#' @importFrom ggplot2 theme_light
 #' @export
 #' @author Yuanlong Hu
 #' @examples
@@ -20,11 +25,11 @@
 
 
 plot_density <- function(result, drug, fill="#6495ED" ){
-  dat <- data.frame(drug = rep(drug, length(res@adj[[drug]][-1])),
-                    var = res@adj[[drug]][-1])
-  plot <- ggplot(dat, aes(x=var)) +
+  dat <- data.frame(drug = rep(drug, length(result@adj[[drug]][-1])),
+                    var = result@adj[[drug]][-1])
+  plot <- ggplot(dat, aes_(x=~var)) +
     geom_density(alpha=0.2, fill=fill)+
-    geom_vline(xintercept=res@adj[[drug]][1], color="red", linetype="dashed", size=1)+
+    geom_vline(xintercept=result@adj[[drug]][1], color="red", linetype="dashed", size=1)+
     theme_light()
   return(plot)
 }

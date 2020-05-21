@@ -9,7 +9,7 @@ extrFP(disease_biomarker, drug_target, geneset = "ImmGenTop150")
 \arguments{
 \item{disease_biomarker}{A character.}
 
-\item{drug_target}{A data frame of drug target.}
+\item{drug_target}{A data frame or list of drug target.}
 
 \item{geneset}{one of "ImmGenTop150" and "KEGG"}
 }

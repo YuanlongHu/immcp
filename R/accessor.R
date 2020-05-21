@@ -1,17 +1,32 @@
-##' @method as.data.frame ScoreResult
-##' @export
+##' as.data.frame method
+##'
+##' @param x a object of class ScoreResult
+##' @author Yuanlong Hu
 
 
-setMethod(f="as.data.frame", signature = "ScoreResult", function(x, ...){
-  x <- x@ScoreResult
-  as.data.frame(x, ...)
+
+setMethod(f="as.data.frame", signature = "ScoreResult", function(x){
+  as.data.frame(x@ScoreResult)
 })
 
 
-##' @method head ScoreResult
-##' @export
+##' head method
+##'
+##' @param x a object of class ScoreResult
+##' @param ... other arguments
+##' @author Yuanlong Hu
 
 setMethod(f="head", signature = "ScoreResult", function(x, ...){
-  x <- x@ScoreResult
-  head(x, ...)
+  head(x@ScoreResult, ...)
+})
+
+
+##' tail method
+##'
+##' @param x a object of class ScoreResult
+##' @param ... other arguments
+##' @author Yuanlong Hu
+
+setMethod(f="tail", signature = "ScoreResult", function(x, ...){
+  tail(x@ScoreResult, ...)
 })

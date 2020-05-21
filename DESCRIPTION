@@ -24,7 +24,8 @@ Imports:
     utils,
     clusterProfiler,
     GSEABase,
-    methods
+    methods,
+    ggplot2
 Suggests: 
     knitr,
     rmarkdown

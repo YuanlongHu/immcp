@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_geneset.R
 \name{to_list}
 \alias{to_list}
-\title{get_list}
+\title{to_list}
 \usage{
 to_list(dataframe)
 }
