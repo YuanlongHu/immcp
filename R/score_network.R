@@ -89,6 +89,7 @@ score_network <- function(Tar, DNet, n = 100){
   result <- as.data.frame(result) %>%
     t() %>%
     as.data.frame()
+  result <- result[order(result$adj_TotalScore, decreasing = T),]
   adj <- lapply(net1, function(x) x[-c(1:2)])
   res_ScoreResult <- new("ScoreResultNet",
                          ScoreResult = as.data.frame(result),
