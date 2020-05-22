@@ -14,7 +14,14 @@
 #' @importFrom stats sd
 #' @export
 #' @author Yuanlong Hu
-
+#' @examples
+#' \dontrun{
+#'   data("drugSample")
+#'   Tar <- drugSample$herb_target
+#'   disease_network <- drugSample$disease_network
+#'   res <- score_network(Tar, DNet)
+#'   res <- as.data.frame(res)
+#' }
 
 score_network <- function(Tar, DNet, n = 100){
 
