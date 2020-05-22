@@ -2,8 +2,8 @@
 #'
 #'
 #' @title score_network
-#' @param targetlist A list containing drug target and disease biomarker.
-#' @param disease_network A data frame of disease network containing two columns.
+#' @param Tar A list containing drug target and disease biomarker.
+#' @param DNet A data frame of disease network containing two columns.
 #' @param n The number of times random permutation sampling.
 #' @return ScoreResultNet object
 #' @importFrom pbapply pblapply
@@ -16,19 +16,22 @@
 #' @author Yuanlong Hu
 
 
-score_network <- function(targetlist, disease_network, n = 100){
+score_network <- function(Tar, DNet, n = 100){
 
-  score_network_s <- function(disease_network, target, method = "all"){
+  if(class(Tar) == "list") Tar
+  if(class(Tar) == "data.frame") Tar <- to_list(Tar)
 
-    disease_network <- as.data.frame(disease_network[,1:2])
-    colnames(disease_network)<- c("node1","node2")
-    target <- intersect(target, unique(c(disease_network$node1, disease_network$node2)))
+  score_network_s <- function(DNet, target, method = "all"){
 
-    disease_network2 <- disease_network[!disease_network$node1 %in% target,]
-    disease_network2 <- disease_network2[!disease_network2$node2 %in% target,]
+    DNet <- as.data.frame(DNet[,1:2])
+    colnames(DNet)<- c("node1","node2")
+    target <- intersect(target, unique(c(DNet$node1, DNet$node2)))
 
-    g1 <- graph.data.frame(disease_network, directed = F)
-    g2 <- graph.data.frame(disease_network2, directed = F)
+    DNet2 <- DNet[!DNet$node1 %in% target,]
+    DNet2 <- DNet2[!DNet2$node2 %in% target,]
+
+    g1 <- graph.data.frame(DNet, directed = F)
+    g2 <- graph.data.frame(DNet2, directed = F)
 
     degree <- (mean(centr_degree(g2)$res) - mean(centr_degree(g1)$res))/mean(centr_degree(g1)$res)
     mean_distance <- (mean_distance(g2, directed = F, unconnected = TRUE) - mean_distance(g1, directed = F, unconnected = TRUE))/mean_distance(g1, directed = F, unconnected = TRUE)
@@ -55,53 +58,36 @@ score_network <- function(targetlist, disease_network, n = 100){
   }
 
 
-  cat("Calculating \n")
-  net1 <- pbapply::pblapply(targetlist, function(x){
-    score_network_s(disease_network = disease_network, target = x, method = "all")
+  cat("Scoring \n")
+  net1 <- pbapply::pblapply(Tar, function(x){
+
+    score <- score_network_s(DNet = DNet, target = x, method = "all")
+    set.seed(1234)
+    adj_total <- replicate(n, score_network_s(DNet = data.frame(node1 = sample(DNet[,1]), node2 = sample(DNet[,2]), stringsAsFactors = F), target = x, method = "total"))
+    res <- c(score, adj_total)
+
+    res
   })
 
-  net2 <- as.data.frame(net1) %>%
-    t() %>%
-    as.data.frame()
-
-  net2 <- data.frame(Drug = names(targetlist),
-                     Mean_degree_disturbance_rate = net2$Mean_degree_disturbance_rate,
-                     Mean_distance_disturbance_rate = net2$Mean_distance_disturbance_rate,
-                     Total_disturbance_rate = net2$Total_disturbance_rate)
-  cat("Done \n")
-
-  cat("Adjusting \n")
-  res3_list <- pbapply::pblapply(targetlist, function(x){
-    degree <- replicate(n, score_network_s(disease_network = data.frame(node1 = sample(disease_network[,1]), node2 = sample(disease_network[,2]), stringsAsFactors = F), target = x, method = "degree"))
-    distance <- replicate(n, score_network_s(disease_network = data.frame(node1 = sample(disease_network[,1]), node2 = sample(disease_network[,2]), stringsAsFactors = F),target = x,method = "distance"))
-    total <- replicate(n, score_network_s(disease_network = data.frame(node1 = sample(disease_network[,1]), node2 = sample(disease_network[,2]), stringsAsFactors = F), target = x, method = "total"))
-    res_r2 <- c(mean(degree), sd(degree),
-                mean(distance), sd(distance),
-                mean(total), sd(total))
-    names(res_r2) <- c("mean_degree", "sd_degree",
-                       "mean_distance", "sd_distance",
-                       "mean_total", "sd_total")
-    return(res_r2)
+  cat("Summarizing \n")
+  result <- pbapply::pblapply(net1, function(x){
+    x2 <- x[-c(1:3)]
+    z_score <- (x[3] - mean(x2))/sd(x2)
+    p_value <- (length(x2[x2 > x[3]])+1)/(n+1)
+    res <- c(x[1:3],z_score,p_value)
+    names(res) <- c("ChangeDegree", "ChangeDistance", "TotalScore", "adj_TotalScore", "p_value")
+    res
   })
-  res3_list <- as.data.frame(res3_list) %>%
+
+  result <- as.data.frame(result) %>%
     t() %>%
     as.data.frame()
-  res3_list$Drug <- names(targetlist)
-
-  result <- merge(res3_list, net2, by = "Drug")
-
-  result$Mean_degree_adjust <- (result$Mean_degree_disturbance_rate - result$mean_degree)/result$sd_degree
-  result$Mean_distance_adjust <- (result$Mean_distance_disturbance_rate - result$mean_distance)/result$sd_distance
-  result$Total_network_score_adjust <- (result$Total_disturbance_rate - result$mean_total)/result$sd_total
-  result <- result[,-c(2:7)]
-  cat("Done \n")
-
-
+  adj <- lapply(net1, function(x) x[-c(1:2)])
   res_ScoreResult <- new("ScoreResultNet",
                          ScoreResult = as.data.frame(result),
-                         DiseaseNetwork = disease_network,
-                         Targetlist = targetlist,
-                         Adjust = FALSE)
+                         DiseaseNetwork = DNet,
+                         Tar = Tar,
+                         adj = adj)
 
   return(res_ScoreResult)
 

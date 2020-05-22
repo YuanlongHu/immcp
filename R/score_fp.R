@@ -55,8 +55,8 @@ score_fp <- function(FP, n = 100){
     res_r <- x[-1]
     score_T <- x[1]
     adj_score <- (score_T - mean(res_r))/sd(res_r)
-    p_value <- length(res_r[res_r>score_T])/n
-    p_value <- signif(p_value*2, 3)
+    p_value <- (length(res_r[res_r>score_T])+1)/(n+1)
+    p_value <- signif(p_value, 3)
     res_r <- c(score_T, adj_score, p_value)
     names(res_r) <- c("Score","adj_score", "p_value")
     res_r

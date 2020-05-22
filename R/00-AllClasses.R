@@ -50,15 +50,15 @@ setClass("ScoreFP2",
 
 setClass("ScoreResult",
          slots = list(
-           ScoreResult = "data.frame"
+           ScoreResult = "data.frame",
+           adj = "list"
          )
 )
 
 setClass("ScoreResultFP",
          contains = "ScoreResult",
          slots = list(
-           Fingerprint = "ScoreFP",
-           adj = "list"
+           Fingerprint = "ScoreFP"
          )
 )
 
@@ -67,6 +67,6 @@ setClass("ScoreResultNet",
          contains = "ScoreResult",
          slots = list(
            DiseaseNetwork = "data.frame",
-           Targetlist = "list"
+           Tar = "list"
          )
 )

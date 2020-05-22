@@ -4,7 +4,6 @@
 #' @title to_list
 #' @param dataframe a data frame of 2 column with term/drug and gene
 #' @return list
-#' @export
 #' @author Yuanlong Hu
 
 
@@ -28,7 +27,6 @@ to_list <- function(dataframe){
 #' @title to_df
 #' @param list a list containing gene sets
 #' @return data frame
-#' @export
 #' @author Yuanlong Hu
 
 
