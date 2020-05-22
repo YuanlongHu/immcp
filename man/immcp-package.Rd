@@ -3,7 +3,6 @@
 \docType{package}
 \name{immcp-package}
 \alias{immcp-package}
-\alias{immcp}
 \title{screen and analysis and candidate prescription related to disease}
 \description{
 The package implements methods to analyze and screen candidate prescription

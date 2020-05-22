@@ -1,19 +1,40 @@
 ---
-title: "immcp"
+title: "A Short Introduction to the immcp Package"
+author: "Author: Yuanlong Hu"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{immcp}
+  %\VignetteIndexEntry{A Short Introduction to the immcp Package}
+  %\VignettePackage{immcp}
   %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, message = FALSE, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 4,
+  fig.height = 3
 )
 ```
 
-```{r setup}
+Traditional Chinese Medicine(TCM) has a history of more than 2000 years and has accumulated a great deal of clinical experience. The herbal prescription is one of the main treatment methods of traditional Chinese medicine. How to find a candidate prescription for a disease defined by modern medicine is an urgent problem to be solved.
+
+The pathway fingerprint[@ye2012study] is a method to indicate the profile of significant pathways being influenced by drugs, which may hint drug functions. Potential therapeutic prescription can be found based on the similarity of pathway fingerprints between disease and prescription.
+
+
+```{r}
 library(immcp)
 ```
+`drugSample` is a demo dataset, which contains three data frame:
++ 
+
+```{r}
+data("drugSample")
+str(drugSample)
+```
+
+
+

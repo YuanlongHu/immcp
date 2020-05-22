@@ -2,7 +2,7 @@
 % Please edit documentation in R/score_fp.R
 \name{score_fp}
 \alias{score_fp}
-\title{score_immpc}
+\title{score_fp}
 \usage{
 score_fp(FP, n = 100)
 }

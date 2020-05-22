@@ -6,7 +6,7 @@ Authors@R:
            family = "Hu",
            role = c("aut", "cre"),
            email = "huyuanlong1996@163.com")
-Description: The package implements methods to analyze and screen candidate prescription related to disease based pathway fingerprints.
+Description: The package implements methods to analyze and screen candidate herbal prescription related to disease based pathway fingerprints.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

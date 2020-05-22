@@ -1,7 +1,7 @@
 #' Calculate the pathway fingerprint.similarity between disease and prescription.
 #'
 #'
-#' @title score_immpc
+#' @title score_fp
 #' @param FP A ScoreFP.
 #' @param n The number of times random permutation sampling.
 #' @return ScoreResult object

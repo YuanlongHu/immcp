@@ -4,12 +4,12 @@
 \alias{score_network}
 \title{score_network}
 \usage{
-score_network(targetlist, disease_network, n = 100)
+score_network(Tar, DNet, n = 100)
 }
 \arguments{
-\item{targetlist}{A list containing drug target and disease biomarker.}
+\item{Tar}{A list containing drug target and disease biomarker.}
 
-\item{disease_network}{A data frame of disease network containing two columns.}
+\item{DNet}{A data frame of disease network containing two columns.}
 
 \item{n}{The number of times random permutation sampling.}
 }
@@ -18,6 +18,15 @@ ScoreResultNet object
 }
 \description{
 Calculate the network score
+}
+\examples{
+\dontrun{
+  data("drugSample")
+  Tar <- drugSample$herb_target
+  disease_network <- drugSample$disease_network
+  res <- score_network(Tar, DNet)
+  res <- as.data.frame(res)
+}
 }
 \author{
 Yuanlong Hu

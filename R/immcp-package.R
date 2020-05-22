@@ -4,7 +4,7 @@
 #' related to disease based pathway fingerprints.
 #'
 #' @name immcp-package
-#' @aliases immcp-package immcp
+#' @aliases immcp-package
 #' @docType package
 NULL
 
@@ -14,7 +14,7 @@ NULL
 #'
 #' A demo dataset contains a sample of herbal prescription.
 #'
-#' @name DataSet
+#' @name drugSample
 #' @aliases drugSample
 #' @docType data
 #' @keywords datasets
