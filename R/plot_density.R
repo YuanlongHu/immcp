@@ -30,6 +30,7 @@ plot_density <- function(result, drug, fill="#6495ED" ){
   plot <- ggplot(dat, aes_(x=~var)) +
     geom_density(alpha=0.2, fill=fill)+
     geom_vline(xintercept=result@adj[[drug]][1], color="red", linetype="dashed", size=1)+
-    theme_light()
+    theme_light()+
+    labs(x="")
   return(plot)
 }

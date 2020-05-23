@@ -1,10 +1,9 @@
 
-# immcp
-
-<!-- badges: start -->
-<!-- badges: end -->
+# immcp: Candidate prescriptions discovery based on pathway fingerprint
 
 
+
+This package implements the method proposed by *Ye* for pathway fingerprint. Candidate herbal prescriptions can be discovered based on the pathway fingerprint similarity between disease and prescriptions.
 
 ## Installation
 
@@ -16,6 +15,7 @@ library(devtools)
 install_github("YuanlongHu/immcp")
 ```
 
+-----
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
@@ -29,6 +29,6 @@ FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
 res <- score_fp(FP, n=100)
 plot_density(res, drug="BAN_XIA_XIE_XIN_TANG")
 
-res_df <- as.data.frame(res)
+res1 = get_result(res)
 ```
 
