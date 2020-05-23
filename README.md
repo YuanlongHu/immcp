@@ -29,6 +29,7 @@ FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
 res <- score_fp(FP, n=100)
 plot_density(res, drug="BAN_XIA_XIE_XIN_TANG")
 
-res1 = get_result(res)
+res1 <- get_result(res)
+head(res1)
 ```
 
