@@ -1,12 +1,12 @@
 Package: immcp
-Title: candidate prescriptions discovery based on immune and disease networks
+Title: Candidate prescriptions discovery based on pathway fingerprint
 Version: 1.0.0
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
            role = c("aut", "cre"),
            email = "huyuanlong1996@163.com")
-Description: The package implements methods to analyze and screen candidate herbal prescription related to disease based pathway fingerprints.
+Description: The package implements methods to find candidate herbal prescription based pathway fingerprints.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

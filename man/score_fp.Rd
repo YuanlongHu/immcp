@@ -4,15 +4,17 @@
 \alias{score_fp}
 \title{score_fp}
 \usage{
-score_fp(FP, n = 100)
+score_fp(FP, n = 100, two_tailed = TRUE)
 }
 \arguments{
 \item{FP}{A ScoreFP.}
 
 \item{n}{The number of times random permutation sampling.}
+
+\item{two_tailed}{a logical: select a two-tailed p-value}
 }
 \value{
-ScoreResult object
+ScoreResult
 }
 \description{
 Calculate the pathway fingerprint.similarity between disease and prescription.

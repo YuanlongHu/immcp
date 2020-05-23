@@ -22,19 +22,47 @@ knitr::opts_chunk$set(
 
 Traditional Chinese Medicine(TCM) has a history of more than 2000 years and has accumulated a great deal of clinical experience. The herbal prescription is one of the main treatment methods of traditional Chinese medicine. How to find a candidate prescription for a disease defined by modern medicine is an urgent problem to be solved.
 
-The pathway fingerprint[@ye2012study] is a method to indicate the profile of significant pathways being influenced by drugs, which may hint drug functions. Potential therapeutic prescription can be found based on the similarity of pathway fingerprints between disease and prescription.
+The pathway fingerprint is a method to indicate the profile of significant pathways being influenced by drugs, which may hint drug functions. Potential therapeutic prescription can be found based on the similarity of pathway fingerprints between disease and prescription.
 
 
-```{r}
+```{r, message = FALSE}
 library(immcp)
 ```
 `drugSample` is a demo dataset, which contains three data frame:
-+ 
++ herb_target: The names and tagets of herbal prescription.
++ disease_network: Disease network of convalescent stage for COVID-19.
++ disease_biomarker: Disease biomarkers of convalescent stage for COVID-19.
 
 ```{r}
 data("drugSample")
 str(drugSample)
 ```
+`extrFP()` can calculate the pathway fingerprints. The genesets contain `ImmGenTop150` and `KEGG`.
++ `geneset = "ImmGenTop150"`: The top 150(most overexpressed) and the bottom 150(most down-regulated) genes from ImmGen.
++ `geneset = "KEGG"`: KEGG pathawy(except "Human Diseases" and "Drug Development")
 
+```{r}
+# calculate the KEGG pathway fingerprints
+# or
+# calculate the ImmGenTop150 pathway fingerprints
+FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+              drug_target = drugSample$herb_target,
+              geneset = "ImmGenTop150")
+```
 
+`score_fp()` can calculate the Tanimoto coefficient of pathway fingerprint between disease and prescription as score. The score is adjusted by permutation test. The results contain:
++ score: Unadjusted score
++ adj_score: Adjusted score
++ p_value: p-value of permutation test 
 
+```{r}
+res <- score_fp(FP, n = 100)
+res1 <- get_result(res, pvalueCutoff = 0.05)
+head(res1)
+```
+
+We can look at our distribution using `plot_density()`.
+
+```{r}
+plot_density(res, "BAN_XIA_XIE_XIN_TANG")
+```

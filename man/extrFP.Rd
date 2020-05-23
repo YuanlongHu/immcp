@@ -7,7 +7,7 @@
 extrFP(disease_biomarker, drug_target, geneset = "ImmGenTop150")
 }
 \arguments{
-\item{disease_biomarker}{A character.}
+\item{disease_biomarker}{A character of disease biomarkers.}
 
 \item{drug_target}{A data frame or list of drug target.}
 
@@ -17,7 +17,19 @@ extrFP(disease_biomarker, drug_target, geneset = "ImmGenTop150")
 ScoreFP object
 }
 \description{
-Calculate the Drug Fingerprints
+Calculate the pathway fingerprints
+}
+\examples{
+\dontrun{
+  data("drugSample")
+  FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+               drug_target = drugSample$herb_target,
+               geneset = "ImmGenTop150")
+  # or
+  FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+               drug_target = drugSample$herb_target,
+               geneset = "KEGG")
+}
 }
 \author{
 Yuanlong Hu

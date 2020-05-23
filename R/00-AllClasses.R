@@ -4,8 +4,8 @@
 ##'
 ##' @name ScoreFP-class
 ##' @docType class
-##'
-##'
+##' @slot Fingerprint pathway fingerprint
+##' @slot FPType pathway fingerprint type
 ##' @exportClass ScoreFP
 ##' @author Yuanlong Hu
 
@@ -38,13 +38,14 @@ setClass("ScoreFP2",
 )
 
 ##' Class "ScoreResult"
-##' This class represents the score result.
+##'
+##' This class represents the result of score.
 ##'
 ##'
 ##' @name ScoreResult-class
 ##' @docType class
-##'
-##'
+##' @slot ScoreResult all score reslut.
+##' @slot adj distribution data
 ##' @exportClass ScoreResult
 ##' @author Yuanlong Hu
 

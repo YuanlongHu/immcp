@@ -4,7 +4,7 @@
 \alias{score_network}
 \title{score_network}
 \usage{
-score_network(Tar, DNet, n = 100)
+score_network(Tar, DNet, n = 100, two_tailed = TRUE)
 }
 \arguments{
 \item{Tar}{A list containing drug target and disease biomarker.}
@@ -12,6 +12,8 @@ score_network(Tar, DNet, n = 100)
 \item{DNet}{A data frame of disease network containing two columns.}
 
 \item{n}{The number of times random permutation sampling.}
+
+\item{two_tailed}{a logical: select a two-tailed p-value.}
 }
 \value{
 ScoreResultNet object

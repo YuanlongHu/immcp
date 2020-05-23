@@ -5,6 +5,7 @@
 #' @param Tar A list containing drug target and disease biomarker.
 #' @param DNet A data frame of disease network containing two columns.
 #' @param n The number of times random permutation sampling.
+#' @param two_tailed a logical: select a two-tailed p-value.
 #' @return ScoreResultNet object
 #' @importFrom pbapply pblapply
 #' @importFrom igraph graph.data.frame
@@ -23,7 +24,7 @@
 #'   res <- as.data.frame(res)
 #' }
 
-score_network <- function(Tar, DNet, n = 100){
+score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
 
   if(class(Tar) == "list") Tar
   if(class(Tar) == "data.frame") Tar <- to_list(Tar)
@@ -80,7 +81,12 @@ score_network <- function(Tar, DNet, n = 100){
   result <- pbapply::pblapply(net1, function(x){
     x2 <- x[-c(1:3)]
     z_score <- (x[3] - mean(x2))/sd(x2)
-    p_value <- (length(x2[x2 > x[3]])+1)/(n+1)
+    if(two_tailed){
+      p_value <- (length(x2[abs(x2) > abs(x[3])])+1)/(n+1)
+    }else{
+      p_value <- (length(x2[x2 > x[3]])+1)/(n+1)
+    }
+    p_value <- signif(p_value, 3)
     res <- c(x[1:3],z_score,p_value)
     names(res) <- c("ChangeDegree", "ChangeDistance", "TotalScore", "adj_TotalScore", "p_value")
     res

@@ -1,8 +1,8 @@
-#' Calculate the Drug Fingerprints
+#' Calculate the pathway fingerprints
 #'
 #'
 #' @title extrFP
-#' @param disease_biomarker A character.
+#' @param disease_biomarker A character of disease biomarkers.
 #' @param drug_target A data frame or list of drug target.
 #' @param geneset one of "ImmGenTop150" and "KEGG"
 #' @return ScoreFP object
@@ -10,6 +10,17 @@
 #' @importFrom clusterProfiler enricher
 #' @export
 #' @author Yuanlong Hu
+#' @examples
+#' \dontrun{
+#'   data("drugSample")
+#'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+#'                drug_target = drugSample$herb_target,
+#'                geneset = "ImmGenTop150")
+#'   # or
+#'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+#'                drug_target = drugSample$herb_target,
+#'                geneset = "KEGG")
+#' }
 
 
 extrFP <- function(disease_biomarker, drug_target, geneset = "ImmGenTop150"){
@@ -20,8 +31,8 @@ extrFP <- function(disease_biomarker, drug_target, geneset = "ImmGenTop150"){
 
   if(geneset == "KEGG"){
     geneset0 <- genesetlist$KEGGPATHID2EXTID
-    geneset0 <- geneset0[!geneset0 %in% genesetlist$KEGGPATHID2NAME_out,]
-
+    geneset0 <- geneset0[!geneset0$from %in% genesetlist$KEGGPATHID2NAME_out,]
+    geneset0 <- geneset0[,-1]
   }
 
   if(class(geneset) == "list"){

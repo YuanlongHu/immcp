@@ -1,4 +1,4 @@
-#' plot smoothed density estimates for adjusted score
+#' Plot smoothed density estimates for adjusted score
 #'
 #'
 #' @title plot_density

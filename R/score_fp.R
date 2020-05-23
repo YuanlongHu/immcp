@@ -4,7 +4,8 @@
 #' @title score_fp
 #' @param FP A ScoreFP.
 #' @param n The number of times random permutation sampling.
-#' @return ScoreResult object
+#' @param two_tailed a logical: select a two-tailed p-value
+#' @return ScoreResult
 #' @importFrom igraph graph.data.frame
 #' @importFrom igraph centr_degree
 #' @importFrom igraph mean_distance
@@ -24,7 +25,7 @@
 #' }
 
 
-score_fp <- function(FP, n = 100){
+score_fp <- function(FP, n = 100, two_tailed = TRUE){
 
   f <- FP@Fingerprint
   target <- FP@DrugTarget
@@ -55,7 +56,12 @@ score_fp <- function(FP, n = 100){
     res_r <- x[-1]
     score_T <- x[1]
     adj_score <- (score_T - mean(res_r))/sd(res_r)
-    p_value <- (length(res_r[res_r>score_T])+1)/(n+1)
+
+    if(two_tailed){
+      p_value <- (length(res_r[abs(res_r)>abs(score_T)])+1)/(n+1)
+    }else{
+      p_value <- (length(res_r[res_r>score_T])+1)/(n+1)
+      }
     p_value <- signif(p_value, 3)
     res_r <- c(score_T, adj_score, p_value)
     names(res_r) <- c("Score","adj_score", "p_value")
@@ -70,7 +76,6 @@ score_fp <- function(FP, n = 100){
     as.data.frame()
 
   result <- result[order(result$adj_score, decreasing = T),]
-  head(result)
 
   res_ScoreResultFP <- new("ScoreResultFP",
                            ScoreResult = as.data.frame(result),

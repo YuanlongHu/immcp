@@ -9,6 +9,14 @@ This class represents the pathway fingerprint.}
 Class "ScoreFP"
 This class represents the pathway fingerprint.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{Fingerprint}}{pathway fingerprint}
+
+\item{\code{FPType}}{pathway fingerprint type}
+}}
+
 \author{
 Yuanlong Hu
 }

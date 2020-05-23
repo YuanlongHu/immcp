@@ -3,12 +3,18 @@
 \docType{class}
 \name{ScoreResult-class}
 \alias{ScoreResult-class}
-\title{Class "ScoreResult"
-This class represents the score result.}
+\title{Class "ScoreResult"}
 \description{
-Class "ScoreResult"
-This class represents the score result.
+This class represents the result of score.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{ScoreResult}}{all score reslut.}
+
+\item{\code{adj}}{distribution data}
+}}
+
 \author{
 Yuanlong Hu
 }
