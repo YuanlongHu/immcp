@@ -1,7 +1,7 @@
 
 # immcp: Candidate prescriptions discovery based on pathway fingerprint
 
-
+[![](https://img.shields.io/badge/devel%20version-0.7.1-blue)](https://github.com/YuanlongHu/immcp)
 
 This package implements the method proposed by *Ye* for pathway fingerprint. Candidate herbal prescriptions can be discovered based on the pathway fingerprint similarity between disease and prescriptions.
 
