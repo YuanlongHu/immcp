@@ -1,5 +1,5 @@
 
-# immcp: Candidate prescriptions discovery based on pathway fingerprint
+# immcp: Candidate Prescriptions Discovery Based on Pathway Fingerprint
 
 [![](https://img.shields.io/badge/devel%20version-0.7.1-blue)](https://github.com/YuanlongHu/immcp)
 
