@@ -13,7 +13,16 @@ simFP(FP)
 a matrix
 }
 \description{
-Calculate the similarity between Drug Fingerprints
+Calculate the similarity between Drug pathway Fingerprints
+}
+\examples{
+\dontrun{
+  data("drugSample")
+  FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+               drug_target = drugSample$herb_target,
+               geneset = "ImmGenTop150")
+  sim_mat <- simFP(FP)
+}
 }
 \author{
 Yuanlong Hu

@@ -11,6 +11,7 @@
 #' @importFrom ggplot2 geom_density
 #' @importFrom ggplot2 geom_vline
 #' @importFrom ggplot2 theme_light
+#' @importFrom ggplot2 labs
 #' @export
 #' @author Yuanlong Hu
 #' @examples

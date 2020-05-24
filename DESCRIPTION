@@ -6,7 +6,7 @@ Authors@R:
            family = "Hu",
            role = c("aut", "cre"),
            email = "huyuanlong1996@163.com")
-Description: The package implements methods to find candidate herbal prescription based pathway fingerprints.
+Description: The package implements methods to find candidate herbal prescription based pathway fingerprints.Through the similarity of pathway fingerprints, the potential relationship between disease and prescription can be found.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -30,3 +30,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+BugReports: https://github.com/YuanlongHu/immcp/issues
