@@ -29,6 +29,7 @@ The pathway fingerprint (Ye, et.al,2012) is a method to indicate the profile of 
 library(immcp)
 ```
 `drugSample` is a demo dataset, which contains three data frame:
+
 * herb_target: The names and tagets of herbal prescription.
 * disease_network: Disease network of convalescent stage for COVID-19.
 * disease_biomarker: Disease biomarkers of convalescent stage for COVID-19.
@@ -38,6 +39,7 @@ data("drugSample")
 str(drugSample)
 ```
 `extrFP()` can calculate the pathway fingerprints. The genesets contain `ImmGenTop150` and `KEGG`.
+
 * `geneset = "ImmGenTop150"`: The top 150(most overexpressed) and the bottom 150(most down-regulated) genes from ImmGen.
 * `geneset = "KEGG"`: KEGG pathawy(except "Human Diseases" and "Drug Development")
 
@@ -51,6 +53,7 @@ FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
 ```
 
 `score_fp()` can calculate the Tanimoto coefficient of pathway fingerprint between disease and prescription as score. The score is adjusted by permutation test. The results contain:
+
 * score: Unadjusted score
 * adj_score: Adjusted score
 * p_value: p-value of permutation test 
