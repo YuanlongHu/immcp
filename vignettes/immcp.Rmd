@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 Traditional Chinese Medicine(TCM) has a history of more than 2000 years and has accumulated a great deal of clinical experience. The herbal prescription is one of the main treatment methods of traditional Chinese medicine. How to find a candidate prescription for a disease defined by modern medicine is an urgent problem to be solved.
 
-The pathway fingerprint (Ye, et.al, 2012) is a method to indicate the profile of significant pathways being influenced by drugs, which may hint drug functions. Potential therapeutic prescription can be found based on the similarity of pathway fingerprints between disease and prescription.
+The pathway fingerprint (Ye, et.al,2012) is a method to indicate the profile of significant pathways being influenced by drugs, which may hint drug functions. Potential therapeutic prescription can be found based on the similarity of pathway fingerprints between disease and prescription.
 
 
 ```{r, message = FALSE}
