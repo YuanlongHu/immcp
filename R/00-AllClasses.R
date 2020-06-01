@@ -21,7 +21,7 @@ setClass("ScoreFP",
 setClass("ScoreFP1",
          contains = "ScoreFP",
          slots = list(
-           DiseaseBiomarker = "character",
+           DiseaseBiomarker = "vector",
            DrugTarget = "list"
          )
 )

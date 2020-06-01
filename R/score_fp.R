@@ -3,7 +3,7 @@
 #'
 #' @title score_fp
 #' @param FP A ScoreFP.
-#' @param n The number of times random permutation sampling.
+#' @param n The number of permutations.
 #' @param two_tailed a logical: select a two-tailed p-value
 #' @return ScoreResult
 #' @importFrom igraph graph.data.frame

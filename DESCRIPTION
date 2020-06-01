@@ -1,6 +1,6 @@
 Package: immcp
 Title: Candidate Prescriptions Discovery Based on Pathway Fingerprint
-Version: 0.7.3
+Version: 0.8.0
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
