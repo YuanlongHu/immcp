@@ -17,10 +17,7 @@
 #' @examples
 #'
 #'   data("drugSample")
-#'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-#'                drug_target = drugSample$herb_target,
-#'                geneset = "ImmGenTop150")
-#'   res <- score_fp(FP, n=100)
+#'   res <- score_fp(drugSample$demoFP, n=100)
 #'   res <- get_result(res)
 
 

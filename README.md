@@ -1,7 +1,7 @@
 
 # immcp: Candidate Prescriptions Discovery Based on Pathway Fingerprint
 
-[![](https://img.shields.io/badge/devel%20version-0.8.1-blue)](https://github.com/YuanlongHu/immcp)
+[![](https://img.shields.io/badge/devel%20version-0.8.2-blue)](https://github.com/YuanlongHu/immcp)
 [![](https://img.shields.io/github/license/YuanlongHu/immcp)](https://github.com/YuanlongHu/immcp/blob/master/LICENSE.md)
 [![](https://travis-ci.com/YuanlongHu/immcp.svg?branch=master)](https://travis-ci.com/github/YuanlongHu/immcp)
 
