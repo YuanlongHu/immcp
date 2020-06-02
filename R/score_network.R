@@ -16,13 +16,10 @@
 #' @export
 #' @author Yuanlong Hu
 #' @examples
-#' \dontrun{
+#'
 #'   data("drugSample")
-#'   Tar <- drugSample$herb_target
-#'   disease_network <- drugSample$disease_network
-#'   res <- score_network(Tar, DNet)
-#'   res <- as.data.frame(res)
-#' }
+#'   res <- score_network(Tar = drugSample$herb_target, DNet = drugSample$disease_network)
+#'   res <- get_result(res)
 
 score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
 
@@ -66,7 +63,7 @@ score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
   }
 
 
-  cat("Scoring \n")
+  message("Calculating score... \n")
   net1 <- pbapply::pblapply(Tar, function(x){
 
     score <- score_network_s(DNet = DNet, target = x, method = "all")
@@ -77,7 +74,7 @@ score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
     res
   })
 
-  cat("Summarizing \n")
+  message("Summarizing all results... \n")
   result <- pbapply::pblapply(net1, function(x){
     x2 <- x[-c(1:3)]
     z_score <- (x[3] - mean(x2))/sd(x2)
@@ -97,6 +94,8 @@ score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
     as.data.frame()
   result <- result[order(result$adj_TotalScore, decreasing = T),]
   adj <- lapply(net1, function(x) x[-c(1:2)])
+
+  message("Done... \n")
   res_ScoreResult <- new("ScoreResultNet",
                          ScoreResult = as.data.frame(result),
                          DiseaseNetwork = DNet,

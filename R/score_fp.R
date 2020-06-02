@@ -15,14 +15,13 @@
 #' @export
 #' @author Yuanlong Hu
 #' @examples
-#' \dontrun{
+#'
 #'   data("drugSample")
 #'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
 #'                drug_target = drugSample$herb_target,
 #'                geneset = "ImmGenTop150")
 #'   res <- score_fp(FP, n=100)
-#'   res <- as.data.frame(res)
-#' }
+#'   res <- get_result(res)
 
 
 score_fp <- function(FP, n = 100, two_tailed = TRUE){
@@ -42,7 +41,7 @@ score_fp <- function(FP, n = 100, two_tailed = TRUE){
   }
 
 
-  cat("Scoring and Resampling(1/2) \n")
+  message("Calculating score... \n")
   adj_list <- pbapply::pblapply(f[-1], function(x){
     score_T <- Tanimoto_f(disease = f$disease, drug = x)
     set.seed(123)
@@ -51,7 +50,7 @@ score_fp <- function(FP, n = 100, two_tailed = TRUE){
     res_r
   })
 
-  cat("Summarizing(2/2) \n")
+  message("Summarizing all results... \n")
   result <- pbapply::pblapply(adj_list, function(x){
     res_r <- x[-1]
     score_T <- x[1]
@@ -68,15 +67,13 @@ score_fp <- function(FP, n = 100, two_tailed = TRUE){
     res_r
   })
 
-  cat("Done \n")
-
-
   result <- as.data.frame(result) %>%
     t() %>%
     as.data.frame()
 
   result <- result[order(result$adj_score, decreasing = T),]
 
+  message("Done... \n")
   res_ScoreResultFP <- new("ScoreResultFP",
                            ScoreResult = as.data.frame(result),
                            Fingerprint = FP,

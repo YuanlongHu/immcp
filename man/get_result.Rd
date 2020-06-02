@@ -18,14 +18,13 @@ a data.frame
 Extract a table of the score result
 }
 \examples{
-\dontrun{
+
   data("drugSample")
   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
                drug_target = drugSample$herb_target,
                geneset = "ImmGenTop150")
   res <- score_fp(FP, n=100)
   res <- get_result(res)
-}
 }
 \author{
 Yuanlong Hu

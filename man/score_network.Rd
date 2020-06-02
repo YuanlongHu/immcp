@@ -22,13 +22,10 @@ ScoreResultNet object
 Calculate the network score
 }
 \examples{
-\dontrun{
+
   data("drugSample")
-  Tar <- drugSample$herb_target
-  disease_network <- drugSample$disease_network
-  res <- score_network(Tar, DNet)
-  res <- as.data.frame(res)
-}
+  res <- score_network(Tar = drugSample$herb_target, DNet = drugSample$disease_network)
+  res <- get_result(res)
 }
 \author{
 Yuanlong Hu

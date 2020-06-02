@@ -28,11 +28,12 @@ The pathway fingerprint (Ye, et.al,2012) is a method to indicate the profile of 
 ```{r, message = FALSE}
 library(immcp)
 ```
-`drugSample` is a demo dataset, which contains three data frame:
+`drugSample` is a demo dataset, which contains two data frame and two vector:
 
 * herb_target: The names and tagets of herbal prescription.
-* disease_network: Disease network of convalescent stage for COVID-19.
-* disease_biomarker: Disease biomarkers of convalescent stage for COVID-19.
+* disease_network: Disease network.
+* disease_biomarker: Disease biomarkers.
+* disease_biomarker_gsea: Disease biomarkers containing logFC values.
 
 ```{r}
 data("drugSample")
@@ -43,13 +44,34 @@ str(drugSample)
 * `geneset = "ImmGenTop150"`: The top 150(most overexpressed) and the bottom 150(most down-regulated) genes from ImmGen.
 * `geneset = "KEGG"`: KEGG pathawy(except "Human Diseases" and "Drug Development")
 
+If the `disease_biomarker` is a a vector of gene symbol, you can use `method = "enrich"`, such as `disease_biomarker`.
+If the `disease_biomarker` is a a vector of logFC values named by gene symbol, you can use `method = "enrich"`, such as `disease_biomarker_gsea`.
+
 ```{r}
-# calculate the KEGG pathway fingerprints
-# or
-# calculate the ImmGenTop150 pathway fingerprints
+# "gsea" method---------------------------------------------------------------------
+
+FP <- extrFP(disease_biomarker = drugSample$disease_biomarker_gsea,
+             drug_target = drugSample$herb_target,
+             method = "gsea",
+             geneset = "KEGG")
+
+FP <- extrFP(disease_biomarker = drugSample$disease_biomarker_gsea,
+             drug_target = drugSample$herb_target,
+             method = "gsea",
+             geneset = "ImmGenTop150")
+
+
+# "enrich" method---------------------------------------------------------------------
 FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-              drug_target = drugSample$herb_target,
-              geneset = "ImmGenTop150")
+             drug_target = drugSample$herb_target,
+             method = "enrich",
+             geneset = "KEGG")
+
+FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
+             drug_target = drugSample$herb_target,
+             method = "enrich",
+             geneset = "ImmGenTop150")
+
 ```
 
 `score_fp()` can calculate the Tanimoto coefficient of pathway fingerprint between disease and prescription as score. The score is adjusted by permutation test. The results contain:
