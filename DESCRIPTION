@@ -29,7 +29,6 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown
-Remotes: bioc::release/clusterProfiler, bioc::release/GSEABase
 VignetteBuilder: knitr
 BugReports: https://github.com/YuanlongHu/immcp/issues
 URL: https://github.com/YuanlongHu/immcp
