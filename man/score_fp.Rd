@@ -22,8 +22,7 @@ Calculate the pathway fingerprint.similarity between disease and prescription.
 \examples{
 
   data("drugSample")
-  res <- score_fp(drugSample$demoFP, n=100)
-  res <- get_result(res)
+  res <- score_fp(drugResult$demoFP, n=100)
 }
 \author{
 Yuanlong Hu

@@ -3,7 +3,7 @@
 \docType{data}
 \name{drugSample}
 \alias{drugSample}
-\title{Datasets}
+\title{A demo dataset contains a sample of herbal prescription.}
 \description{
 A demo dataset contains a sample of herbal prescription.
 }

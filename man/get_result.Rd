@@ -19,11 +19,8 @@ Extract a table of the score result
 }
 \examples{
 
-  data("drugSample")
-  FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-               drug_target = drugSample$herb_target,
-               geneset = "ImmGenTop150")
-  res <- score_fp(FP, n=100)
+  data("drugResult")
+  res <- drugResult$demoScoreFP
   res <- get_result(res)
 }
 \author{

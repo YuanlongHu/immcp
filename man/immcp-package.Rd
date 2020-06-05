@@ -3,8 +3,10 @@
 \docType{package}
 \name{immcp-package}
 \alias{immcp-package}
-\title{screen and analysis and candidate prescription related to disease}
+\title{Candidate Prescriptions Discovery Based on Pathway Fingerprint}
 \description{
-The package implements methods to analyze and screen candidate prescription
-related to disease based pathway fingerprints.
+The pathway fingerprint is a method to indicate the profile of significant pathways
+being influenced by drugs, which may hint drug functions. Through the similarity of
+pathway fingerprints, the potential relationship between disease and prescription
+can be found. Ye (2012) <doi: 10.1007/s13238-012-2011-z>.
 }
