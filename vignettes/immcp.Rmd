@@ -48,25 +48,6 @@ If the `disease_biomarker` is a a vector of gene symbol, you can use `method = "
 If the `disease_biomarker` is a a vector of logFC values named by gene symbol, you can use `method = "enrich"`, such as `disease_biomarker_gsea`.
 
 ```{r}
-# "gsea" method---------------------------------------------------------------------
-
-FP <- extrFP(disease_biomarker = drugSample$disease_biomarker_gsea,
-             drug_target = drugSample$herb_target,
-             method = "gsea",
-             geneset = "KEGG")
-
-FP <- extrFP(disease_biomarker = drugSample$disease_biomarker_gsea,
-             drug_target = drugSample$herb_target,
-             method = "gsea",
-             geneset = "ImmGenTop150")
-
-
-# "enrich" method---------------------------------------------------------------------
-FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-             drug_target = drugSample$herb_target,
-             method = "enrich",
-             geneset = "KEGG")
-
 FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
              drug_target = drugSample$herb_target,
              method = "enrich",
