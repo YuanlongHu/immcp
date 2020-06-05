@@ -7,3 +7,8 @@ cache: packages
 bioc_packages:
      - GSEABase
      - clusterProfiler
+
+os:
+- linux
+- osx
+- windows
