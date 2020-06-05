@@ -11,11 +11,8 @@
 #' @author Yuanlong Hu
 #' @examples
 #'
-#'   data("drugSample")
-#'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-#'                drug_target = drugSample$herb_target,
-#'                geneset = "ImmGenTop150")
-#'   sim_mat <- simFP(FP)
+#'   data("drugResult")
+#'   sim_mat <- simFP(drugResult$demoFP)
 
 
 simFP <- function(FP){

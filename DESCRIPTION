@@ -1,6 +1,6 @@
 Package: immcp
 Title: Candidate Prescriptions Discovery Based on Pathway Fingerprint
-Version: 0.8.2
+Version: 0.8.3
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
@@ -29,6 +29,7 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown
+Remotes: bioc::release/clusterProfiler, bioc::release/GSEABase
 VignetteBuilder: knitr
 BugReports: https://github.com/YuanlongHu/immcp/issues
 URL: https://github.com/YuanlongHu/immcp

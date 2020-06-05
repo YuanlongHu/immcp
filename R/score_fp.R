@@ -17,8 +17,7 @@
 #' @examples
 #'
 #'   data("drugSample")
-#'   res <- score_fp(drugSample$demoFP, n=100)
-#'   res <- get_result(res)
+#'   res <- score_fp(drugResult$demoFP, n=100)
 
 
 score_fp <- function(FP, n = 100, two_tailed = TRUE){
