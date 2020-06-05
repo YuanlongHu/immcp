@@ -12,22 +12,17 @@ NULL
 
 
 
-#' Datasets
-#'
 #' A demo dataset contains a sample of herbal prescription.
 #'
 #' @name drugSample
-#' @aliases drugSample
 #' @docType data
 #' @keywords datasets
 NULL
 
 
-#' Datasets
-#'
 #' A demo dataset contains all result.
 #'
-#' @name drugSample
+#' @name drugResult
 #' @aliases drugResult
 #' @docType data
 #' @keywords datasets
