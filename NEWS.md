@@ -1,0 +1,5 @@
+CHANGES IN VERSION 0.8.4
+------------------------
+
+* Add as.data.frame, head, tail methods for ScoreResult. <2020-06-10, Wed>
+* Add CRAN version.
