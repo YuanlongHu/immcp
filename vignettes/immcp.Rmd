@@ -45,7 +45,7 @@ str(drugSample)
 * `geneset = "KEGG"`: KEGG pathawy(except "Human Diseases" and "Drug Development")
 
 If the `disease_biomarker` is a a vector of gene symbol, you can use `method = "enrich"`, such as `disease_biomarker`.
-If the `disease_biomarker` is a a vector of logFC values named by gene symbol, you can use `method = "enrich"`, such as `disease_biomarker_gsea`.
+If the `disease_biomarker` is a a vector of logFC values named by gene symbol, you can use `method = "gsea"`, such as `disease_biomarker_gsea`.
 
 ```{r}
 FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
