@@ -16,3 +16,6 @@
 \description{
 Return the last Parts of a ScoreResult Object
 }
+\author{
+Yuanlong Hu
+}

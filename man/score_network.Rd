@@ -7,7 +7,7 @@
 score_network(Tar, DNet, n = 100, two_tailed = TRUE)
 }
 \arguments{
-\item{Tar}{A list containing drug target and disease biomarker.}
+\item{Tar}{A list containing drug target.}
 
 \item{DNet}{A data frame of disease network containing two columns.}
 

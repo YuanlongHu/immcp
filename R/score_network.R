@@ -2,7 +2,7 @@
 #'
 #'
 #' @title score_network
-#' @param Tar A list containing drug target and disease biomarker.
+#' @param Tar A list containing drug target.
 #' @param DNet A data frame of disease network containing two columns.
 #' @param n The number of times random permutation sampling.
 #' @param two_tailed a logical: select a two-tailed p-value.
@@ -67,25 +67,29 @@ score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
   net1 <- pbapply::pblapply(Tar, function(x){
 
     score <- score_network_s(DNet = DNet, target = x, method = "all")
+    marker <- intersect(x,unique(c(DNet[,1], DNet[,2])))
+    marker <- paste0(marker, collapse=", ")
     set.seed(1234)
     adj_total <- replicate(n, score_network_s(DNet = data.frame(node1 = sample(DNet[,1]), node2 = sample(DNet[,2]), stringsAsFactors = F), target = x, method = "total"))
-    res <- c(score, adj_total)
+    res <- c(marker, score, adj_total)
 
     res
   })
 
   message("Summarizing all results... \n")
   result <- pbapply::pblapply(net1, function(x){
-    x2 <- x[-c(1:3)]
-    z_score <- (x[3] - mean(x2))/sd(x2)
+    x1 <- as.numeric(x[4])
+    x2 <- as.numeric(x[-c(1:4)])
+
+    z_score <- (x1 - mean(x2))/sd(x2)
     if(two_tailed){
-      p_value <- (length(x2[abs(x2) > abs(x[3])])+1)/(n+1)
+      p_value <- (length(x2[abs(x2) > abs(x1)])+1)/(n+1)
     }else{
-      p_value <- (length(x2[x2 > x[3]])+1)/(n+1)
+      p_value <- (length(x2[x2 > x1])+1)/(n+1)
     }
     p_value <- signif(p_value, 3)
-    res <- c(x[1:3],z_score,p_value)
-    names(res) <- c("ChangeDegree", "ChangeDistance", "TotalScore", "adj_TotalScore", "p_value")
+    res <- c(as.numeric(x[2:4]), z_score, p_value, x[1])
+    names(res) <- c("ChangeDegree", "ChangeDistance", "TotalScore", "adj_TotalScore", "p_value", "Target")
     res
   })
 

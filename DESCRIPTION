@@ -1,6 +1,6 @@
 Package: immcp
 Title: Candidate Prescriptions Discovery Based on Pathway Fingerprint
-Version: 0.8.4
+Version: 0.9.0
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
@@ -26,7 +26,11 @@ Imports:
     clusterProfiler,
     GSEABase,
     methods,
-    ggplot2
+    ggplot2,
+    visNetwork,
+    RobustRankAggreg,
+    reshape2,
+    corrr
 Suggests: 
     knitr,
     rmarkdown

@@ -6,6 +6,7 @@
 ##' @docType class
 ##' @slot Fingerprint pathway fingerprint
 ##' @slot FPType pathway fingerprint type
+##' @slot Geneset Geneset name
 ##' @exportClass ScoreFP
 ##' @author Yuanlong Hu
 
@@ -13,7 +14,8 @@
 setClass("ScoreFP",
          slots = list(
            Fingerprint = "list",
-           FPType = "character"
+           FPType = "character",
+           Geneset = "character"
          ))
 
 
@@ -82,7 +84,7 @@ setClass("ScoreResultNet",
 #' @param optional logical. If TRUE, setting row names and converting column names (to syntactic names: see make.names) is optional. Note that all of R's base package as.data.frame() methods use optional only for column names treatment, basically with the meaning of data.frame(*, check.names = !optional). See also the make.names argument of the matrix method.
 #' @param ... other arguments
 #' @export
-#' @rdname as-ScoreResult-methods
+#' @author Yuanlong Hu
 
 
 
@@ -101,7 +103,7 @@ setMethod("as.data.frame", "ScoreResult",
 #' @param x A ScoreResult object
 #' @param ... other arguments
 #' @export
-#' @rdname head-ScoreResult-methods
+#' @author Yuanlong Hu
 
 setMethod("head", "ScoreResult",
           function(x, ...){
@@ -117,7 +119,7 @@ setMethod("head", "ScoreResult",
 #' @param x A ScoreResult object
 #' @param ... other arguments
 #' @export
-#' @rdname tail-ScoreResult-methods
+#' @author Yuanlong Hu
 
 setMethod("tail", "ScoreResult",
           function(x, ...){

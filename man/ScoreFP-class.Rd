@@ -15,6 +15,8 @@ This class represents the pathway fingerprint.
 \item{\code{Fingerprint}}{pathway fingerprint}
 
 \item{\code{FPType}}{pathway fingerprint type}
+
+\item{\code{Geneset}}{Geneset name}
 }}
 
 \author{

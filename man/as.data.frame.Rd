@@ -20,3 +20,6 @@
 \description{
 Coerce a ScoreResult object into a data frame
 }
+\author{
+Yuanlong Hu
+}

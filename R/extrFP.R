@@ -87,11 +87,14 @@ extrFP <- function(disease_biomarker, drug_target, method = "enrich", geneset = 
   f <- c(f_disease, f)
 
   message("Done...")
+
+  ifelse(class(geneset)=="character",geneset, "CusDef")
   res_ScoreFP1 <- new("ScoreFP1",
                       Fingerprint = f,
                       DiseaseBiomarker = disease_biomarker,
                       DrugTarget = drug_target,
-                      FPType = "enrich"
+                      FPType = "enrich",
+                      Geneset = geneset
                         )
   return(res_ScoreFP1)
 }

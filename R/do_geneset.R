@@ -5,6 +5,7 @@
 #' @param dataframe a data frame of 2 column with term/drug and gene
 #' @return list
 #' @author Yuanlong Hu
+#' @noRd
 
 
 to_list <- function(dataframe){
@@ -28,6 +29,7 @@ to_list <- function(dataframe){
 #' @param list a list containing gene sets
 #' @return data frame
 #' @author Yuanlong Hu
+#' @noRd
 
 
 
