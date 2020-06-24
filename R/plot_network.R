@@ -147,6 +147,7 @@ overlap_pathway <- function(FP, Drug){
   res <- Reduce(intersect,FP_d)
   if (FP@Geneset == "KEGG") {
     res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% res,]
+    colnames(res) <- c("ID", "Description")
   }
   return(res)
 }
