@@ -36,7 +36,7 @@ plot_network <- function(ResNet, Drug, visIgraphLayout="none"){
 
 }
 
-#' Drug-KEGG Patyway network visualization
+#' Drug-KEGG Pathyway network visualization
 #'
 #'
 #' @title plot_KEGG_network
@@ -124,3 +124,30 @@ overlap_count <- function(list){
 
  return(b)
 }
+
+
+
+##' Performs set intersection on pathyways fingerprints
+##'
+##' @title overlap_pathway
+##' @param FP A ScoreFP Object
+##' @param Drug The drug names
+##' @return a vector or data frame
+##' @export
+##' @author Yuanlong Hu
+
+overlap_pathway <- function(FP, Drug){
+  Drug <- c("disease", Drug)
+  FP_d <- FP@Fingerprint[Drug]
+  FP_d <- lapply(FP_d, function(x){
+    a <- names(x)[x==1]
+    return(a)
+  })
+
+  res <- Reduce(intersect,FP_d)
+  if (FP@Geneset == "KEGG") {
+    res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% res,]
+  }
+  return(res)
+}
+

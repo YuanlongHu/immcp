@@ -17,7 +17,7 @@ plot_KEGG_network(FP, Drug, layout = "layout_in_circle")
 visNetwork
 }
 \description{
-Drug-KEGG Patyway network visualization
+Drug-KEGG Pathyway network visualization
 }
 \author{
 Yuanlong Hu

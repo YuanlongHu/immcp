@@ -21,7 +21,7 @@
 #'                geneset = "ImmGenTop150")
 
 
-extrFP <- function(disease_biomarker, drug_target, method = "enrich", geneset = "ImmGenTop150"){
+extrFP <- function(disease_biomarker, drug_target, method = "enrich", geneset = "KEGG"){
 
   if (geneset == "ImmGenTop150"){
     geneset0 <- genesetlist$ImmGenTop150
