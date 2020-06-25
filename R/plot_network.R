@@ -3,7 +3,7 @@
 
 setMethod("plot_network", signature(x = "ScoreResultNet"),
           function(x, Drug,
-                   layout = "none", ...) {
+                   layout = "layout_nicely", ...) {
             plot_network.ScoreResultNet(x, Drug,
                                         layout = "layout_nicely", ...)
           })
@@ -14,7 +14,7 @@ setMethod("plot_network", signature(x = "ScoreResultNet"),
 
 setMethod("plot_network", signature(x = "ScoreFP"),
           function(x, Drug,
-                   layout = "none", ...) {
+                   layout = "layout_nicely", ...) {
             plot_network.ScoreFP(x, Drug,
                                         layout = "layout_nicely", ...)
           })
@@ -23,7 +23,6 @@ setMethod("plot_network", signature(x = "ScoreFP"),
 #' @rdname plot_network
 #' @param node one of "target" or "all"
 #' @param node_color The node color
-#' @return visNetwork object
 #' @importFrom visNetwork visNetwork
 #' @importFrom visNetwork visOptions
 #' @importFrom visNetwork visIgraphLayout
@@ -31,8 +30,9 @@ setMethod("plot_network", signature(x = "ScoreFP"),
 
 
 
-plot_network.ScoreResultNet <- function(x, Drug,
-                                        layout="none",
+plot_network.ScoreResultNet <- function(x,
+                                        Drug,
+                                        layout = "layout_nicely",
                                         node = "target",
                                         node_color = c("red", "blue")){
 
@@ -70,16 +70,16 @@ plot_network.ScoreResultNet <- function(x, Drug,
 }
 
 #' @rdname plot_network
-#' @return visNetwork object
 #' @importFrom visNetwork visNetwork
 #' @importFrom visNetwork visOptions
 #' @importFrom corrr shave
 #' @importFrom corrr as_cordf
 #' @importFrom corrr stretch
-#' @author Yuanlong Hu
 
 
-plot_network.ScoreFP <- function(x, Drug, layout){
+plot_network.ScoreFP <- function(x,
+                                 Drug,
+                                 layout = "layout_nicely"){
 
   FP1 <- as.data.frame(x@Fingerprint)
 
@@ -111,14 +111,18 @@ plot_network.ScoreFP <- function(x, Drug, layout){
   mat_overlap <- mat_overlap[mat_overlap$width != 0,]
   mat_overlap <- as.data.frame(mat_overlap)
 
-
   nodes <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(mat_overlap$from, mat_overlap$to)),]
 
   colnames(nodes) <- c("id", "label")
 
 
   message(
-    paste(nodes$label, collapse = ", ")
+    paste("------ Summary ------ \n",
+          "Pathway: \n",
+          paste(nodes$label, collapse = ", "),
+          "\n",
+          "Patyway Number: \n",
+          length(nodes$label))
   )
 
   if (layout == "none"){
