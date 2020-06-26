@@ -47,6 +47,7 @@ plot_network.ScoreResultNet <- function(x,
     nodes_df$color <- rep(node_color[2], nrow(nodes_df))
     nodes_df <- nodes_df[nodes_df$id %in% overlap,]
     TarNet <- TarNet[TarNet[,1] %in% overlap & TarNet[,2] %in% overlap,]
+
   }
 
   if (node == "all"){

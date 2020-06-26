@@ -10,19 +10,19 @@
 \usage{
 plot_network(x, Drug, layout = "layout_nicely", ...)
 
-\S4method{plot_network}{ScoreResultNet}(x, Drug, layout = "none", ...)
+\S4method{plot_network}{ScoreResultNet}(x, Drug, layout = "layout_nicely", ...)
 
-\S4method{plot_network}{ScoreFP}(x, Drug, layout = "none", ...)
+\S4method{plot_network}{ScoreFP}(x, Drug, layout = "layout_nicely", ...)
 
 plot_network.ScoreResultNet(
   x,
   Drug,
-  layout = "none",
+  layout = "layout_nicely",
   node = "target",
   node_color = c("red", "blue")
 )
 
-plot_network.ScoreFP(x, Drug, layout)
+plot_network.ScoreFP(x, Drug, layout = "layout_nicely")
 }
 \arguments{
 \item{x}{enrichment result}
@@ -39,16 +39,10 @@ plot_network.ScoreFP(x, Drug, layout)
 }
 \value{
 visNetwork object
-
-visNetwork object
-
-visNetwork object
 }
 \description{
 Drug target or pathway network visualization
 }
 \author{
-Yuanlong Hu
-
 Yuanlong Hu
 }
