@@ -34,6 +34,7 @@ extrFP <- function(disease_biomarker, drug_target, method = "enrich", geneset = 
   }
 
   if (class(geneset) == "list"){
+    geneset0 <- NULL
     for(i in names(geneset)){
       geneset1 <- data.frame(feature = rep(i, length(geneset[i])), genesymbol = geneset[i])
       names(geneset1) <- c("feature", "genesymbol")
@@ -97,4 +98,93 @@ extrFP <- function(disease_biomarker, drug_target, method = "enrich", geneset = 
                       Geneset = geneset
                         )
   return(res_ScoreFP1)
+}
+
+
+##' @param data A list of order ranked geneList.
+##' @param search A vecter of order ranked geneList.
+##' @param geneset A data.frame of 2 column with term and gene
+##' @importFrom clusterProfiler GSEA
+##' @importFrom pbapply pblapply
+##' @return
+##' @noRd
+
+
+MoASim <- function(data, search=NULL, geneset){
+  if (is.null(search)) {
+    data
+  }else{
+    data <- c(list(search), data)
+  }
+  colnames(geneset) <- c("name","gene")
+  geneset_temp <- unique(geneset[,1])
+
+  geneset_temp <- data.frame(index=c(1:length(geneset_temp)), name=geneset_temp)
+  geneset <- merge(geneset, geneset_temp, by = "name")
+  TERM2GENE <- data.frame(term=geneset$index, gene=geneset$gene)
+  TERM2NAME <- data.frame(term=geneset$index, name=geneset$name)
+  extrNES <- function(genelist, TERM2GENE = TERM2GENE, TERM2NAME =TERM2NAME){
+    genelist <- sort(genelist,decreasing = TRUE)
+    res <- suppressMessages(GSEA(genelist,
+                                 exponent = 1,
+                                 minGSSize = 1, maxGSSize = Inf,
+                                 pvalueCutoff = 1, pAdjustMethod = "BH",
+                                 TERM2GENE = TERM2GENE,
+                                 TERM2NAME = TERM2NAME,
+                                 verbose = TRUE, seed = FALSE,
+                                 by = "fgsea"))
+    res <- res@result
+    res <- res[order(res$ID),]
+    #enrich_drug <- enrich_drug[enrich_drug$pvalue<0.05 & enrich_drug$qvalues<0.1,]
+    res2 <- res$NES
+    names(res2) <- res$ID
+    return(res2)
+  }
+  res_NES <- pblapply(data, function(x){
+    suppressWarnings(extrNES(x, TERM2GENE = TERM2GENE, TERM2NAME =TERM2NAME))
+  })
+
+  return(res_NES)
+}
+
+##' Select features related to phenotype using Boruta
+##'
+##'
+##' @title getF
+##' @param expr A matrix of expression values where rows correspond to genes and columns correspond to samples.
+##' @param pdata A character of phenotype.
+##' @param geneset A data frame of geneset containing two columns.
+##' @param withTentative If set to TRUE, Tentative attributes will be also returned.
+##' @return A character of features.
+##' @importFrom GSVA gsea
+##' @importFrom Boruta Boruta
+##' @noRd
+##' @author Yuanlong Hu
+
+getF <- function(expr, pdata, geneset, withTentative = TRUE){
+  expr <- as.matrix(expr)
+  if (class(geneset)=="list") geneset
+  if (class(geneset) == "data.frame") geneset <- to_list(geneset)
+
+  cat("Run ssgsea \n")
+  res1 <- gsva(expr = expr,
+               gset.idx.list = geneset,
+               method = "ssgsea",
+               abs.ranking = FALSE,
+               min.sz = 1,
+               max.sz = Inf,
+               mx.diff = TRUE,
+               ssgsea.norm = TRUE,
+               verbose = TRUE,
+  )
+
+  res2 <- t(res1)
+  res2 <- as.data.frame(res2)
+  res2$group <- pdata
+  res2$group <- factor(res2$group)
+
+  cat("Run Boruta \n")
+  res_B <- Boruta(group~.,data=res2,doTrace=0)
+  features <- getSelectedAttributes(res_B, withTentative = withTentative)
+  return(features)
 }
