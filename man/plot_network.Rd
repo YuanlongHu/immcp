@@ -8,26 +8,46 @@
 \alias{plot_network.ScoreFP}
 \title{plot_network}
 \usage{
-plot_network(x, Drug, layout = "layout_nicely", ...)
+plot_network(x, Drug, node_color, layout = "layout_nicely", ...)
 
-\S4method{plot_network}{ScoreResultNet}(x, Drug, layout = "layout_nicely", ...)
+\S4method{plot_network}{ScoreResultNet}(
+  x,
+  Drug,
+  node_color = c("red", "blue"),
+  layout = "layout_nicely",
+  ...
+)
 
-\S4method{plot_network}{ScoreFP}(x, Drug, layout = "layout_nicely", ...)
+\S4method{plot_network}{ScoreFP}(
+  x,
+  Drug,
+  node_color = c("red", "blue"),
+  layout = "layout_nicely",
+  ...
+)
 
 plot_network.ScoreResultNet(
   x,
   Drug,
+  node_color = c("red", "blue"),
   layout = "layout_nicely",
-  node = "target",
-  node_color = c("red", "blue")
+  node = "target"
 )
 
-plot_network.ScoreFP(x, Drug, layout = "layout_nicely")
+plot_network.ScoreFP(
+  x,
+  Drug,
+  node_color = c("blue", "red"),
+  layout = "layout_nicely",
+  highlight = NULL
+)
 }
 \arguments{
 \item{x}{enrichment result}
 
 \item{Drug}{number of enriched terms to display}
+
+\item{node_color}{The node color}
 
 \item{layout}{Character Name of network layout function to use. Default to "layout_nicely".}
 
@@ -35,7 +55,7 @@ plot_network.ScoreFP(x, Drug, layout = "layout_nicely")
 
 \item{node}{one of "target" or "all"}
 
-\item{node_color}{The node color}
+\item{highlight}{A character vector of gene.}
 }
 \value{
 visNetwork object

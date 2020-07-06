@@ -2,7 +2,7 @@
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultNet"),
-          function(x, Drug,
+          function(x, Drug, node_color = c("red", "blue"),
                    layout = "layout_nicely", ...) {
             plot_network.ScoreResultNet(x, Drug,
                                         layout = "layout_nicely", ...)
@@ -13,7 +13,7 @@ setMethod("plot_network", signature(x = "ScoreResultNet"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreFP"),
-          function(x, Drug,
+          function(x, Drug, node_color = c("red", "blue"),
                    layout = "layout_nicely", ...) {
             plot_network.ScoreFP(x, Drug,
                                         layout = "layout_nicely", ...)
@@ -32,9 +32,10 @@ setMethod("plot_network", signature(x = "ScoreFP"),
 
 plot_network.ScoreResultNet <- function(x,
                                         Drug,
+                                        node_color = c("red", "blue"),
                                         layout = "layout_nicely",
-                                        node = "target",
-                                        node_color = c("red", "blue")){
+                                        node = "target"
+                                        ){
 
   overlap <- intersect(c(x@DiseaseNetwork[,1], x@DiseaseNetwork[,2]), x@Tar[[Drug]])
 
@@ -71,6 +72,7 @@ plot_network.ScoreResultNet <- function(x,
 }
 
 #' @rdname plot_network
+#' @param highlight A character vector of gene.
 #' @importFrom visNetwork visNetwork
 #' @importFrom visNetwork visOptions
 #' @importFrom corrr shave
@@ -80,10 +82,14 @@ plot_network.ScoreResultNet <- function(x,
 
 plot_network.ScoreFP <- function(x,
                                  Drug,
-                                 layout = "layout_nicely"){
+                                 node_color = c("blue", "red"),
+                                 layout = "layout_nicely",
+                                 highlight = NULL
+                                 ){
 
   FP1 <- as.data.frame(x@Fingerprint)
 
+  # The intersection of disease and drug pathways
   pathway_overlap <- FP1[,c("disease", Drug)]
   pathway_overlap <- pathway_overlap[pathway_overlap[,1] == 1 & pathway_overlap[,2] == 1,]
   pathway_overlap <- rownames(pathway_overlap)
@@ -96,12 +102,12 @@ plot_network.ScoreFP <- function(x,
   }
   tar <- x@DrugTarget[[Drug]]
   geneset0 <- geneset0[geneset0$from %in% pathway_overlap,]
-  geneset0 <- geneset0[geneset0$SYMBOL %in% tar,]
+  geneset1 <- geneset0[geneset0$SYMBOL %in% tar,]
 
-  geneset0 <- to_list(geneset0)
+  geneset1 <- to_list(geneset1)
 
-  mat_overlap <- overlap_count(geneset0)
-
+  # Number of overlapping genes between pathways
+  mat_overlap <- overlap_count(geneset1)
   mat_overlap <- shave(as_cordf(mat_overlap)) %>%
     stretch() %>%
     as("data.frame")
@@ -115,14 +121,25 @@ plot_network.ScoreFP <- function(x,
   nodes <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(mat_overlap$from, mat_overlap$to)),]
 
   colnames(nodes) <- c("id", "label")
+  if(!is.null(highlight)){
 
+    highlight_pathway <- lapply(to_list(geneset0), function(x){
+    length(intersect(x, highlight))
+  })
+
+    highlight_pathway <- unlist(highlight_pathway)
+    highlight_pathway <- names(highlight_pathway[highlight_pathway>0])
+    nodes$color <- ifelse(nodes$id %in% highlight_pathway, node_color[2], node_color[1])
+  }else{
+    nodes$color <- rep(node_color[1], nrow(nodes))
+  }
 
   message(
     paste("------ Summary ------ \n",
           "Pathway: \n",
           paste(nodes$label, collapse = ", "),
           "\n",
-          "Patyway Number: \n",
+          "Patyway Num0ber: \n",
           length(nodes$label))
   )
 

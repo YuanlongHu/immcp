@@ -156,8 +156,9 @@ MoASim <- function(data, search=NULL, geneset){
 ##' @param geneset A data frame of geneset containing two columns.
 ##' @param withTentative If set to TRUE, Tentative attributes will be also returned.
 ##' @return A character of features.
-##' @importFrom GSVA gsea
+##' @importFrom GSVA gsva
 ##' @importFrom Boruta Boruta
+##' @importFrom Boruta getSelectedAttributes
 ##' @noRd
 ##' @author Yuanlong Hu
 
@@ -184,7 +185,7 @@ getF <- function(expr, pdata, geneset, withTentative = TRUE){
   res2$group <- factor(res2$group)
 
   cat("Run Boruta \n")
-  res_B <- Boruta(group~.,data=res2,doTrace=0)
+  res_B <- Boruta(group~.,data = res2,doTrace = 0)
   features <- getSelectedAttributes(res_B, withTentative = withTentative)
   return(features)
 }

@@ -30,7 +30,9 @@ Imports:
     visNetwork,
     RobustRankAggreg,
     reshape2,
-    corrr
+    corrr,
+    GSVA,
+    Boruta
 Suggests: 
     knitr,
     rmarkdown
