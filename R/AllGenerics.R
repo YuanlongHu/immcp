@@ -12,6 +12,6 @@
 ##' @export
 
 setGeneric("plot_network",
-           function(x, Drug, node_color, layout = "layout_nicely", ...)
+           function(x, Drug, node_color = c("red", "blue"), layout = "layout_nicely", ...)
              standardGeneric("plot_network")
 )

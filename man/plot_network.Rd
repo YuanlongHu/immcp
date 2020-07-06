@@ -8,7 +8,13 @@
 \alias{plot_network.ScoreFP}
 \title{plot_network}
 \usage{
-plot_network(x, Drug, node_color, layout = "layout_nicely", ...)
+plot_network(
+  x,
+  Drug,
+  node_color = c("red", "blue"),
+  layout = "layout_nicely",
+  ...
+)
 
 \S4method{plot_network}{ScoreResultNet}(
   x,

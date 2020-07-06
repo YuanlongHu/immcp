@@ -4,8 +4,7 @@
 setMethod("plot_network", signature(x = "ScoreResultNet"),
           function(x, Drug, node_color = c("red", "blue"),
                    layout = "layout_nicely", ...) {
-            plot_network.ScoreResultNet(x, Drug,
-                                        layout = "layout_nicely", ...)
+            plot_network.ScoreResultNet(x, Drug, node_color = node_color, layout = layout, ...)
           })
 
 
@@ -15,8 +14,7 @@ setMethod("plot_network", signature(x = "ScoreResultNet"),
 setMethod("plot_network", signature(x = "ScoreFP"),
           function(x, Drug, node_color = c("red", "blue"),
                    layout = "layout_nicely", ...) {
-            plot_network.ScoreFP(x, Drug,
-                                        layout = "layout_nicely", ...)
+            plot_network.ScoreFP(x, Drug, node_color = node_color, layout = layout, ...)
           })
 
 
@@ -131,15 +129,15 @@ plot_network.ScoreFP <- function(x,
     highlight_pathway <- names(highlight_pathway[highlight_pathway>0])
     nodes$color <- ifelse(nodes$id %in% highlight_pathway, node_color[2], node_color[1])
   }else{
-    nodes$color <- rep(node_color[1], nrow(nodes))
+    nodes$color <- rep(node_color[2], nrow(nodes))
   }
 
   message(
     paste("------ Summary ------ \n",
-          "Pathway: \n",
+          "> Pathway: \n",
           paste(nodes$label, collapse = ", "),
           "\n",
-          "Patyway Num0ber: \n",
+          "> Pathway Number: \n",
           length(nodes$label))
   )
 
