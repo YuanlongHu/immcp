@@ -2,9 +2,8 @@
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultNet"),
-          function(x, Drug, node_color = c("red", "blue"),
-                   layout = "layout_nicely", ...) {
-            plot_network.ScoreResultNet(x, Drug, node_color = node_color, layout = layout, ...)
+          function(x, Drug, node_color = c("orange", "lightblue"), layout = "layout_nicely", node_type = node_type) {
+            plot_network.ScoreResultNet(x, Drug, node_color = node_color, layout = layout, node_type = node_type)
           })
 
 
@@ -12,14 +11,13 @@ setMethod("plot_network", signature(x = "ScoreResultNet"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreFP"),
-          function(x, Drug, node_color = c("red", "blue"),
-                   layout = "layout_nicely", ...) {
-            plot_network.ScoreFP(x, Drug, node_color = node_color, layout = layout, ...)
+          function(x, Drug, node_color = c("orange", "lightblue"), layout = "layout_nicely", highlight = highlight, width = width) {
+            plot_network.ScoreFP(x, Drug, node_color = node_color, layout = layout, highlight = highlight, width = width)
           })
 
 
 #' @rdname plot_network
-#' @param node one of "target" or "all"
+#' @param node_type one of "target" or "all"
 #' @param node_color The node color
 #' @importFrom visNetwork visNetwork
 #' @importFrom visNetwork visOptions
@@ -30,9 +28,9 @@ setMethod("plot_network", signature(x = "ScoreFP"),
 
 plot_network.ScoreResultNet <- function(x,
                                         Drug,
-                                        node_color = c("red", "blue"),
+                                        node_color = c("orange", "lightblue"),
                                         layout = "layout_nicely",
-                                        node = "target"
+                                        node_type = "target"
                                         ){
 
   overlap <- intersect(c(x@DiseaseNetwork[,1], x@DiseaseNetwork[,2]), x@Tar[[Drug]])
@@ -42,14 +40,15 @@ plot_network.ScoreResultNet <- function(x,
   nodes_df <- data.frame(id = unique(c(TarNet[,1], TarNet[,2])),
                          label = unique(c(TarNet[,1], TarNet[,2]))
   )
-  if (node == "target"){
-    nodes_df$color <- rep(node_color[2], nrow(nodes_df))
+
+  if (node_type == "target"){
+    nodes_df$color <- node_color[2]
     nodes_df <- nodes_df[nodes_df$id %in% overlap,]
     TarNet <- TarNet[TarNet[,1] %in% overlap & TarNet[,2] %in% overlap,]
 
   }
 
-  if (node == "all"){
+  if (node_type == "all"){
     nodes_df$color <- ifelse(nodes_df$id %in% overlap, node_color[1], node_color[2])
   }
 
@@ -71,6 +70,7 @@ plot_network.ScoreResultNet <- function(x,
 
 #' @rdname plot_network
 #' @param highlight A character vector of gene.
+#' @param width A logical. The number of overlapping genes between the two pathways is used as the width of the edges.
 #' @importFrom visNetwork visNetwork
 #' @importFrom visNetwork visOptions
 #' @importFrom corrr shave
@@ -80,9 +80,10 @@ plot_network.ScoreResultNet <- function(x,
 
 plot_network.ScoreFP <- function(x,
                                  Drug,
-                                 node_color = c("blue", "red"),
+                                 node_color = c("orange", "lightblue"),
                                  layout = "layout_nicely",
-                                 highlight = NULL
+                                 highlight = NULL,
+                                 width = FALSE
                                  ){
 
   FP1 <- as.data.frame(x@Fingerprint)
@@ -129,23 +130,29 @@ plot_network.ScoreFP <- function(x,
     highlight_pathway <- names(highlight_pathway[highlight_pathway>0])
     nodes$color <- ifelse(nodes$id %in% highlight_pathway, node_color[2], node_color[1])
   }else{
-    nodes$color <- rep(node_color[2], nrow(nodes))
+    nodes$color <- node_color[2]
   }
 
   message(
     paste("------ Summary ------ \n",
-          "> Pathway: \n",
+          ">>> Pathway: \n",
           paste(nodes$label, collapse = ", "),
           "\n",
-          "> Pathway Number: \n",
+          ">>> Pathway Number: \n",
           length(nodes$label))
   )
 
-  if (layout == "none"){
-    visNetwork(nodes = nodes,edges = mat_overlap[,-3]) %>%
+  if (width) {
+    mat_overlap$width <- mat_overlap$width/5
+  }else{
+    mat_overlap <- mat_overlap[,-3]
+  }
+
+  if (layout == "none") {
+    visNetwork(nodes = nodes,edges = mat_overlap) %>%
       visOptions(highlightNearest = TRUE)
   }else{
-    visNetwork(nodes = nodes,edges = mat_overlap[,-3]) %>%
+    visNetwork(nodes = nodes,edges = mat_overlap) %>%
       visOptions(highlightNearest = TRUE) %>%
       visIgraphLayout(layout = layout)
   }

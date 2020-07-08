@@ -11,7 +11,7 @@
 plot_network(
   x,
   Drug,
-  node_color = c("red", "blue"),
+  node_color = c("orange", "lightblue"),
   layout = "layout_nicely",
   ...
 )
@@ -19,33 +19,35 @@ plot_network(
 \S4method{plot_network}{ScoreResultNet}(
   x,
   Drug,
-  node_color = c("red", "blue"),
+  node_color = c("orange", "lightblue"),
   layout = "layout_nicely",
-  ...
+  node_type = node_type
 )
 
 \S4method{plot_network}{ScoreFP}(
   x,
   Drug,
-  node_color = c("red", "blue"),
+  node_color = c("orange", "lightblue"),
   layout = "layout_nicely",
-  ...
+  highlight = highlight,
+  width = width
 )
 
 plot_network.ScoreResultNet(
   x,
   Drug,
-  node_color = c("red", "blue"),
+  node_color = c("orange", "lightblue"),
   layout = "layout_nicely",
-  node = "target"
+  node_type = "target"
 )
 
 plot_network.ScoreFP(
   x,
   Drug,
-  node_color = c("blue", "red"),
+  node_color = c("orange", "lightblue"),
   layout = "layout_nicely",
-  highlight = NULL
+  highlight = NULL,
+  width = FALSE
 )
 }
 \arguments{
@@ -59,9 +61,11 @@ plot_network.ScoreFP(
 
 \item{...}{additional parameters}
 
-\item{node}{one of "target" or "all"}
+\item{node_type}{one of "target" or "all"}
 
 \item{highlight}{A character vector of gene.}
+
+\item{width}{A logical. The number of overlapping genes between the two pathways is used as the width of the edges.}
 }
 \value{
 visNetwork object
