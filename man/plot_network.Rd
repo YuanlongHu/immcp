@@ -21,7 +21,7 @@ plot_network(
   Drug,
   node_color = c("orange", "lightblue"),
   layout = "layout_nicely",
-  node_type = node_type
+  node_type = "target"
 )
 
 \S4method{plot_network}{ScoreFP}(
@@ -29,8 +29,8 @@ plot_network(
   Drug,
   node_color = c("orange", "lightblue"),
   layout = "layout_nicely",
-  highlight = highlight,
-  width = width
+  highlight = NULL,
+  width = FALSE
 )
 
 plot_network.ScoreResultNet(

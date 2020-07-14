@@ -2,7 +2,7 @@
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultNet"),
-          function(x, Drug, node_color = c("orange", "lightblue"), layout = "layout_nicely", node_type = node_type) {
+          function(x, Drug, node_color = c("orange", "lightblue"), layout = "layout_nicely", node_type = "target") {
             plot_network.ScoreResultNet(x, Drug, node_color = node_color, layout = layout, node_type = node_type)
           })
 
@@ -11,7 +11,7 @@ setMethod("plot_network", signature(x = "ScoreResultNet"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreFP"),
-          function(x, Drug, node_color = c("orange", "lightblue"), layout = "layout_nicely", highlight = highlight, width = width) {
+          function(x, Drug, node_color = c("orange", "lightblue"), layout = "layout_nicely", highlight = NULL, width = FALSE) {
             plot_network.ScoreFP(x, Drug, node_color = node_color, layout = layout, highlight = highlight, width = width)
           })
 
