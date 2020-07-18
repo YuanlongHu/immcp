@@ -2,9 +2,9 @@
 #'
 #'
 #' @title score_fp
-#' @param FP A ScoreFP.
+#' @param FP a ScoreFP object
 #' @param n The number of permutations.
-#' @param two_tailed a logical: select a two-tailed p-value
+#' @param two_tailed whether returning a two-tailed p-value
 #' @return ScoreResult
 #' @importFrom igraph graph.data.frame
 #' @importFrom igraph centr_degree
@@ -29,7 +29,7 @@ score_fp <- function(FP, n = 100, two_tailed = TRUE){
   Tanimoto_f <- function(disease, drug){
     f <- rbind(disease, drug)
     res_f <- as.matrix(f) %>%
-      Matrix::Matrix() %>%
+      Matrix::Matrix(sparse = TRUE) %>%
       proxyC::simil(method = "jaccard") %>%
       as.matrix() %>%
       as.data.frame()

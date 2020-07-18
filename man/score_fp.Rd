@@ -7,11 +7,11 @@
 score_fp(FP, n = 100, two_tailed = TRUE)
 }
 \arguments{
-\item{FP}{A ScoreFP.}
+\item{FP}{a ScoreFP object}
 
 \item{n}{The number of permutations.}
 
-\item{two_tailed}{a logical: select a two-tailed p-value}
+\item{two_tailed}{whether returning a two-tailed p-value}
 }
 \value{
 ScoreResult

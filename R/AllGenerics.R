@@ -3,8 +3,8 @@
 ##'
 ##' @title plot_network
 ##' @rdname plot_network
-##' @param x enrichment result
-##' @param Drug number of enriched terms to display
+##' @param x ScoreFP or ScoreResultNet object
+##' @param Drug The name of drug.
 ##' @param node_color The node color.
 ##' @param layout Character Name of network layout function to use. Default to "layout_nicely".
 ##' @param ... additional parameters

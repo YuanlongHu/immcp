@@ -51,9 +51,9 @@ plot_network.ScoreFP(
 )
 }
 \arguments{
-\item{x}{enrichment result}
+\item{x}{ScoreFP or ScoreResultNet object}
 
-\item{Drug}{number of enriched terms to display}
+\item{Drug}{The name of drug.}
 
 \item{node_color}{The node color}
 

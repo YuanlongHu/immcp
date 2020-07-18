@@ -90,7 +90,7 @@ setClass("ScoreResultNet",
 
 setMethod("as.data.frame", "ScoreResult",
           function(x, row.names=NULL, optional=FALSE, ...){
-            data.frame(x@ScoreResult)
+            data.frame(x@ScoreResult, ...)
           })
 
 
