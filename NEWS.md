@@ -1,8 +1,13 @@
 CHANGES IN VERSION 0.9.1
 ------------------------
 
-* Update internal KEGG geneset
+* Add `CreateBasicData` function
 
+
+CHANGES IN VERSION 0.9.1
+------------------------
+
+* Update internal KEGG geneset
 
 
 CHANGES IN VERSION 0.9.0
