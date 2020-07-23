@@ -8,8 +8,6 @@
 #' @export
 #' @author Yuanlong Hu
 
-
-
 CreateBasicData <- function(drug_herb, herb_target){
 
   colnames(drug_herb) <- c("drug", "herb")
@@ -25,8 +23,15 @@ CreateBasicData <- function(drug_herb, herb_target){
   })
 
   v <- unlist(v)
-
   data <- data[v]
+
+  # not matching
+  w <- unique(drug_herb$herb)
+  w <- w[!w %in% unique(herb_target$herb)]
+  if (length(w)>0) {
+    w <- paste0(w, collapse = ", ")
+    warning(paste0("The following herb do not find the target information: \n", w))
+  }
 
   return(data)
 }
