@@ -153,31 +153,39 @@ MoASim <- function(data, search=NULL, geneset){
 ##' @title getF
 ##' @param expr A matrix of expression values where rows correspond to genes and columns correspond to samples.
 ##' @param pdata A character of phenotype.
+##' @param level one of the gene or pathway
 ##' @param geneset A data frame of geneset containing two columns.
 ##' @param withTentative If set to TRUE, Tentative attributes will be also returned.
 ##' @return A character of features.
 ##' @importFrom GSVA gsva
 ##' @importFrom Boruta Boruta
 ##' @importFrom Boruta getSelectedAttributes
-##' @noRd
+##' @export
 ##' @author Yuanlong Hu
 
-getF <- function(expr, pdata, geneset, withTentative = TRUE){
+getF <- function(expr, pdata, level = "gene", withTentative = TRUE, geneset){
   expr <- as.matrix(expr)
   if (class(geneset)=="list") geneset
   if (class(geneset) == "data.frame") geneset <- to_list(geneset)
 
-  cat("Run ssgsea \n")
-  res1 <- gsva(expr = expr,
-               gset.idx.list = geneset,
-               method = "ssgsea",
-               abs.ranking = FALSE,
-               min.sz = 1,
-               max.sz = Inf,
-               mx.diff = TRUE,
-               ssgsea.norm = TRUE,
-               verbose = TRUE,
-  )
+  if (level == "pathway"){
+
+    cat("Run ssgsea \n")
+    res1 <- gsva(expr = expr,
+                 gset.idx.list = geneset,
+                 method = "ssgsea",
+                 abs.ranking = FALSE,
+                 min.sz = 1,
+                 max.sz = Inf,
+                 mx.diff = TRUE,
+                 ssgsea.norm = TRUE,
+                 verbose = TRUE,
+    )
+  }
+
+  if (level == "gene"){
+    res1 <- expr
+  }
 
   res2 <- t(res1)
   res2 <- as.data.frame(res2)
