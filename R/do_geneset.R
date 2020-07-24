@@ -3,21 +3,36 @@
 #'
 #' @title to_list
 #' @param dataframe a data frame of 2 column with term/drug and gene
+#' @param input one of the single or basket
+#' @param sep When 'input' is 'basket'.
 #' @return list
 #' @author Yuanlong Hu
 #' @noRd
 
 
-to_list <- function(dataframe){
+to_list <- function(dataframe, input="single", sep = ", "){
   dataframe <- dataframe[,c(1,2)]
   names(dataframe) <- c("terms", "gene")
+
   target0 <- list()
-  for (i in unique(dataframe[,1])) {
-    target1 <- dataframe$gene[dataframe$terms == i]
-    target1 <- list(target1)
-    target0 <- c(target0, target1)
+  if (input == "single"){
+    for (i in unique(dataframe[,1])) {
+      target1 <- dataframe$gene[dataframe$terms == i]
+      target1 <- list(target1)
+      target0 <- c(target0, target1)
+    }
+    names(target0) <- unique(dataframe[,1])
   }
-  names(target0) <- unique(dataframe[,1])
+
+  if (input == "basket"){
+    for(i in 1:nrow(dataframe)){
+      A <- dataframe[i,2]
+      A <- strsplit(A,split = sep)[[1]]
+      A <- list(A)
+      names(A) <- dataframe[i,1]
+      target0 <- c(target0, A)
+    }
+  }
   return(target0)
 }
 

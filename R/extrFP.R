@@ -170,7 +170,7 @@ getF <- function(expr, pdata, level = "gene", withTentative = TRUE, geneset){
 
   if (level == "pathway"){
 
-    cat("Run ssgsea \n")
+    message("Run ssgsea ...\n")
     res1 <- gsva(expr = expr,
                  gset.idx.list = geneset,
                  method = "ssgsea",
@@ -192,8 +192,11 @@ getF <- function(expr, pdata, level = "gene", withTentative = TRUE, geneset){
   res2$group <- pdata
   res2$group <- factor(res2$group)
 
-  cat("Run Boruta \n")
+  message("Run Boruta ...\n")
+  set.seed(1234)
   res_B <- Boruta(group~.,data = res2,doTrace = 0)
   features <- getSelectedAttributes(res_B, withTentative = withTentative)
+
+  message("Done...")
   return(features)
 }

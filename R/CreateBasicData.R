@@ -12,6 +12,15 @@ CreateBasicData <- function(drug_herb, herb_target){
 
   colnames(drug_herb) <- c("drug", "herb")
   colnames(herb_target) <- c("herb", "target")
+
+  # not matching
+  w <- unique(drug_herb$herb)
+  w <- w[!w %in% unique(herb_target$herb)]
+  if (length(w)>0) {
+    w <- paste0(w, collapse = ", ")
+    warning(paste0("The following herb do not find the target information: \n", w))
+  }
+
   drug_herb <- to_list(drug_herb)
   data <- lapply(drug_herb, function(x){
     d <- herb_target$target[herb_target$herb %in% unique(x)]
@@ -25,13 +34,7 @@ CreateBasicData <- function(drug_herb, herb_target){
   v <- unlist(v)
   data <- data[v]
 
-  # not matching
-  w <- unique(drug_herb$herb)
-  w <- w[!w %in% unique(herb_target$herb)]
-  if (length(w)>0) {
-    w <- paste0(w, collapse = ", ")
-    warning(paste0("The following herb do not find the target information: \n", w))
-  }
+
 
   return(data)
 }
