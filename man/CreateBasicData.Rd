@@ -7,9 +7,9 @@
 CreateBasicData(drug_herb, herb_target)
 }
 \arguments{
-\item{drug_herb}{A data frame containing prescription and herb}
+\item{drug_herb}{A data frame or listcontaining prescription and herb}
 
-\item{herb_target}{A data.frame containing herb and target}
+\item{herb_target}{A data.frame or list containing herb and target}
 }
 \value{
 a list

@@ -2,13 +2,22 @@
 #'
 #'
 #' @title CreateBasicData
-#' @param drug_herb A data frame containing prescription and herb
-#' @param herb_target A data.frame containing herb and target
+#' @param drug_herb A data frame or listcontaining prescription and herb
+#' @param herb_target A data.frame or list containing herb and target
 #' @return a list
 #' @export
 #' @author Yuanlong Hu
 
 CreateBasicData <- function(drug_herb, herb_target){
+  if (class(drug_herb) == "list") {
+    drug_herb <- to_df(drug_herb)
+  }
+  if (class(herb_target) == "list") {
+    herb_target <- to_df(herb_target)
+  }
+
+  drug_herb <- drug_herb[,1:2]
+  herb_target <- herb_target[,1:2]
 
   colnames(drug_herb) <- c("drug", "herb")
   colnames(herb_target) <- c("herb", "target")
@@ -27,14 +36,10 @@ CreateBasicData <- function(drug_herb, herb_target){
     d <- unique(d)
   })
 
-  v <- lapply(data, function(x){
-    length(x) != 0
-  })
+  v <- lapply(data, function(x) length(x) != 0)
 
   v <- unlist(v)
   data <- data[v]
-
-
 
   return(data)
 }
