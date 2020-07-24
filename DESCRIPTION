@@ -32,7 +32,8 @@ Imports:
     reshape2,
     corrr,
     GSVA,
-    Boruta
+    Boruta,
+    limma
 Suggests: 
     knitr,
     rmarkdown
