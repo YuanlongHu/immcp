@@ -165,11 +165,12 @@ MoASim <- function(data, search=NULL, geneset){
 
 getF <- function(expr, pdata, level = "gene", withTentative = TRUE, geneset){
   expr <- as.matrix(expr)
-  if (class(geneset)=="list") geneset
-  if (class(geneset) == "data.frame") geneset <- to_list(geneset)
+
+
 
   if (level == "pathway"){
-
+    if (class(geneset)=="list") geneset
+    if (class(geneset) == "data.frame") geneset <- to_list(geneset)
     message("Run ssgsea ...\n")
     res1 <- gsva(expr = expr,
                  gset.idx.list = geneset,
