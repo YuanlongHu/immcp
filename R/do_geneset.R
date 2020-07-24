@@ -7,7 +7,7 @@
 #' @param sep When 'input' is 'basket'.
 #' @return list
 #' @author Yuanlong Hu
-#' @noRd
+#' @export
 
 
 to_list <- function(dataframe, input="single", sep = ", "){
@@ -44,7 +44,7 @@ to_list <- function(dataframe, input="single", sep = ", "){
 #' @param list a list containing gene sets
 #' @return data frame
 #' @author Yuanlong Hu
-#' @noRd
+#' @export
 
 
 
