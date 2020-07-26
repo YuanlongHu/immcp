@@ -5,7 +5,6 @@
 #' @param disease_biomarker A character of disease biomarkers or an order ranked geneList.
 #' @param drug_target A data frame or list of drug target.
 #' @param method one of "enrich" and "gsea"
-#' @param geneset one of "ImmGenTop150" and "KEGG"
 #' @return ScoreFP object
 #' @importFrom pbapply pblapply
 #' @importFrom clusterProfiler enricher
@@ -21,12 +20,9 @@
 #'                geneset = "KEGG")
 
 
-extrFP <- function(disease_biomarker, drug_target, method = "enrich", geneset = "KEGG"){
+extrFP <- function(disease_biomarker, drug_target, method = "enrich"){
 
-  if (geneset == "ImmGenTop150"){
-    geneset0 <- genesetlist$ImmGenTop150
-  }
-
+  geneset <- "KEGG"
   if (geneset == "KEGG"){
     geneset0 <- genesetlist$KEGGPATHID2EXTID
     geneset0 <- geneset0[!geneset0$from %in% genesetlist$KEGGPATHID2NAME_out,]

@@ -4,7 +4,7 @@
 \alias{extrFP}
 \title{extrFP}
 \usage{
-extrFP(disease_biomarker, drug_target, method = "enrich", geneset = "KEGG")
+extrFP(disease_biomarker, drug_target, method = "enrich")
 }
 \arguments{
 \item{disease_biomarker}{A character of disease biomarkers or an order ranked geneList.}
@@ -12,8 +12,6 @@ extrFP(disease_biomarker, drug_target, method = "enrich", geneset = "KEGG")
 \item{drug_target}{A data frame or list of drug target.}
 
 \item{method}{one of "enrich" and "gsea"}
-
-\item{geneset}{one of "ImmGenTop150" and "KEGG"}
 }
 \value{
 ScoreFP object

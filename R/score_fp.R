@@ -79,3 +79,8 @@ score_fp <- function(FP, n = 100, two_tailed = TRUE){
   return(res_ScoreResultFP)
 }
 
+
+viewpathway <- function(x, drug){
+
+
+}
