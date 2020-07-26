@@ -24,8 +24,7 @@ Calculate the pathway fingerprints
   data("drugSample")
   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
                drug_target = drugSample$herb_target,
-               method = "enrich",
-               geneset = "KEGG")
+               method = "enrich")
 }
 \author{
 Yuanlong Hu

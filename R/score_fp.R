@@ -80,7 +80,34 @@ score_fp <- function(FP, n = 100, two_tailed = TRUE){
 }
 
 
+#' View pathway information.
+#'
+#'
+#' @title viewpathway
+#' @param x a ScoreFP object
+#' @param drug character vector of drug name
+#' @return ScoreResult object
+#' @importFrom igraph graph.data.frame
+#' @noRd
+#' @author Yuanlong Hu
+
+
 viewpathway <- function(x, drug){
 
+  FP <- x@Fingerprint@Fingerprint
+  FP_disease <- FP[["disease"]]
+  FP_disease <- names(FP_disease)[FP_disease == 1]
+
+  FP_drug <- FP[[drug]]
+  FP_drug <- names(FP_drug)[FP_drug == 1]
+
+  FP_intersect <- intersect(FP_disease, FP_drug)
+
+  res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_intersect,]
+
+  res0 <- NULL
+  for (i in 1:ncol(res)) {
+    SYMBOL <- genesetlist$KEGGPATHID2EXTID$SYMBOL[genesetlist$KEGGPATHID2EXTID$from == res$from[i]]
+  }
 
 }

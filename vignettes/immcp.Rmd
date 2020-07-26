@@ -39,10 +39,8 @@ library(immcp)
 data("drugSample")
 str(drugSample)
 ```
-`extrFP()` can calculate the pathway fingerprints. The genesets contain `ImmGenTop150` and `KEGG`.
+`extrFP()` can calculate the pathway fingerprints based on `KEGG` pathawy(except "Human Diseases" and "Drug Development").
 
-* `geneset = "ImmGenTop150"`: The top 150(most overexpressed) and the bottom 150(most down-regulated) genes from ImmGen.
-* `geneset = "KEGG"`: KEGG pathawy(except "Human Diseases" and "Drug Development")
 
 If the `disease_biomarker` is a a vector of gene symbol, you can use `method = "enrich"`, such as `disease_biomarker`.
 If the `disease_biomarker` is a a vector of logFC values named by gene symbol, you can use `method = "gsea"`, such as `disease_biomarker_gsea`.
@@ -50,8 +48,7 @@ If the `disease_biomarker` is a a vector of logFC values named by gene symbol, y
 ```{r}
 FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
              drug_target = drugSample$herb_target,
-             method = "enrich",
-             geneset = "KEGG")
+             method = "enrich")
 
 ```
 

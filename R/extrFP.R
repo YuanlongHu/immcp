@@ -16,8 +16,7 @@
 #'   data("drugSample")
 #'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
 #'                drug_target = drugSample$herb_target,
-#'                method = "enrich",
-#'                geneset = "KEGG")
+#'                method = "enrich")
 
 
 extrFP <- function(disease_biomarker, drug_target, method = "enrich"){
@@ -47,7 +46,7 @@ extrFP <- function(disease_biomarker, drug_target, method = "enrich"){
     if (method=="enrich"){
        enrich_drug <- enricher(target_character,
                                TERM2GENE = geneset,
-                               minGSSize = 2, maxGSSize = Inf,
+                               minGSSize = 5, maxGSSize = 500,
                                pvalueCutoff = 0.05,
                                qvalueCutoff = 0.1)
        enrich_drug <- enrich_drug@result
@@ -57,7 +56,7 @@ extrFP <- function(disease_biomarker, drug_target, method = "enrich"){
       target_character <- sort(target_character,decreasing = TRUE)
        enrich_drug <- GSEA(target_character,
                            exponent = 1,
-                           minGSSize = 1, maxGSSize = Inf,
+                           minGSSize = 5, maxGSSize = 500,
                            pvalueCutoff = 0.05, pAdjustMethod = "BH",
                            TERM2GENE = geneset,
                            verbose = FALSE, seed = FALSE,
@@ -123,7 +122,7 @@ MoASim <- function(data, search=NULL, geneset){
     genelist <- sort(genelist,decreasing = TRUE)
     res <- suppressMessages(GSEA(genelist,
                                  exponent = 1,
-                                 minGSSize = 1, maxGSSize = Inf,
+                                 minGSSize = 5, maxGSSize = 500,
                                  pvalueCutoff = 1, pAdjustMethod = "BH",
                                  TERM2GENE = TERM2GENE,
                                  TERM2NAME = TERM2NAME,
