@@ -4,6 +4,7 @@
 \alias{plot_network}
 \alias{plot_network,ScoreResultNet-method}
 \alias{plot_network,ScoreFP-method}
+\alias{plot_network,ScoreResultFP-method}
 \alias{plot_network.ScoreResultNet}
 \alias{plot_network.ScoreFP}
 \title{plot_network}
@@ -25,6 +26,15 @@ plot_network(
 )
 
 \S4method{plot_network}{ScoreFP}(
+  x,
+  Drug,
+  node_color = c("orange", "lightblue"),
+  layout = "layout_nicely",
+  highlight = NULL,
+  width = FALSE
+)
+
+\S4method{plot_network}{ScoreResultFP}(
   x,
   Drug,
   node_color = c("orange", "lightblue"),

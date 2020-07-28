@@ -24,7 +24,8 @@ setClass("ScoreFP1",
          contains = "ScoreFP",
          slots = list(
            DiseaseBiomarker = "vector",
-           DrugTarget = "list"
+           DrugTarget = "list",
+           Relationship = "data.frame"
          )
 )
 
@@ -125,3 +126,23 @@ setMethod("tail", "ScoreResult",
           function(x, ...){
             tail(x@ScoreResult, ...)
           })
+
+
+##' Class "BasicData"
+##' This class represents the basic input data.
+##'
+##'
+##' @name BasicData-class
+##' @docType class
+##' @slot BasicData Alist containing basic data.
+##' @slot Key Column name of basic data.
+##' @slot Relationship Relationship.
+##' @exportClass BasicData
+##' @author Yuanlong Hu
+
+setClass("BasicData",
+         slots = list(
+           BasicData = "list",
+           Key = "character",
+           Relationship = "data.frame"
+         ))

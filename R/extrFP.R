@@ -1,7 +1,14 @@
-#' Calculate the pathway fingerprints
-#'
-#'
-#' @title extrFP
+##' @rdname extrFP
+##' @exportMethod extrFP
+
+setMethod("extrFP", signature(drug_target = "BasicData"),
+          function(drug_target, disease_biomarker, method = "enrich") {
+            extrFP.BasicData(drug_target = drug_target, disease_biomarker=disease_biomarker, method = method)
+          })
+
+
+
+#' @rdname extrFP
 #' @param disease_biomarker A character of disease biomarkers or an order ranked geneList.
 #' @param drug_target A data frame or list of drug target.
 #' @param method one of "enrich" and "gsea"
@@ -9,17 +16,13 @@
 #' @importFrom pbapply pblapply
 #' @importFrom clusterProfiler enricher
 #' @importFrom clusterProfiler GSEA
-#' @export
 #' @author Yuanlong Hu
-#' @examples
-#'
-#'   data("drugSample")
-#'   FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-#'                drug_target = drugSample$herb_target,
-#'                method = "enrich")
 
 
-extrFP <- function(disease_biomarker, drug_target, method = "enrich"){
+extrFP.BasicData <- function(drug_target, disease_biomarker, method = "enrich"){
+
+  Relationship <- drug_target@Relationship
+  drug_target <- drug_target@BasicData
 
   geneset <- "KEGG"
   if (geneset == "KEGG"){
@@ -39,7 +42,7 @@ extrFP <- function(disease_biomarker, drug_target, method = "enrich"){
 
   if (class(geneset)== "data.frame") geneset0 <- geneset
 
-  if (class(drug_target)=="data.frame") drug_target <- to_list(drug_target)
+  #if (class(drug_target)=="data.frame") drug_target <- to_list(drug_target)
 
   enrich_f <- function(target_character, geneset = geneset0, method){
     names(geneset) <- c("c1", "c2")
@@ -90,7 +93,8 @@ extrFP <- function(disease_biomarker, drug_target, method = "enrich"){
                       DiseaseBiomarker = disease_biomarker,
                       DrugTarget = drug_target,
                       FPType = "enrich",
-                      Geneset = geneset
+                      Geneset = geneset,
+                      Relationship = Relationship
                         )
   return(res_ScoreFP1)
 }

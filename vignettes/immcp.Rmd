@@ -39,6 +39,13 @@ library(immcp)
 data("drugSample")
 str(drugSample)
 ```
+
+`PrepareData` can prepare the format of input data. `CreateBasicData` can craete a `BasicData` object.
+```{r}
+drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
+drug_target <- CreateBasicData(drug_target)
+```
+
 `extrFP()` can calculate the pathway fingerprints based on `KEGG` pathawy(except "Human Diseases" and "Drug Development").
 
 
@@ -46,8 +53,8 @@ If the `disease_biomarker` is a a vector of gene symbol, you can use `method = "
 If the `disease_biomarker` is a a vector of logFC values named by gene symbol, you can use `method = "gsea"`, such as `disease_biomarker_gsea`.
 
 ```{r}
-FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-             drug_target = drugSample$herb_target,
+FP <- extrFP(drug_target = drug_target,
+             disease_biomarker = drugSample$disease_biomarker,
              method = "enrich")
 
 ```
@@ -60,13 +67,19 @@ FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
 
 ```{r}
 res <- score_fp(FP, n = 100)
-res1 <- get_result(res, pvalueCutoff = 0.05)
-head(res1)
 ```
 
+
+```{r}
+get_result(res, pvalueCutoff = 0.05)
+```
 We can look at our distribution using `plot_density()`.
 
 ```{r}
 plot_density(res, "BAN_XIA_XIE_XIN_TANG")
 ```
 
+`plot_network` can construct a pathway-pathway interaction network.
+```{r}
+plot_network(res, "BAN_XIA_XIE_XIN_TANG")
+```

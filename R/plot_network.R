@@ -16,6 +16,16 @@ setMethod("plot_network", signature(x = "ScoreFP"),
           })
 
 
+##' @rdname plot_network
+##' @exportMethod plot_network
+
+setMethod("plot_network", signature(x = "ScoreResultFP"),
+          function(x, Drug, node_color = c("orange", "lightblue"), layout = "layout_nicely", highlight = NULL, width = FALSE) {
+            x <- x@Fingerprint
+            plot_network.ScoreFP(x = x, Drug, node_color = node_color, layout = layout, highlight = highlight, width = width)
+          })
+
+
 #' @rdname plot_network
 #' @param node_type one of "target" or "all"
 #' @param node_color The node color

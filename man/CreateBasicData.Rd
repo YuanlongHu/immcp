@@ -4,18 +4,22 @@
 \alias{CreateBasicData}
 \title{CreateBasicData}
 \usage{
-CreateBasicData(drug_herb, herb_target)
+CreateBasicData(...)
 }
 \arguments{
-\item{drug_herb}{A data frame or listcontaining prescription and herb}
-
-\item{herb_target}{A data.frame or list containing herb and target}
+\item{...}{A data frame from \code{PrepareData}.}
 }
 \value{
 a list
 }
 \description{
 Prepare input data.
+}
+\examples{
+
+  data("drugSample")
+  drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
+  drug_target <- CreateBasicData(drug_target)
 }
 \author{
 Yuanlong Hu
