@@ -12,7 +12,7 @@
 plot_network(
   x,
   Drug,
-  node_color = c("orange", "lightblue"),
+  node_color = c("orange", "lightblue", "orange", "green"),
   layout = "layout_nicely",
   ...
 )
@@ -20,15 +20,17 @@ plot_network(
 \S4method{plot_network}{ScoreResultNet}(
   x,
   Drug,
-  node_color = c("orange", "lightblue"),
+  node_color = c("orange", "lightblue", "orange", "green"),
   layout = "layout_nicely",
-  node_type = "target"
+  node_type = "target",
+  background = "drug",
+  neighbor = FALSE
 )
 
 \S4method{plot_network}{ScoreFP}(
   x,
   Drug,
-  node_color = c("orange", "lightblue"),
+  node_color = c("orange", "lightblue", "orange", "green"),
   layout = "layout_nicely",
   highlight = NULL,
   width = FALSE
@@ -37,7 +39,7 @@ plot_network(
 \S4method{plot_network}{ScoreResultFP}(
   x,
   Drug,
-  node_color = c("orange", "lightblue"),
+  node_color = c("orange", "lightblue", "orange", "green"),
   layout = "layout_nicely",
   highlight = NULL,
   width = FALSE
@@ -46,9 +48,11 @@ plot_network(
 plot_network.ScoreResultNet(
   x,
   Drug,
-  node_color = c("orange", "lightblue"),
+  node_color = c("orange", "lightblue", "orange", "lightred"),
   layout = "layout_nicely",
-  node_type = "target"
+  node_type = "target",
+  background = "drug",
+  neighbor = FALSE
 )
 
 plot_network.ScoreFP(
@@ -65,13 +69,17 @@ plot_network.ScoreFP(
 
 \item{Drug}{The name of drug.}
 
-\item{node_color}{The node color}
+\item{node_color}{The node color.}
 
 \item{layout}{Character Name of network layout function to use. Default to "layout_nicely".}
 
 \item{...}{additional parameters}
 
-\item{node_type}{one of "target" or "all"}
+\item{node_type}{network type. one of "herb-target","herb-compound-target" and "target".}
+
+\item{background}{one of "drug" or "disease"}
+
+\item{neighbor}{logical.}
 
 \item{highlight}{A character vector of gene.}
 

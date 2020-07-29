@@ -2,7 +2,7 @@
 #'
 #'
 #' @title score_network
-#' @param Tar A list containing drug target.
+#' @param Tar A BasicData object containing drug target.
 #' @param DNet A data frame of disease network containing two columns.
 #' @param n The number of times random permutation sampling.
 #' @param two_tailed a logical: select a two-tailed p-value.
@@ -18,13 +18,17 @@
 #' @examples
 #'
 #'   data("drugSample")
-#'   res <- score_network(Tar = drugSample$herb_target, DNet = drugSample$disease_network)
+#'   drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
+#'   drug_target <- CreateBasicData(drug_target)
+#'   res <- score_network(Tar = drug_target, DNet = drugSample$disease_network)
 #'   res <- get_result(res)
 
 score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
+  Relationship <- Tar@Relationship
+  Tar <- Tar@BasicData
 
-  if(class(Tar) == "list") Tar
-  if(class(Tar) == "data.frame") Tar <- to_list(Tar)
+ # if(class(Tar) == "list") Tar
+  #if(class(Tar) == "data.frame") Tar <- to_list(Tar)
 
   score_network_s <- function(DNet, target, method = "all"){
 
@@ -104,8 +108,8 @@ score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
                          ScoreResult = as.data.frame(result),
                          DiseaseNetwork = DNet,
                          Tar = Tar,
+                         Relationship = Relationship,
                          adj = adj)
 
   return(res_ScoreResult)
-
 }

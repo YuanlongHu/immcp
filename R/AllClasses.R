@@ -71,7 +71,8 @@ setClass("ScoreResultNet",
          contains = "ScoreResult",
          slots = list(
            DiseaseNetwork = "data.frame",
-           Tar = "list"
+           Tar = "list",
+           Relationship = "data.frame"
          )
 )
 

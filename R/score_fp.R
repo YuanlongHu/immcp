@@ -84,15 +84,15 @@ score_fp <- function(FP, n = 100, two_tailed = TRUE){
 #'
 #'
 #' @title viewpathway
-#' @param x a ScoreFP object
-#' @param drug character vector of drug name
+#' @param x a ScoreFP object.
+#' @param drug character vector of drug name.
+#' @param view one of intersect, drug or disease.
 #' @return ScoreResult object
-#' @importFrom igraph graph.data.frame
-#' @noRd
+#' @export
 #' @author Yuanlong Hu
 
 
-viewpathway <- function(x, drug){
+viewpathway <- function(x, drug, view = "intersect"){
 
   FP <- x@Fingerprint@Fingerprint
   FP_disease <- FP[["disease"]]
@@ -103,11 +103,21 @@ viewpathway <- function(x, drug){
 
   FP_intersect <- intersect(FP_disease, FP_drug)
 
-  res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_intersect,]
+  if (view == "disease") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_disease,]
+  if (view == "drug") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_drug,]
+  if (view == "intersect") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_intersect,]
 
   res0 <- NULL
-  for (i in 1:ncol(res)) {
+  for (i in 1:nrow(res)) {
     SYMBOL <- genesetlist$KEGGPATHID2EXTID$SYMBOL[genesetlist$KEGGPATHID2EXTID$from == res$from[i]]
+    SYMBOL <- intersect(SYMBOL, x@Fingerprint@DrugTarget[[drug]])
+    SYMBOL <- paste0(SYMBOL, collapse = ", ")
+    res0 <- c(res0, SYMBOL)
   }
 
+  res$gene <- res0
+  rownames(res) <- res$from
+  colnames(res) <- c("Pathway", "Description", "Gene")
+
+  return(res)
 }

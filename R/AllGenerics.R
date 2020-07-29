@@ -12,7 +12,7 @@
 #' @export
 
 setGeneric("plot_network",
-           function(x, Drug, node_color = c("orange", "lightblue"), layout = "layout_nicely", ...){
+           function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", ...){
              standardGeneric("plot_network")
            }
 
