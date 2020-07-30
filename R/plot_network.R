@@ -2,8 +2,8 @@
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultNet"),
-          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", node_type = "target", background = "drug",neighbor = FALSE) {
-            plot_network.ScoreResultNet(x, Drug, node_color = node_color, layout = layout, node_type = node_type, background = background, neighbor = neighbor)
+          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", manipulation = FALSE, node_type = "target", background = "drug",neighbor = FALSE) {
+            plot_network.ScoreResultNet(x, Drug, node_color = node_color, layout = layout, manipulation = manipulation, node_type = node_type, background = background, neighbor = neighbor)
           })
 
 
@@ -11,8 +11,8 @@ setMethod("plot_network", signature(x = "ScoreResultNet"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreFP"),
-          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", highlight = NULL, width = FALSE) {
-            plot_network.ScoreFP(x, Drug, node_color = node_color, layout = layout, highlight = highlight, width = width)
+          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", manipulation = FALSE, highlight = NULL, width = FALSE) {
+            plot_network.ScoreFP(x, Drug, node_color = node_color, layout = layout, manipulation = manipulation, highlight = highlight, width = width)
           })
 
 
@@ -20,9 +20,9 @@ setMethod("plot_network", signature(x = "ScoreFP"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultFP"),
-          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", highlight = NULL, width = FALSE) {
+          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", manipulation = FALSE, highlight = NULL, width = FALSE) {
             x <- x@Fingerprint
-            plot_network.ScoreFP(x = x, Drug, node_color = node_color, layout = layout, highlight = highlight, width = width)
+            plot_network.ScoreFP(x = x, Drug, node_color = node_color, layout = layout, manipulation = manipulation, highlight = highlight, width = width)
           })
 
 
@@ -42,6 +42,7 @@ plot_network.ScoreResultNet <- function(x,
                                         Drug,
                                         node_color = c("orange", "lightblue","orange", "lightred"),
                                         layout = "layout_nicely",
+                                        manipulation = FALSE,
                                         node_type = "target",
                                         background = "drug",
                                         neighbor = FALSE
@@ -66,11 +67,11 @@ plot_network.ScoreResultNet <- function(x,
   if (layout == "none") {
     visNetwork(nodes = res_df$nodes,
                edges = res_df$edges) %>%
-      visOptions(highlightNearest = TRUE)
+      visOptions(highlightNearest = TRUE, manipulation = manipulation)
   }else{
     visNetwork(nodes = res_df$nodes,
                edges = res_df$edges) %>%
-      visOptions(highlightNearest = TRUE) %>%
+      visOptions(highlightNearest = TRUE, manipulation = manipulation) %>%
       visIgraphLayout(layout = layout)
   }
 
@@ -91,6 +92,7 @@ plot_network.ScoreFP <- function(x,
                                  Drug,
                                  node_color = c("orange", "lightblue"),
                                  layout = "layout_nicely",
+                                 manipulation = FALSE,
                                  highlight = NULL,
                                  width = FALSE
                                  ){
@@ -159,10 +161,10 @@ plot_network.ScoreFP <- function(x,
 
   if (layout == "none") {
     visNetwork(nodes = nodes,edges = mat_overlap) %>%
-      visOptions(highlightNearest = TRUE)
+      visOptions(highlightNearest = TRUE, manipulation = manipulation)
   }else{
     visNetwork(nodes = nodes,edges = mat_overlap) %>%
-      visOptions(highlightNearest = TRUE) %>%
+      visOptions(highlightNearest = TRUE, manipulation = manipulation) %>%
       visIgraphLayout(layout = layout)
   }
 }

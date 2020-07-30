@@ -14,6 +14,7 @@ plot_network(
   Drug,
   node_color = c("orange", "lightblue", "orange", "green"),
   layout = "layout_nicely",
+  manipulation = FALSE,
   ...
 )
 
@@ -22,6 +23,7 @@ plot_network(
   Drug,
   node_color = c("orange", "lightblue", "orange", "green"),
   layout = "layout_nicely",
+  manipulation = FALSE,
   node_type = "target",
   background = "drug",
   neighbor = FALSE
@@ -32,6 +34,7 @@ plot_network(
   Drug,
   node_color = c("orange", "lightblue", "orange", "green"),
   layout = "layout_nicely",
+  manipulation = FALSE,
   highlight = NULL,
   width = FALSE
 )
@@ -41,6 +44,7 @@ plot_network(
   Drug,
   node_color = c("orange", "lightblue", "orange", "green"),
   layout = "layout_nicely",
+  manipulation = FALSE,
   highlight = NULL,
   width = FALSE
 )
@@ -50,6 +54,7 @@ plot_network.ScoreResultNet(
   Drug,
   node_color = c("orange", "lightblue", "orange", "lightred"),
   layout = "layout_nicely",
+  manipulation = FALSE,
   node_type = "target",
   background = "drug",
   neighbor = FALSE
@@ -60,6 +65,7 @@ plot_network.ScoreFP(
   Drug,
   node_color = c("orange", "lightblue"),
   layout = "layout_nicely",
+  manipulation = FALSE,
   highlight = NULL,
   width = FALSE
 )
@@ -72,6 +78,8 @@ plot_network.ScoreFP(
 \item{node_color}{The node color.}
 
 \item{layout}{Character Name of network layout function to use. Default to "layout_nicely".}
+
+\item{manipulation}{Whether to edit the network.}
 
 \item{...}{additional parameters}
 
