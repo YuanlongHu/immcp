@@ -81,5 +81,5 @@ plot_density(res, "BAN_XIA_XIE_XIN_TANG")
 
 `plot_network` can construct a pathway-pathway interaction network.
 ```{r}
-plot_network(res, "BAN_XIA_XIE_XIN_TANG")
+plot_network(res, "BAN_XIA_XIE_XIN_TANG", node_type="pathway")
 ```

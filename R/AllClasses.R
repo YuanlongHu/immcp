@@ -25,7 +25,8 @@ setClass("ScoreFP1",
          slots = list(
            DiseaseBiomarker = "vector",
            DrugTarget = "list",
-           Relationship = "data.frame"
+           Relationship = "data.frame",
+           CompoundAnno = "data.frame"
          )
 )
 
@@ -138,6 +139,7 @@ setMethod("tail", "ScoreResult",
 ##' @slot BasicData Alist containing basic data.
 ##' @slot Key Column name of basic data.
 ##' @slot Relationship Relationship.
+##' @slot CompoundAnno Compound ID
 ##' @exportClass BasicData
 ##' @author Yuanlong Hu
 
@@ -145,5 +147,6 @@ setClass("BasicData",
          slots = list(
            BasicData = "list",
            Key = "character",
-           Relationship = "data.frame"
+           Relationship = "data.frame",
+           CompoundAnno = "data.frame"
          ))

@@ -17,6 +17,8 @@ This class represents the basic input data.
 \item{\code{Key}}{Column name of basic data.}
 
 \item{\code{Relationship}}{Relationship.}
+
+\item{\code{CompoundAnno}}{Compound ID}
 }}
 
 \author{

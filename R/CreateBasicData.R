@@ -33,7 +33,19 @@ PrepareData <- function(data, col1, col2, format = "single", sep){
   if (class(data) == "list") {
     data <- to_df(data)
   }
-  data <- as.data.frame(data[,1:2])
+
+  if (ncol(data)>2) {
+
+    anno <- data.frame(from = data[,c(col1, col2, "compound_id")== "compound"],
+                       id = paste0("c",data[,3]))
+    data <- as.data.frame(data[,1:2])
+  }else{
+    anno <- data.frame(from = unique(data[,1]),
+                       id = paste0("c",1:length(unique(data[,1])))
+                       )
+    data <- as.data.frame(data[,1:2])
+  }
+
 
   if (format == "single"){
     data <- data
@@ -46,6 +58,10 @@ PrepareData <- function(data, col1, col2, format = "single", sep){
   colnames(data) <- c("from", "to")
   data$col1 <- col1
   data$col2 <- col2
+
+  data <- merge(data, anno, by= "from")
+
+
   return(data)
 }
 
@@ -70,6 +86,29 @@ CreateBasicData <- function(...){
 
   da <- list(...)
   rp <- length(da)-1
+
+  index <- lapply(da, function(x){
+
+    index <- unique(x$col1) == "compound"
+    return(index)
+  })
+
+  index <- unlist(index)
+
+  if(length(da[index]) > 0){
+    compound <- da[index][[1]]
+    compound <- data.frame(compound = compound$from,
+                           id = compound$id)
+   # compound <- compound[,c(unique(compound$col1) == "compound", 3)]
+    #colnames(compound) <- c("compound", "id")
+
+    #compound <- Reduce("rbind",compound)
+    compound <- compound[!duplicated(compound$compound),]
+  }else{
+    compound <- data.frame()
+  }
+
+
   if(rp == 0){
 
     da <- da[[1]]
@@ -108,7 +147,8 @@ CreateBasicData <- function(...){
   res <- new("BasicData",
              BasicData = target,
              Key = relation,
-             Relationship = da
+             Relationship = da,
+             CompoundAnno = compound
              )
   return(res)
 }

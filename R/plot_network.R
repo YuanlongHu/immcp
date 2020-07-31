@@ -2,7 +2,7 @@
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultNet"),
-          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", manipulation = FALSE, node_type = "target", background = "drug",neighbor = FALSE) {
+          function(x, Drug, node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = FALSE, node_type = "target", background = "drug",neighbor = FALSE) {
             plot_network.ScoreResultNet(x, Drug, node_color = node_color, layout = layout, manipulation = manipulation, node_type = node_type, background = background, neighbor = neighbor)
           })
 
@@ -11,8 +11,8 @@ setMethod("plot_network", signature(x = "ScoreResultNet"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreFP"),
-          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", manipulation = FALSE, highlight = NULL, width = FALSE) {
-            plot_network.ScoreFP(x, Drug, node_color = node_color, layout = layout, manipulation = manipulation, highlight = highlight, width = width)
+          function(x, Drug, node_type="herb-compound-target", node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = FALSE, highlight = NULL, width = FALSE) {
+            plot_network.ScoreFP(x, Drug, node_type=node_type, node_color = node_color, layout = layout, manipulation = manipulation, highlight = highlight, width = width)
           })
 
 
@@ -20,9 +20,9 @@ setMethod("plot_network", signature(x = "ScoreFP"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultFP"),
-          function(x, Drug, node_color = c("orange", "lightblue","orange", "green"), layout = "layout_nicely", manipulation = FALSE, highlight = NULL, width = FALSE) {
+          function(x, Drug, node_type="herb-compound-target", node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = FALSE, highlight = NULL, width = FALSE) {
             x <- x@Fingerprint
-            plot_network.ScoreFP(x = x, Drug, node_color = node_color, layout = layout, manipulation = manipulation, highlight = highlight, width = width)
+            plot_network.ScoreFP(x = x, Drug, node_type = node_type, node_color = node_color, layout = layout, manipulation = manipulation, highlight = highlight, width = width)
           })
 
 
@@ -40,7 +40,7 @@ setMethod("plot_network", signature(x = "ScoreResultFP"),
 
 plot_network.ScoreResultNet <- function(x,
                                         Drug,
-                                        node_color = c("orange", "lightblue","orange", "lightred"),
+                                        node_color = c("lightblue","orange", "red", "green"),
                                         layout = "layout_nicely",
                                         manipulation = FALSE,
                                         node_type = "target",
@@ -83,14 +83,12 @@ plot_network.ScoreResultNet <- function(x,
 #' @param width A logical. The number of overlapping genes between the two pathways is used as the width of the edges.
 #' @importFrom visNetwork visNetwork
 #' @importFrom visNetwork visOptions
-#' @importFrom corrr shave
-#' @importFrom corrr as_cordf
-#' @importFrom corrr stretch
 
 
 plot_network.ScoreFP <- function(x,
                                  Drug,
-                                 node_color = c("orange", "lightblue"),
+                                 node_type = "herb-compound-pathway",
+                                 node_color = c("lightblue","orange", "red", "green"),
                                  layout = "layout_nicely",
                                  manipulation = FALSE,
                                  highlight = NULL,
@@ -99,7 +97,6 @@ plot_network.ScoreFP <- function(x,
 
   FP1 <- as.data.frame(x@Fingerprint)
 
-  # The intersection of disease and drug pathways
   pathway_overlap <- FP1[,c("disease", Drug)]
   pathway_overlap <- pathway_overlap[pathway_overlap[,1] == 1 & pathway_overlap[,2] == 1,]
   pathway_overlap <- rownames(pathway_overlap)
@@ -110,6 +107,7 @@ plot_network.ScoreFP <- function(x,
   }else{
     stop("The geneset for extracting pathway fingerprints must come from KEGG.")
   }
+
   tar <- x@DrugTarget[[Drug]]
   geneset0 <- geneset0[geneset0$from %in% pathway_overlap,]
   geneset1 <- geneset0[geneset0$SYMBOL %in% tar,]
@@ -117,53 +115,108 @@ plot_network.ScoreFP <- function(x,
   geneset1 <- to_list(geneset1)
 
   # Number of overlapping genes between pathways
-  mat_overlap <- overlap_count(geneset1)
-  mat_overlap <- shave(as_cordf(mat_overlap)) %>%
-    stretch() %>%
-    as("data.frame")
 
-  colnames(mat_overlap) <- c("from", "to", "width")
+  CompoundAnno <- x@CompoundAnno
+  Relationship <- x@Relationship
 
-  mat_overlap <- mat_overlap[!is.na(mat_overlap$width),]
-  mat_overlap <- mat_overlap[mat_overlap$width != 0,]
-  mat_overlap <- as.data.frame(mat_overlap)
+  if (node_type == "herb-compound-target"){
 
-  nodes <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(mat_overlap$from, mat_overlap$to)),]
+    compound_target <- Relationship[Relationship$col1 == "compound" & Relationship$col2 == "target",]
+    compound_target$from <- as.character(compound_target$id)
 
-  colnames(nodes) <- c("id", "label")
+    compound_target <- to_list(compound_target)
+
+    compound_target <- c(geneset1, compound_target)
+    mat_overlap2 <- overlap_count(compound_target)
+    mat_overlap2 <- mat_overlap2[mat_overlap2$from %in% names(geneset1) | mat_overlap2$to %in% names(geneset1),]
+
+    nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(mat_overlap2$from, mat_overlap2$to)),]
+
+    nodes1$color <- node_color[1]
+    colnames(nodes1) <- c("id", "label","color")
+    nodes2 <- data.frame(from = unique(c(mat_overlap2$from, mat_overlap2$to)),
+                         to = unique(c(mat_overlap2$from, mat_overlap2$to))
+    )
+
+
+    nodes2 <- nodes2[!nodes2$from %in% unique(nodes1$from),]
+
+
+    nodes2 <- merge(nodes2, CompoundAnno, by.x = "from", by.y = "id")
+    nodes2 <- nodes2[,-2]
+    nodes2$color <- node_color[2]
+
+    colnames(nodes2) <- c("id", "label","color")
+
+
+    herb_compound <- Relationship[Relationship$col1 == "herb" & Relationship$col2 == "compound",]
+    herb_compound <- herb_compound[herb_compound$to %in% nodes2$label,]
+
+    nodes3 <- herb_compound[,1:2]
+    nodes3 <- merge(nodes3, CompoundAnno, by.x = "to", by.y = "compound")
+
+    mat_overlap3 <- nodes3[,c(2,3)]
+    colnames(mat_overlap3) <- c("from", "to")
+    mat_overlap3$width <- 1
+
+    nodes3 <- data.frame(id = unique(nodes3$from), label = unique(nodes3$from))
+    nodes3$color <- node_color[3]
+
+    nodes <- Reduce("rbind", list(nodes1, nodes2, nodes3))
+    edges <- rbind(mat_overlap2, mat_overlap3)
+  }
+
+  if (node_type == "pathway"){
+    # compound_target <- Relationship[Relationship$col1 == "compound" & Relationship$col2 == "target",]
+    # compound_target$from <- as.character(compound_target$id)
+    #
+    # compound_target <- to_list(compound_target)
+    #
+    # compound_target <- c(geneset1, compound_target)
+    mat_overlap <- overlap_count(geneset1)
+    mat_overlap <- mat_overlap[mat_overlap$from %in% names(geneset1) | mat_overlap$to %in% names(geneset1),]
+
+    nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(mat_overlap$from, mat_overlap$to)),]
+
+    nodes1$color <- node_color[1]
+    colnames(nodes1) <- c("id", "label","color")
+
+    nodes <- nodes1
+    edges <- mat_overlap
+  }
+
+
   if(!is.null(highlight)){
 
     highlight_pathway <- lapply(to_list(geneset0), function(x){
-    length(intersect(x, highlight))
-  })
+      length(intersect(x, highlight))
+    })
 
     highlight_pathway <- unlist(highlight_pathway)
     highlight_pathway <- names(highlight_pathway[highlight_pathway>0])
     nodes$color <- ifelse(nodes$id %in% highlight_pathway, node_color[2], node_color[1])
-  }else{
-    nodes$color <- node_color[2]
   }
 
   message(
     paste("------ Summary ------ \n",
           ">>> Pathway: \n",
-          paste(nodes$label, collapse = ", "),
+          paste(nodes1$label, collapse = ", "),
           "\n",
           ">>> Pathway Number: \n",
-          length(nodes$label))
+          length(nodes1$label))
   )
 
   if (width) {
-    mat_overlap$width <- mat_overlap$width/5
+    edges$width <- edges$width/5
   }else{
-    mat_overlap <- mat_overlap[,-3]
+    edges <- edges[,-3]
   }
 
   if (layout == "none") {
-    visNetwork(nodes = nodes,edges = mat_overlap) %>%
+    visNetwork(nodes = nodes,edges = edges) %>%
       visOptions(highlightNearest = TRUE, manipulation = manipulation)
   }else{
-    visNetwork(nodes = nodes,edges = mat_overlap) %>%
+    visNetwork(nodes = nodes,edges = edges) %>%
       visOptions(highlightNearest = TRUE, manipulation = manipulation) %>%
       visIgraphLayout(layout = layout)
   }
@@ -175,6 +228,9 @@ plot_network.ScoreFP <- function(x,
 ##' @title overlap_count
 ##' @param list A list
 ##' @return a data frame
+##' @importFrom corrr shave
+##' @importFrom corrr as_cordf
+##' @importFrom corrr stretch
 ##' @author Yuanlong Hu
 ##' @noRd
 
@@ -191,6 +247,16 @@ overlap_count <- function(list){
   })
 
  b <-  as.data.frame(b)
+
+ b <- shave(as_cordf(b)) %>%
+   stretch() %>%
+   as("data.frame")
+
+ colnames(b) <- c("from", "to", "width")
+
+ b <- b[!is.na(b$width),]
+ b <- b[b$width != 0,]
+ b <- as.data.frame(b)
 
  return(b)
 }
@@ -232,6 +298,7 @@ overlap_pathway <- function(FP, Drug){
 ##' @param overlap overlop gene.
 ##' @param Drug drug name.
 ##' @param Relationship Relationship.
+##' @param CompoundAnno CompoundAnno.
 ##' @param nodes A data frame of nodes.
 ##' @param edges A data frame of edges.
 ##' @param node_color nodes color.
@@ -241,7 +308,7 @@ overlap_pathway <- function(FP, Drug){
 ##' @noRd
 ##' @author Yuanlong Hu
 
-create_network <- function(overlap, Drug, Relationship, nodes, edges, node_color, node_type, background, neighbor){
+create_network <- function(overlap, Drug, Relationship, CompoundAnno, nodes, edges, node_color, node_type, background, neighbor){
 
   if ( !node_type %in% c("herb-target","herb-compound-target","target")){
     stop("The 'node_type' must be one of 'herb-target','herb-compound-target' and 'target'")
@@ -297,7 +364,6 @@ create_network <- function(overlap, Drug, Relationship, nodes, edges, node_color
     compound_target <- compound_target[compound_target$to %in% unique(nodes$label),1:2]
 
 
-
     nodes_df2 <- data.frame(id = unique(herb_compound$from),
                             label = unique(herb_compound$from)
     )
@@ -311,6 +377,7 @@ create_network <- function(overlap, Drug, Relationship, nodes, edges, node_color
     herb_compound <- herb_compound[herb_compound$to %in% unique(nodes_df3$label),]
     edges <- Reduce("rbind", list(edges, herb_compound, compound_target))
   }
+
 
 
   res_df <- list(nodes = nodes, edges = edges)

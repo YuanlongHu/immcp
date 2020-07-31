@@ -76,7 +76,6 @@ score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
     set.seed(1234)
     adj_total <- replicate(n, score_network_s(DNet = data.frame(node1 = sample(DNet[,1]), node2 = sample(DNet[,2]), stringsAsFactors = F), target = x, method = "total"))
     res <- c(marker, score, adj_total)
-
     res
   })
 

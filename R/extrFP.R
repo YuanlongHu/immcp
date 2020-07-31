@@ -22,6 +22,7 @@ setMethod("extrFP", signature(drug_target = "BasicData"),
 extrFP.BasicData <- function(drug_target, disease_biomarker, method = "enrich"){
 
   Relationship <- drug_target@Relationship
+  CompoundAnno <- drug_target@CompoundAnno
   drug_target <- drug_target@BasicData
 
   geneset <- "KEGG"
@@ -94,7 +95,8 @@ extrFP.BasicData <- function(drug_target, disease_biomarker, method = "enrich"){
                       DrugTarget = drug_target,
                       FPType = "enrich",
                       Geneset = geneset,
-                      Relationship = Relationship
+                      Relationship = Relationship,
+                      CompoundAnno = CompoundAnno
                         )
   return(res_ScoreFP1)
 }
