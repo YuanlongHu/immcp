@@ -119,7 +119,7 @@ plot_network.ScoreFP <- function(x,
   CompoundAnno <- x@CompoundAnno
   Relationship <- x@Relationship
 
-  if (node_type == "herb-compound-target"){
+  if (node_type == "herb-compound-pathway"){
 
     compound_target <- Relationship[Relationship$col1 == "compound" & Relationship$col2 == "target",]
     compound_target$from <- as.character(compound_target$id)
@@ -166,13 +166,44 @@ plot_network.ScoreFP <- function(x,
     edges <- rbind(mat_overlap2, mat_overlap3)
   }
 
+
+  if (node_type == "herb-pathway"){
+
+    compound_target <- Relationship[Relationship$col1 == "compound" & Relationship$col2 == "target",]
+
+    herb_compound <- Relationship[Relationship$col1 == "herb" & Relationship$col2 == "compound",]
+
+    herb_target <- merge(herb_compound,compound_target, by.x = "to", by.y = "from")
+
+    herb_target <- herb_target[,c(2,6,3,8,5)]
+
+    colnames(herb_target) <- c("from","to","col1","col2","id")
+    herb_target <- herb_target[!duplicated(paste0(herb_target$from, herb_target$to)),]
+
+    herb_target <- to_list(herb_target)
+
+    herb_target <- c(geneset1, herb_target)
+    edges <- overlap_count(herb_target)
+    edges <- edges[mat_overlap2$from %in% names(geneset1) | mat_overlap2$to %in% names(geneset1),]
+
+    nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(edges$from, edges$to)),]
+
+    nodes1$color <- node_color[1]
+    colnames(nodes1) <- c("id", "label","color")
+
+    nodes2 <- data.frame(from = unique(c(edges$from, edges$to)),
+                         to = unique(c(edges$from, edges$to))
+    )
+
+    nodes2 <- nodes2[!nodes2$from %in% unique(nodes1$id),]
+
+    nodes2$color <- node_color[2]
+    colnames(nodes2) <- c("id", "label","color")
+    nodes <- rbind(nodes1, nodes2)
+  }
+
   if (node_type == "pathway"){
-    # compound_target <- Relationship[Relationship$col1 == "compound" & Relationship$col2 == "target",]
-    # compound_target$from <- as.character(compound_target$id)
-    #
-    # compound_target <- to_list(compound_target)
-    #
-    # compound_target <- c(geneset1, compound_target)
+
     mat_overlap <- overlap_count(geneset1)
     mat_overlap <- mat_overlap[mat_overlap$from %in% names(geneset1) | mat_overlap$to %in% names(geneset1),]
 
