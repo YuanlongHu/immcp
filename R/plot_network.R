@@ -134,7 +134,8 @@ plot_network.ScoreFP <- function(x,
     mat_overlap2 <- overlap_count(compound_target)
     mat_overlap2 <- mat_overlap2[mat_overlap2$from %in% names(geneset1) | mat_overlap2$to %in% names(geneset1),]
 
-    nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(mat_overlap2$from, mat_overlap2$to)),]
+    # unique(c(mat_overlap2$from, mat_overlap2$to))
+    nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% pathway_overlap,]
 
     nodes1$color <- node_color[1]
     colnames(nodes1) <- c("id", "label","color")
@@ -206,7 +207,7 @@ plot_network.ScoreFP <- function(x,
       edges <- overlap_count(herb_target)
       edges <- edges[edges$from %in% names(geneset1) | edges$to %in% names(geneset1),]
 
-      nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(edges$from, edges$to)),]
+      nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% pathway_overlap,]
 
       nodes1$color <- node_color[1]
       colnames(nodes1) <- c("id", "label","color")
@@ -221,38 +222,6 @@ plot_network.ScoreFP <- function(x,
       nodes <- rbind(nodes1, nodes2)
 
 
-    # if ("herbtarget" %in% val & "drugherb" %in% val){
-    #
-    #   drug_herb <- Relationship[Relationship$from == Drug & Relationship$col2 == "herb",]
-    #
-    #   herb_target <- Relationship[Relationship$from %in% unique(drug_herb$to) & Relationship$col2 == "target",]
-    #   herb_target <- herb_target[!duplicated(paste0(herb_target$from, herb_target$to)),]
-    #
-    #   herb_target <- to_list(herb_target)
-    #   herb_target <- c(geneset1, herb_target)
-    #   edges <- overlap_count(herb_target)
-    #
-    #   edges <- edges[edges$from %in% names(geneset1) | edges$to %in% names(geneset1),]
-    #
-    #   nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(edges$from, edges$to)),]
-    #
-    #   nodes1$color <- node_color[1]
-    #   colnames(nodes1) <- c("id", "label","color")
-    #
-    #   nodes2 <- data.frame(from = unique(c(edges$from, edges$to)),
-    #                        to = unique(c(edges$from, edges$to))
-    #   )
-    #   nodes2 <- nodes2[!nodes2$from %in% unique(nodes1$id),]
-    #
-    #   nodes2$color <- node_color[2]
-    #
-    #   colnames(nodes2) <- c("id", "label","color")
-    #
-    #   nodes <- rbind(nodes1, nodes2)
-    #
-    # }
-
-
   }
 
   if (node_type == "pathway"){
@@ -260,7 +229,7 @@ plot_network.ScoreFP <- function(x,
     mat_overlap <- overlap_count(geneset1)
     mat_overlap <- mat_overlap[mat_overlap$from %in% names(geneset1) | mat_overlap$to %in% names(geneset1),]
 
-    nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% unique(c(mat_overlap$from, mat_overlap$to)),]
+    nodes1 <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% pathway_overlap,]
 
     nodes1$color <- node_color[1]
     colnames(nodes1) <- c("id", "label","color")
