@@ -112,3 +112,89 @@ score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
 
   return(res_ScoreResult)
 }
+
+
+
+##' @rdname imm_centr
+##' @exportMethod imm_centr
+
+setMethod("imm_centr", signature(x = "data.frame"),
+          function(x) {
+            imm_centr.data.frame(x)
+          })
+
+
+##' @rdname imm_centr
+##' @exportMethod imm_centr
+
+setMethod("imm_centr", signature(x = "ScoreResultNet"),
+          function(x, drug, node = "target", net = "disease") {
+            imm_centr.ScoreResultNet(x, drug, node = node, net = net)
+          })
+
+
+#' @rdname imm_centr
+#' @importFrom igraph degree
+#' @importFrom igraph closeness
+#' @importFrom igraph betweenness
+#' @importFrom igraph eigen_centrality
+#' @importFrom igraph V
+#' @author Yuanlong Hu
+
+
+imm_centr.data.frame <- function(x, node, net){
+  x <- as.data.frame(x)[,1:2]
+  names(x) <- c("from", "to")
+  g <- graph.data.frame(x, directed = F)
+
+  res <- list(
+    degree = degree(g, v = V(g), mode = "all"),
+    closeness = closeness(g, vids = V(g), mode = "all"),
+    betweenness = betweenness(g, v = V(g)),
+    eigen = eigen_centrality(g)$vector
+  )
+  res <- as.data.frame(res)
+  return(res)
+}
+
+#' @rdname imm_centr
+#' @param drug drug name
+#' @param node Nodes that need to be evaluated. one of "disease" and "target.
+#' @param net Network. one of "disease" and "target.
+#' @importFrom igraph degree
+#' @importFrom igraph closeness
+#' @importFrom igraph betweenness
+#' @importFrom igraph eigen_centrality
+#' @importFrom igraph V
+#' @author Yuanlong Hu
+
+imm_centr.ScoreResultNet <- function(x, drug, node, net){
+
+  g <- x@DiseaseNetwork
+  names(g) <- c("from", "to")
+
+  if (net == "target"){
+    Target <- x@ScoreResult[drug,"Target"]
+    Target <- strsplit(Target, split = ", ")[[1]]
+    g <- g[g$from %in% Target & g$to %in% Target,]
+  }
+
+  g <- graph.data.frame(g, directed = F)
+
+  res <- list(
+    degree = degree(g, v = V(g), mode = "all"),
+    closeness = closeness(g, vids = V(g), mode = "all"),
+    betweenness = betweenness(g, v = V(g)),
+    eigen = eigen_centrality(g)$vector
+  )
+
+  if (node == "target"){
+    Target <- x@ScoreResult[drug,"Target"]
+    Target <- strsplit(Target, split = ", ")[[1]]
+    res <- res[Target,]
+  }
+
+
+  res <- res[order(res$degree, decreasing = T),]
+  return(res)
+}

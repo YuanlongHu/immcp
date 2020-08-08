@@ -48,3 +48,23 @@ setGeneric("extrFP",
            }
 
 )
+
+
+
+
+#' Computing the centrality of complex networks
+#'
+#'
+#' @title imm_centr
+#' @rdname imm_centr
+#' @param x ScoreResultNet or data.frame object.
+#' @param ... additional parameters
+#' @return data.frame or ScoreResultNet object
+#' @export
+#' @author Yuanlong Hu
+
+setGeneric("imm_centr",
+           function(x, ...){
+             standardGeneric("imm_centr")
+           }
+)
