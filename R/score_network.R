@@ -188,10 +188,12 @@ imm_centr.ScoreResultNet <- function(x, drug, node, net){
     eigen = eigen_centrality(g)$vector
   )
 
+  res <- as.data.frame(res)
   if (node == "target"){
     Target <- x@ScoreResult[drug,"Target"]
     Target <- strsplit(Target, split = ", ")[[1]]
     res <- res[Target,]
+
   }
 
 
