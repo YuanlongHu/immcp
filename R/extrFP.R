@@ -16,7 +16,6 @@ setMethod("extrFP", signature(drug_target = "BasicData"),
 #' @importFrom pbapply pblapply
 #' @importFrom clusterProfiler enricher
 #' @importFrom clusterProfiler GSEA
-#' @author Yuanlong Hu
 
 
 extrFP.BasicData <- function(drug_target, disease_biomarker, method = "enrich"){

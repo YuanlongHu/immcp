@@ -23,6 +23,7 @@ Calculate the pathway fingerprint.similarity between disease and prescription.
 
   data("drugResult")
   res <- score_fp(drugResult$demoFP, n=100)
+  res <- get_result(res)
 }
 \references{
 Ye, H., Tang, K., Yang, L., Cao, Z., & Li, Y. (2012). Study of drug function based on similarity of pathway fingerprint. Protein & cell, 3(2), 132-139.

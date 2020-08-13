@@ -34,7 +34,6 @@ setMethod("plot_network", signature(x = "ScoreResultFP"),
 #' @importFrom visNetwork visNetwork
 #' @importFrom visNetwork visOptions
 #' @importFrom visNetwork visIgraphLayout
-#' @author Yuanlong Hu
 
 
 

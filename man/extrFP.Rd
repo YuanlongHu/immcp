@@ -30,14 +30,15 @@ Calculate the pathway fingerprints
 \examples{
 
   data("drugSample")
-  drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
-  drug_target <- CreateBasicData(drug_target)
+  drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
+  herb_target <- PrepareData(drugSample$herb_target,
+                             col1 = "herb", col2 = "target",
+                             format = "basket", sep = ", ")
+  drug_target <- CreateBasicData(drug_herb, herb_target)
   FP <- extrFP(drug_target = drug_target,
                disease_biomarker = drugSample$disease_biomarker,
                method = "enrich")
 }
 \author{
-Yuanlong Hu
-
 Yuanlong Hu
 }

@@ -14,7 +14,10 @@
 #' @examples
 #'
 #'   data("drugSample")
-#'   drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
+#'   drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
+#'   herb_target <- PrepareData(drugSample$herb_target,
+#'                              col1 = "herb", col2 = "target",
+#'                              format = "basket", sep = ", ")
 
 PrepareData <- function(data, col1, col2, format = "single", sep){
 
@@ -78,8 +81,11 @@ PrepareData <- function(data, col1, col2, format = "single", sep){
 #' @examples
 #'
 #'   data("drugSample")
-#'   drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
-#'   drug_target <- CreateBasicData(drug_target)
+#'   drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
+#'   herb_target <- PrepareData(drugSample$herb_target,
+#'                              col1 = "herb", col2 = "target",
+#'                              format = "basket", sep = ", ")
+#'   drug_target <- CreateBasicData(drug_herb, herb_target)
 
 
 CreateBasicData <- function(...){
@@ -99,10 +105,6 @@ CreateBasicData <- function(...){
     compound <- da[index][[1]]
     compound <- data.frame(compound = compound$from,
                            id = compound$id)
-   # compound <- compound[,c(unique(compound$col1) == "compound", 3)]
-    #colnames(compound) <- c("compound", "id")
-
-    #compound <- Reduce("rbind",compound)
     compound <- compound[!duplicated(compound$compound),]
   }else{
     compound <- data.frame()

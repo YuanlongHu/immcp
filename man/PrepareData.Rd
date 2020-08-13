@@ -26,7 +26,10 @@ Prepare input format.
 \examples{
 
   data("drugSample")
-  drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
+  drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
+  herb_target <- PrepareData(drugSample$herb_target,
+                             col1 = "herb", col2 = "target",
+                             format = "basket", sep = ", ")
 }
 \author{
 Yuanlong Hu

@@ -10,6 +10,7 @@
 #' @param manipulation Whether to edit the network.
 #' @param ... additional parameters
 #' @return visNetwork object
+#' @author Yuanlong Hu
 #' @export
 
 setGeneric("plot_network",
@@ -35,8 +36,11 @@ setGeneric("plot_network",
 #' @examples
 #'
 #'   data("drugSample")
-#'   drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
-#'   drug_target <- CreateBasicData(drug_target)
+#'   drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
+#'   herb_target <- PrepareData(drugSample$herb_target,
+#'                              col1 = "herb", col2 = "target",
+#'                              format = "basket", sep = ", ")
+#'   drug_target <- CreateBasicData(drug_herb, herb_target)
 #'   FP <- extrFP(drug_target = drug_target,
 #'                disease_biomarker = drugSample$disease_biomarker,
 #'                method = "enrich")

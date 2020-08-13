@@ -18,17 +18,17 @@
 #' @examples
 #'
 #'   data("drugSample")
-#'   drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
-#'   drug_target <- CreateBasicData(drug_target)
+#'   drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
+#'   herb_target <- PrepareData(drugSample$herb_target,
+#'                              col1 = "herb", col2 = "target",
+#'                              format = "basket", sep = ", ")
+#'   drug_target <- CreateBasicData(drug_herb, herb_target)
 #'   res <- score_network(Tar = drug_target, DNet = drugSample$disease_network)
 #'   res <- get_result(res)
 
 score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
   Relationship <- Tar@Relationship
   Tar <- Tar@BasicData
-
- # if(class(Tar) == "list") Tar
-  #if(class(Tar) == "data.frame") Tar <- to_list(Tar)
 
   score_network_s <- function(DNet, target, method = "all"){
 

@@ -42,8 +42,11 @@ str(drugSample)
 
 `PrepareData` can prepare the format of input data. `CreateBasicData` can craete a `BasicData` object.
 ```{r}
-drug_target <- PrepareData(drugSample$herb_target, col1 = "herb", col2 = "target")
-drug_target <- CreateBasicData(drug_target)
+drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
+herb_target <- PrepareData(drugSample$herb_target, 
+                           col1 = "herb", col2 = "target", 
+                            format = "basket", sep = ", ")
+drug_target <- CreateBasicData(drug_herb, herb_target)
 ```
 
 `extrFP()` can calculate the pathway fingerprints based on `KEGG` pathawy(except "Human Diseases" and "Drug Development").
@@ -76,6 +79,5 @@ get_result(res, pvalueCutoff = 0.05)
 We can look at our distribution using `plot_density()`.
 
 ```{r}
-plot_density(res, "BAN_XIA_XIE_XIN_TANG")
+plot_density(res, "DANG_GUI_BU_XUE_TANG")
 ```
-
