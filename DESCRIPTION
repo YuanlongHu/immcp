@@ -5,7 +5,8 @@ Authors@R:
     person(given = "Yuanlong",
            family = "Hu",
            role = c("aut", "cre"),
-           email = "huyuanlong1996@163.com")
+           email = "huyuanlong1996@163.com",
+           comment = c(ORCID = "0000-0003-1933-7570"))
 Description: The pathway fingerprint is a method to indicate the profile of significant pathways being influenced by drugs, which may hint drug functions. Through the similarity of pathway fingerprints, the potential relationship between disease and prescription can be found. Ye (2012) <doi: 10.1007/s13238-012-2011-z>.
 License: GPL-3
 Encoding: UTF-8
