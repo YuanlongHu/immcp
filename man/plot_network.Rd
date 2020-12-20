@@ -14,7 +14,7 @@ plot_network(
   Drug,
   node_color = c("lightblue", "orange", "red", "green"),
   layout = "layout_nicely",
-  manipulation = FALSE,
+  manipulation = TRUE,
   ...
 )
 
@@ -23,7 +23,7 @@ plot_network(
   Drug,
   node_color = c("lightblue", "orange", "red", "green"),
   layout = "layout_nicely",
-  manipulation = FALSE,
+  manipulation = TRUE,
   node_type = "target",
   background = "drug",
   neighbor = FALSE
@@ -32,10 +32,10 @@ plot_network(
 \S4method{plot_network}{ScoreFP}(
   x,
   Drug,
-  node_type = "herb-compound-target",
+  node_type = "pathway",
   node_color = c("lightblue", "orange", "red", "green"),
   layout = "layout_nicely",
-  manipulation = FALSE,
+  manipulation = TRUE,
   highlight = NULL,
   width = FALSE
 )
@@ -43,10 +43,10 @@ plot_network(
 \S4method{plot_network}{ScoreResultFP}(
   x,
   Drug,
-  node_type = "herb-compound-target",
+  node_type = "pathway",
   node_color = c("lightblue", "orange", "red", "green"),
   layout = "layout_nicely",
-  manipulation = FALSE,
+  manipulation = TRUE,
   highlight = NULL,
   width = FALSE
 )

@@ -2,7 +2,7 @@
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultNet"),
-          function(x, Drug, node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = FALSE, node_type = "target", background = "drug",neighbor = FALSE) {
+          function(x, Drug, node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = TRUE, node_type = "target", background = "drug",neighbor = FALSE) {
             plot_network.ScoreResultNet(x, Drug, node_color = node_color, layout = layout, manipulation = manipulation, node_type = node_type, background = background, neighbor = neighbor)
           })
 
@@ -11,7 +11,7 @@ setMethod("plot_network", signature(x = "ScoreResultNet"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreFP"),
-          function(x, Drug, node_type="herb-compound-target", node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = FALSE, highlight = NULL, width = FALSE) {
+          function(x, Drug, node_type="pathway", node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = TRUE, highlight = NULL, width = FALSE) {
             plot_network.ScoreFP(x, Drug, node_type=node_type, node_color = node_color, layout = layout, manipulation = manipulation, highlight = highlight, width = width)
           })
 
@@ -20,7 +20,7 @@ setMethod("plot_network", signature(x = "ScoreFP"),
 ##' @exportMethod plot_network
 
 setMethod("plot_network", signature(x = "ScoreResultFP"),
-          function(x, Drug, node_type="herb-compound-target", node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = FALSE, highlight = NULL, width = FALSE) {
+          function(x, Drug, node_type="pathway", node_color = c("lightblue","orange", "red", "green"), layout = "layout_nicely", manipulation = TRUE, highlight = NULL, width = FALSE) {
             x <- x@Fingerprint
             plot_network.ScoreFP(x = x, Drug, node_type = node_type, node_color = node_color, layout = layout, manipulation = manipulation, highlight = highlight, width = width)
           })
@@ -113,12 +113,10 @@ plot_network.ScoreFP <- function(x,
 
   geneset1 <- to_list(geneset1)
 
-  # Number of overlapping genes between pathways
-  val <- unique(paste0(Relationship$col1, Relationship$col2))
-
   CompoundAnno <- x@CompoundAnno
   Relationship <- x@Relationship
-
+  # Number of overlapping genes between pathways
+  val <- unique(paste0(Relationship$col1, Relationship$col2))
   if (node_type == "herb-compound-pathway"){
 
 
