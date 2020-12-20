@@ -4,14 +4,16 @@
 \alias{viewpathway}
 \title{viewpathway}
 \usage{
-viewpathway(x, drug, view = "intersect")
+viewpathway(x, drug, pathway_view = "intersect", gene_view = "drug")
 }
 \arguments{
 \item{x}{a ScoreFP object.}
 
 \item{drug}{character vector of drug name.}
 
-\item{view}{one of intersect, drug or disease.}
+\item{pathway_view}{Look at whether the pathway comes from one of intersect, drug or disease.}
+
+\item{gene_view}{Look at whether the gene comes from one of intersect, drug or disease.}
 }
 \value{
 ScoreResult object

@@ -87,13 +87,14 @@ score_fp <- function(FP, n = 100, two_tailed = TRUE){
 #' @title viewpathway
 #' @param x a ScoreFP object.
 #' @param drug character vector of drug name.
-#' @param view one of intersect, drug or disease.
+#' @param pathway_view Look at whether the pathway comes from one of intersect, drug or disease.
+#' @param gene_view Look at whether the gene comes from one of intersect, drug or disease.
 #' @return ScoreResult object
 #' @export
 #' @author Yuanlong Hu
 
 
-viewpathway <- function(x, drug, view = "intersect"){
+viewpathway <- function(x, drug, pathway_view = "intersect", gene_view = "drug"){
 
   FP <- x@Fingerprint@Fingerprint
   FP_disease <- FP[["disease"]]
@@ -104,14 +105,16 @@ viewpathway <- function(x, drug, view = "intersect"){
 
   FP_intersect <- intersect(FP_disease, FP_drug)
 
-  if (view == "disease") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_disease,]
-  if (view == "drug") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_drug,]
-  if (view == "intersect") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_intersect,]
+  if (pathway_view == "disease") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_disease,]
+  if (pathway_view == "drug") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_drug,]
+  if (pathway_view == "intersect") res <- genesetlist$KEGGPATHID2NAME[genesetlist$KEGGPATHID2NAME$from %in% FP_intersect,]
 
   res0 <- NULL
   for (i in 1:nrow(res)) {
     SYMBOL <- genesetlist$KEGGPATHID2EXTID$SYMBOL[genesetlist$KEGGPATHID2EXTID$from == res$from[i]]
-    SYMBOL <- intersect(SYMBOL, x@Fingerprint@DrugTarget[[drug]])
+    if (gene_view == "drug") SYMBOL <- intersect(SYMBOL, x@Fingerprint@DrugTarget[[drug]])
+    if (gene_view == "disease") SYMBOL <- intersect(SYMBOL, x@Fingerprint@DiseaseBiomarker)
+    if (gene_view == "intersect") SYMBOL <- intersect(SYMBOL, intersect(x@Fingerprint@DiseaseBiomarker, x@Fingerprint@DrugTarget[[drug]]))
     SYMBOL <- paste0(SYMBOL, collapse = ", ")
     res0 <- c(res0, SYMBOL)
   }
