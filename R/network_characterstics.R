@@ -1,0 +1,103 @@
+#' Calculate the natural connectivity
+#'
+#'
+#' @title natural_connectivity
+#' @param graph The graph.
+#' @return a numeric vector
+#' @importFrom base eigen
+#' @importFrom igraph as_adjacency_matrix
+#' @export
+#' @author Yuanlong Hu
+#' @examples
+#'
+#' data("drugSample")
+#' graph <- igraph::graph.data.frame(drugSample$disease_network)
+#' natural_connectivity(graph)
+
+
+natural_connectivity <- function(graph) {
+
+  adj_matrix <- as_adjacency_matrix(igraph,sparse=F)
+  adj_matrix[abs(adj_matrix) != 0] <- 1
+
+  lambda <- eigen(adj_matrix, only.values = TRUE)$values
+  lambda <- sort(lambda, decreasing = TRUE)
+
+  lambda_sum <- 0
+  N = length(lambda)
+  for (i in 1:N) lambda_sum <- lambda_sum + exp(lambda[i])
+  lambda_average <- log(lambda_sum/N, base = exp(1))
+  return(lambda_average)
+}
+
+#' Calculate the network characters
+#'
+#'
+#' @title network_char
+#' @param graph The graph.
+#' @param bootstrap Whether to conduct Bootstrapping sampling.
+#' @param replicate the number of replications
+#' @return a data frame
+#' @importFrom base eigen
+#' @importFrom igraph degree
+#' @importFrom igraph closeness
+#' @importFrom igraph betweenness
+#' @importFrom igraph evcent
+#' @importFrom igraph transitivity
+#' @importFrom igraph V
+#' @importFrom igraph E
+#' @importFrom igraph vertex.connectivity
+#' @importFrom igraph edge.connectivity
+#' @importFrom igraph average.path.length
+#' @importFrom igraph diameter
+#' @importFrom igraph graph.density
+#' @importFrom igraph centralization.betweenness
+#' @importFrom igraph centralization.degree
+#' @export
+#' @author Yuanlong Hu
+#' @examples
+#'
+#' data("drugSample")
+#' graph <- igraph::graph.data.frame(drugSample$disease_network)
+#' network_char(graph)
+
+network_char <- function(graph, total_network=FALSE,
+                         bootstrap=FALSE, replicate=10000){
+
+  if(total_network){
+    net_df <- data.frame(
+      nodes_num = length(V(graph)),    #number of nodes
+      edges_num = length(E(graph)),    #number of edges
+      average_degree = mean(degree(graph)),    #average degree
+      nodes_connectivity = vertex.connectivity(graph),    #vertex connectivity
+      edges_connectivity = edge.connectivity(graph),    #dges connectivity
+      average_path_length = average.path.length(graph, directed = FALSE),    #average path length
+      graph_diameter = diameter(graph, directed = FALSE),    #diameter
+      graph_density = graph.density(graph),    #density
+      clustering_coefficient = transitivity(graph),    #clustering coefficient
+      betweenness_centralization = centralization.betweenness(graph)$centralization,    #betweenness centralization
+      degree_centralization = centralization.degree(graph)$centralization    #degree centralization.
+    )
+    return(net_df)
+  }else{
+    node_df <- data.frame(
+      degree = degree(graph),
+      closeness_centrality = closeness(graph),
+      betweenness_centrality = betweenness(graph),
+      eigenvector_centrality = evcent(graph)$vector,
+      transitivity <- transitivity(graph, 'local', vids = V(graph)),
+      transitivity[is.na(all_transitivity)] <- 0
+    )
+
+    rownames(node_df) <- V(graph)$name
+
+    if(bootstrap){
+      set.seed(12345)
+      node_df <- lapply(node_df, function(x) replicate(replicate, sample(x, 1, replace = TRUE))
+      )
+    node_df <- as.data.frame(node_df)
+  }
+
+  return(node_df)
+  }
+}
