@@ -35,8 +35,6 @@ natural_connectivity <- function(graph) {
 #' @title network_char
 #' @param graph The graph.
 #' @param total_network Calculate for total network or each nodes.
-#' @param bootstrap Whether to conduct Bootstrapping sampling.
-#' @param replicate the number of replications
 #' @return a data frame
 #' @importFrom igraph degree
 #' @importFrom igraph closeness
@@ -60,8 +58,7 @@ natural_connectivity <- function(graph) {
 #' graph <- igraph::graph.data.frame(drugSample$disease_network)
 #' network_char(graph)
 
-network_char <- function(graph, total_network=FALSE,
-                         bootstrap=FALSE, replicate=10000){
+network_char <- function(graph, total_network=FALSE){
 
   if(total_network){
     net_df <- data.frame(
@@ -89,14 +86,75 @@ network_char <- function(graph, total_network=FALSE,
     )
 
     rownames(node_df) <- V(graph)$name
+    return(node_df)
+  }
+}
 
-    if(bootstrap){
-      set.seed(12345)
-      node_df <- lapply(node_df, function(x) replicate(replicate, sample(x, 1, replace = TRUE))
-      )
-    node_df <- as.data.frame(node_df)
+#' Kolmogorov-Smirnov tests for node characters between networks
+#'
+#'
+#' @title network_node_ks
+#' @param network_char list; network node characters
+#' @param replicate the number of conduct bootstrapping sampling replications
+#' @return a data frame
+#' @importFrom pbapply pblapply
+#' @export
+#' @author Yuanlong Hu
+#' @examples
+#'
+#' data("drugSample")
+#' graph <- igraph::graph.data.frame(drugSample$disease_network)
+#' network_char <- network_char(graph)
+#' network_node_ks(network_char)
+
+network_node_ks <- function(network_char, replicate=1000){
+
+  # bootstrap
+  message("----- Bootstrapping Sampling -----")
+  network_char_boot <- pblapply(network_char,
+                              function(x){
+                                set.seed(12345)
+                                node_df <- lapply(x, function(y) replicate(replicate, sample(y, 1, replace = TRUE)))
+                                node_df <- as.data.frame(node_df)
+                                names(node_df) <- c("boot_degree", "boot_closeness",
+                                                    "boot_betweenness", "boot_eigenvector",
+                                                    "boot_transitivity")
+                              })
+
+  # Kolmogorov-Smirnov tests
+  message("----- Kolmogorov-Smirnov Tests -----")
+  result <- list()
+  n <- length(network_char_boot) # a list
+
+  for (i in 1:(n-1)) {
+    for (j in (i+1):n) {
+
+      ks <- lapply(as.list(c("boot_degree", "boot_closeness",
+                             "boot_betweenness", "boot_eigenvector",
+                             "boot_transitivity")),
+             function(x){
+               node_i <- network_char_boot[[i]][ ,x]
+               node_j <- network_char_boot[[j]][ ,x]
+               ks <- ks.test(node_i, node_j, alternative = 'two.sided')
+               return(ks$p.value)
+             })
+
+      # Summary p-value
+      result <- c(result,
+                  list(
+                        c("Network1" = names(network_char_boot)[i],
+                          "Network2" = names(network_char_boot)[j],
+                          "ks_degree" = ks[[1]],
+                          "ks_closeness" = ks[[2]],
+                          "ks_betweenness" = ks[[3]],
+                          "ks_eigenvector" = ks[[4]],
+                          "ks_transitivity" = ks[[5]])
+                        )
+                  )
+    }
   }
 
-  return(node_df)
-  }
+  message("----- Summary Result -----")
+  result <- Reduce(rbind, result)
+  return(result)    # p<0.05
 }

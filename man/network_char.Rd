@@ -4,21 +4,12 @@
 \alias{network_char}
 \title{network_char}
 \usage{
-network_char(
-  graph,
-  total_network = FALSE,
-  bootstrap = FALSE,
-  replicate = 10000
-)
+network_char(graph, total_network = FALSE)
 }
 \arguments{
 \item{graph}{The graph.}
 
 \item{total_network}{Calculate for total network or each nodes.}
-
-\item{bootstrap}{Whether to conduct Bootstrapping sampling.}
-
-\item{replicate}{the number of replications}
 }
 \value{
 a data frame
