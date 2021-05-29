@@ -4,7 +4,6 @@
 #' @title natural_connectivity
 #' @param graph The graph.
 #' @return a numeric vector
-#' @importFrom base eigen
 #' @importFrom igraph as_adjacency_matrix
 #' @export
 #' @author Yuanlong Hu
@@ -17,7 +16,7 @@
 
 natural_connectivity <- function(graph) {
 
-  adj_matrix <- as_adjacency_matrix(igraph,sparse=F)
+  adj_matrix <- as_adjacency_matrix(graph,sparse=F)
   adj_matrix[abs(adj_matrix) != 0] <- 1
 
   lambda <- eigen(adj_matrix, only.values = TRUE)$values
@@ -35,10 +34,10 @@ natural_connectivity <- function(graph) {
 #'
 #' @title network_char
 #' @param graph The graph.
+#' @param total_network Calculate for total network or each nodes.
 #' @param bootstrap Whether to conduct Bootstrapping sampling.
 #' @param replicate the number of replications
 #' @return a data frame
-#' @importFrom base eigen
 #' @importFrom igraph degree
 #' @importFrom igraph closeness
 #' @importFrom igraph betweenness
@@ -86,7 +85,7 @@ network_char <- function(graph, total_network=FALSE,
       betweenness_centrality = betweenness(graph),
       eigenvector_centrality = evcent(graph)$vector,
       transitivity <- transitivity(graph, 'local', vids = V(graph)),
-      transitivity[is.na(all_transitivity)] <- 0
+      transitivity[is.na(transitivity)] <- 0
     )
 
     rownames(node_df) <- V(graph)$name

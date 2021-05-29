@@ -14,6 +14,8 @@ network_char(
 \arguments{
 \item{graph}{The graph.}
 
+\item{total_network}{Calculate for total network or each nodes.}
+
 \item{bootstrap}{Whether to conduct Bootstrapping sampling.}
 
 \item{replicate}{the number of replications}
