@@ -118,6 +118,7 @@ network_node_ks <- function(network_char, replicate=1000){
                                 names(node_df) <- c("boot_degree", "boot_closeness",
                                                     "boot_betweenness", "boot_eigenvector",
                                                     "boot_transitivity")
+                                return(node_df)
                               })
 
   # Kolmogorov-Smirnov tests
@@ -155,5 +156,7 @@ network_node_ks <- function(network_char, replicate=1000){
 
   message("----- Summary Result -----")
   result <- Reduce(rbind, result)
+  result <- as.data.frame(result)
+  rownames(result) <- 1:nrow(result)
   return(result)    # p<0.05
 }
