@@ -10,7 +10,6 @@ bioc_packages:
 
 os:
 - linux
-- windows
 - osx
 
 osx_image: xcode10.3
