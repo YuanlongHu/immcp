@@ -81,10 +81,9 @@ network_char <- function(graph, total_network=FALSE){
       closeness_centrality = closeness(graph),
       betweenness_centrality = betweenness(graph),
       eigenvector_centrality = evcent(graph)$vector,
-      transitivity <- transitivity(graph, 'local', vids = V(graph)),
-      transitivity[is.na(transitivity)] <- 0
+      transitivity <- transitivity(graph, 'local', vids = V(graph))
     )
-
+    node_df$transitivity <- ifelse(is.na(node_df$transitivity), 0, node_df$transitivity)
     rownames(node_df) <- V(graph)$name
     return(node_df)
   }
