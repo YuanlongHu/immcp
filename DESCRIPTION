@@ -1,6 +1,6 @@
 Package: immcp
 Title: Candidate Prescriptions Discovery and Analysis
-Version: 0.9.7
+Version: 0.10.0
 Authors@R: 
     person(given = "Yuanlong",
            family = "Hu",
@@ -34,7 +34,8 @@ Imports:
     corrr,
     GSVA,
     Boruta,
-    limma
+    limma,
+    purrr
 Suggests: 
     knitr,
     rmarkdown

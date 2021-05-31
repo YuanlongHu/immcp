@@ -4,7 +4,7 @@
 \alias{score_network}
 \title{score_network}
 \usage{
-score_network(Tar, DNet, n = 100, two_tailed = TRUE)
+score_network(Tar, DNet, n = 100)
 }
 \arguments{
 \item{Tar}{A BasicData object containing drug target.}
@@ -12,8 +12,6 @@ score_network(Tar, DNet, n = 100, two_tailed = TRUE)
 \item{DNet}{A data frame of disease network containing two columns.}
 
 \item{n}{The number of times random permutation sampling.}
-
-\item{two_tailed}{a logical: select a two-tailed p-value.}
 }
 \value{
 ScoreResultNet object
@@ -30,7 +28,6 @@ Calculate the network score
                              format = "basket", sep = ", ")
   drug_target <- CreateBasicData(drug_herb, herb_target)
   res <- score_network(Tar = drug_target, DNet = drugSample$disease_network)
-  res <- get_result(res)
 }
 \author{
 Yuanlong Hu

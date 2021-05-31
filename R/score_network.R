@@ -5,7 +5,6 @@
 #' @param Tar A BasicData object containing drug target.
 #' @param DNet A data frame of disease network containing two columns.
 #' @param n The number of times random permutation sampling.
-#' @param two_tailed a logical: select a two-tailed p-value.
 #' @return ScoreResultNet object
 #' @importFrom pbapply pblapply
 #' @importFrom igraph graph.data.frame
@@ -24,96 +23,160 @@
 #'                              format = "basket", sep = ", ")
 #'   drug_target <- CreateBasicData(drug_herb, herb_target)
 #'   res <- score_network(Tar = drug_target, DNet = drugSample$disease_network)
-#'   res <- get_result(res)
 
-score_network <- function(Tar, DNet, n = 100, two_tailed = TRUE){
+score_network <- function(Tar, DNet, n = 100){
   Relationship <- Tar@Relationship
   Tar <- Tar@BasicData
 
-  score_network_s <- function(DNet, target, method = "all"){
-
-    DNet <- as.data.frame(DNet[,1:2])
-    colnames(DNet)<- c("node1","node2")
-    target <- intersect(target, unique(c(DNet$node1, DNet$node2)))
-
-    DNet2 <- DNet[!DNet$node1 %in% target,]
-    DNet2 <- DNet2[!DNet2$node2 %in% target,]
-
-    g1 <- graph.data.frame(DNet, directed = F)
-    g2 <- graph.data.frame(DNet2, directed = F)
-
-    degree <- (mean(centr_degree(g2)$res) - mean(centr_degree(g1)$res))/mean(centr_degree(g1)$res)
-    mean_distance <- (mean_distance(g2, directed = F, unconnected = TRUE) - mean_distance(g1, directed = F, unconnected = TRUE))/mean_distance(g1, directed = F, unconnected = TRUE)
-    Total_disturbance_rate <- mean_distance - degree
-
-
-    if(method == "all"){
-      res_network <- c(degree, mean_distance, Total_disturbance_rate)
-      names(res_network) <- c("Mean_degree_disturbance_rate", "Mean_distance_disturbance_rate", "Total_disturbance_rate")
-      return(res_network)
-    }
-
-    if (method == "degree") {
-      return(degree)
-    }
-
-    if (method == "distance") {
-      return(mean_distance)
-    }
-
-    if (method == "total") {
-      return(Total_disturbance_rate)
-    }
-  }
-
-
-  message("Calculating score... \n")
-  net1 <- pbapply::pblapply(Tar, function(x){
-
-    score <- score_network_s(DNet = DNet, target = x, method = "all")
-    marker <- intersect(x,unique(c(DNet[,1], DNet[,2])))
-    marker <- paste0(marker, collapse=", ")
-    set.seed(1234)
-    adj_total <- replicate(n, score_network_s(DNet = data.frame(node1 = sample(DNet[,1]), node2 = sample(DNet[,2]), stringsAsFactors = F), target = x, method = "total"))
-    res <- c(marker, score, adj_total)
-    res
+  message("----- Calculating Network Characters and Tests -----")
+  res <- pbapply::pblapply(Tar, function(x){
+    res <- network_char_test(DNet=DNet, target=x, n=n, samplingdata=TRUE)
+    return(res)
   })
 
-  message("Summarizing all results... \n")
-  result <- pbapply::pblapply(net1, function(x){
-    x1 <- as.numeric(x[4])
-    x2 <- as.numeric(x[-c(1:4)])
+  message("----- Summarizing all results -----")
 
-    z_score <- (x1 - mean(x2))/sd(x2)
-    if(two_tailed){
-      p_value <- (length(x2[abs(x2) > abs(x1)])+1)/(n+1)
-    }else{
-      p_value <- (length(x2[x2 > x1])+1)/(n+1)
-    }
-    p_value <- signif(p_value, 3)
-    res <- c(as.numeric(x[2:4]), z_score, p_value, x[1])
-    names(res) <- c("ChangeDegree", "ChangeDistance", "TotalScore", "adj_TotalScore", "p_value", "Target")
-    res
+  random <- lapply(res, function(x){
+    random <- x$random
+    return(random)
   })
+  res <- lapply(res, function(x){
+    res <- x$res
+    return(res)
+  })
+  res <- Reduce(rbind, res)
+  rownames(res) <- names(Tar)
+  names(random) <- names(Tar)
 
-  result <- as.data.frame(result) %>%
-    t() %>%
-    as.data.frame()
-  result <- result[order(result$adj_TotalScore, decreasing = T),]
-  adj <- lapply(net1, function(x) x[-c(1:2)])
-
-  message("Done... \n")
+  message("----- Done -----")
   res_ScoreResult <- new("ScoreResultNet",
-                         ScoreResult = as.data.frame(result),
+                         ScoreResult = res,
                          DiseaseNetwork = DNet,
                          Tar = Tar,
                          Relationship = Relationship,
-                         adj = adj)
-
+                         adj = random) #list
   return(res_ScoreResult)
 }
 
+#' Test the change of network characters
+#'
+#'
+#' @title network_char_test
+#' @param DNet A data frame of disease network containing two columns.
+#' @param target character; drug target.
+#' @param n The number of times random sampling.
+#' @param method the method of test; "PT":Permutation test.
+#' @param samplingdata Whether to output the random data.
+#' @return a data frame
+#' @importFrom igraph graph.data.frame
+#' @importFrom igraph delete.vertices
+#' @importFrom igraph erdos.renyi.game
+#' @importFrom igraph vcount
+#' @importFrom igraph ecount
+#' @importFrom igraph V
+#' @importFrom igraph V<-
+#' @importFrom purrr map2
+#' @importFrom stats sd
+#' @importFrom pbapply pblapply
+#' @export
+#' @author Yuanlong Hu
 
+network_char_test <- function(DNet, target, n=100, method="PT", samplingdata=FALSE){
+
+  g_DNet <- graph.data.frame(DNet[,1:2])
+  g_DNet_char <- network_char_change(DNet=g_DNet,target=target)
+
+  res_rand <- pblapply(as.list(1:n), function(x){
+    g_rand <- erdos.renyi.game(n = vcount(g_DNet),
+                               p.or.m = ecount(g_DNet),
+                               type = 'gnm', weight = FALSE, mode = 'undirected'
+                               )
+    V(g_rand)$name <- V(g_DNet)$name
+    g_rand_char <- network_char_change(DNet=g_rand, target=target, output_all=FALSE)
+    rownames(g_rand_char) <- x
+    return(g_rand_char)
+  })
+
+  res_rand <- Reduce(rbind, res_rand)
+  g_DNet_char_change <- g_DNet_char[,-c(1:ncol(g_DNet_char)/3*2)]
+
+  if(method=="PT"){
+    z0 <- list()
+    p0 <- list()
+    for (i in 3:ncol(g_DNet_char_change)){
+      x <- g_DNet_char_change[,i]
+      y <- res_rand[,i]
+      z <- (x-mean(y))/sd(y)
+      p <- (length(y[abs(y) > abs(x)])+1)/(n+1)
+      z0 <- c(z0, list(z))
+      p0 <- c(p0, list(p))
+    }
+
+     names(z0) <- paste0("z_", names(g_DNet_char_change)[-c(1,2)])
+     names(p0) <- paste0("p_", names(g_DNet_char_change)[-c(1,2)])
+     res2 <- data.frame(g_DNet_char,
+                        as.data.frame(z0),
+                        as.data.frame(p0))
+   }
+  if(samplingdata){
+    res2 <- list(res=res2, random=res_rand)
+  }
+  return(res2)
+}
+
+#' Calculate the change of network characters
+#'
+#'
+#' @title network_char_change
+#' @param DNet A data frame of disease network containing two columns.
+#' @param target character; drug target.
+#' @param output_all output all result
+#' @return a data frame
+#' @importFrom igraph graph.data.frame
+#' @importFrom igraph delete.vertices
+#' @export
+#' @author Yuanlong Hu
+#' @examples
+#'
+#'   data("drugSample")
+#'   network_char_change(DNet=drugSample$disease_network,
+#'                       target=unique(drugSample$herb_target[,2]))
+
+
+network_char_change <- function(DNet, target, output_all=TRUE){
+
+  if(class(DNet)=="igraph"){
+    g1 <- DNet
+    target <- intersect(target, V(g1)$name)
+  }else{
+
+    DNet <- as.data.frame(DNet[,1:2])
+   # colnames(DNet)<- c("node1","node2")
+    # overlapping gene between drug targets and disease network
+    target <- intersect(target, unique(c(DNet[,1], DNet[,2])))
+    g1 <- graph.data.frame(DNet, directed = F)
+  }
+
+  # Change
+  g2 <- delete.vertices(g1, target)
+
+  netchar_g1 <- network_char(g1, T)
+  netchar_g2 <- network_char(g2, T)
+  change <- (netchar_g2 - netchar_g1)/netchar_g1
+
+  # Summary
+  names(netchar_g1) <- paste0("G1_", names(netchar_g1))
+  names(netchar_g2) <- paste0("G2_", names(netchar_g2))
+  names(change) <- paste0("Change_", names(change))
+  change[is.na(change)] <- 0
+
+  if(output_all){
+    res_network <- data.frame(netchar_g1, netchar_g2, change)
+  }else{
+    res_network <- change
+  }
+  return(res_network)
+}
 
 ##' @rdname imm_centr
 ##' @exportMethod imm_centr
@@ -195,8 +258,6 @@ imm_centr.ScoreResultNet <- function(x, drug, node, net){
     res <- res[Target,]
 
   }
-
-
   res <- res[order(res$degree, decreasing = T),]
   return(res)
 }

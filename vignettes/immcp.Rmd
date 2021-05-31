@@ -76,8 +76,3 @@ res <- score_fp(FP, n = 100)
 ```{r}
 get_result(res, pvalueCutoff = 0.05)
 ```
-We can look at our distribution using `plot_density()`.
-
-```{r}
-plot_density(res, "DANG_GUI_BU_XUE_TANG")
-```

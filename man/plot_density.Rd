@@ -4,12 +4,14 @@
 \alias{plot_density}
 \title{plot_density}
 \usage{
-plot_density(result, drug, fill = "#6495ED")
+plot_density(result, drug, view = "Change_average_degree", fill = "#6495ED")
 }
 \arguments{
 \item{result}{an object of class ScoreResult.}
 
 \item{drug}{a character of drug name.}
+
+\item{view}{the index}
 
 \item{fill}{fill color.}
 }
@@ -18,16 +20,6 @@ a ggplot
 }
 \description{
 Plot smoothed density estimates for adjusted score
-}
-\examples{
-\dontrun{
-  data("drugSample")
-  FP <- extrFP(disease_biomarker = drugSample$disease_biomarker,
-               drug_target = drugSample$herb_target,
-               geneset = "ImmGenTop150")
-  res <- score_fp(FP, n=100)
-  plot_density(res, drug="BAN_XIA_XIE_XIN_TANG")
-}
 }
 \author{
 Yuanlong Hu

@@ -60,14 +60,24 @@ natural_connectivity <- function(graph) {
 
 network_char <- function(graph, total_network=FALSE){
 
+  transitivity <- transitivity(graph, 'local', vids = V(graph))
+  transitivity <- ifelse(is.na(transitivity), 0, transitivity)
+
   if(total_network){
+
+
     net_df <- data.frame(
       nodes_num = length(V(graph)),    #number of nodes
       edges_num = length(E(graph)),    #number of edges
       average_degree = mean(degree(graph)),    #average degree
-      nodes_connectivity = vertex.connectivity(graph),    #vertex connectivity
-      edges_connectivity = edge.connectivity(graph),    #dges connectivity
       average_path_length = average.path.length(graph, directed = FALSE),    #average path length
+      average_closeness = mean(closeness(graph)),
+      average_betweenness = mean(betweenness(graph)),
+      average_eigenvector = mean(evcent(graph)$vector),
+      average_transitivity = mean(transitivity),
+      #nodes_connectivity = vertex.connectivity(graph),    #vertex connectivity
+      #edges_connectivity = edge.connectivity(graph),    #dges connectivity
+      natural_connectivity = natural_connectivity(graph), #natural connectivity
       graph_diameter = diameter(graph, directed = FALSE),    #diameter
       graph_density = graph.density(graph),    #density
       clustering_coefficient = transitivity(graph),    #clustering coefficient
@@ -81,9 +91,9 @@ network_char <- function(graph, total_network=FALSE){
       closeness_centrality = closeness(graph),
       betweenness_centrality = betweenness(graph),
       eigenvector_centrality = evcent(graph)$vector,
-      transitivity = transitivity(graph, 'local', vids = V(graph))
+      transitivity = transitivity
     )
-    node_df$transitivity <- ifelse(is.na(node_df$transitivity), 0, node_df$transitivity)
+    #node_df$transitivity <- ifelse(is.na(node_df$transitivity), 0, node_df$transitivity)
     rownames(node_df) <- V(graph)$name
     return(node_df)
   }
@@ -97,6 +107,7 @@ network_char <- function(graph, total_network=FALSE){
 #' @param replicate the number of conduct bootstrapping sampling replications
 #' @return a data frame
 #' @importFrom pbapply pblapply
+#' @importFrom stats ks.test
 #' @export
 #' @author Yuanlong Hu
 #' @examples
@@ -155,7 +166,13 @@ network_node_ks <- function(network_char, replicate=1000){
   }
 
   message("----- Summary Result -----")
-  result <- Reduce(rbind, result)
+
+  if(length(result)==1){
+      result <- result[[1]]
+    }else{
+      result <- Reduce(rbind, result)
+    }
+
   result <- as.data.frame(result)
   rownames(result) <- 1:nrow(result)
   return(result)    # p<0.05
