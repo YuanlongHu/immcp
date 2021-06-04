@@ -4,6 +4,7 @@
 #' @title score_network
 #' @param Tar A BasicData object containing drug target.
 #' @param DNet A data frame of disease network containing two columns.
+#' @param method "PT","KS"
 #' @param n The number of times random permutation sampling.
 #' @return ScoreResultNet object
 #' @importFrom pbapply pblapply
@@ -24,29 +25,39 @@
 #'   drug_target <- CreateBasicData(drug_herb, herb_target)
 #'   res <- score_network(Tar = drug_target, DNet = drugSample$disease_network)
 
-score_network <- function(Tar, DNet, n = 100){
+score_network <- function(Tar, DNet, method=c("PT","KS"),n = 100){
   Relationship <- Tar@Relationship
   Tar <- Tar@BasicData
 
   message("----- Calculating Network Characters and Tests -----")
   res <- pbapply::pblapply(Tar, function(x){
-    res <- network_char_test(DNet=DNet, target=x, n=n, samplingdata=TRUE)
+    if(method[1]=="PT") res <- network_char_test(DNet=DNet, target=x, n=n, samplingdata=TRUE)
+    if(method[1]=="KS") res <- network_node_ks(graph=graph.data.frame(DNet, directed = F), target=x, replicate=n)
     return(res)
   })
 
   message("----- Summarizing all results -----")
 
-  random <- lapply(res, function(x){
-    random <- x$random
-    return(random)
-  })
-  res <- lapply(res, function(x){
+  if(method=="KS") random <- list()
+  if(method=="PT"){
+    random <- lapply(res, function(x){
+      random <- x$random
+      return(random)
+   })
+    names(random) <- names(Tar)
+  }
+
+  if(method=="PT"){
+    res <- lapply(res, function(x){
     res <- x$res
     return(res)
-  })
+   })
+
+  }
+
   res <- Reduce(rbind, res)
   rownames(res) <- names(Tar)
-  names(random) <- names(Tar)
+
 
   message("----- Done -----")
   res_ScoreResult <- new("ScoreResultNet",
@@ -65,7 +76,6 @@ score_network <- function(Tar, DNet, n = 100){
 #' @param DNet A data frame of disease network containing two columns.
 #' @param target character; drug target.
 #' @param n The number of times random sampling.
-#' @param method the method of test; "PT":Permutation test.
 #' @param samplingdata Whether to output the random data.
 #' @return a data frame
 #' @importFrom igraph graph.data.frame
@@ -81,7 +91,7 @@ score_network <- function(Tar, DNet, n = 100){
 #' @export
 #' @author Yuanlong Hu
 
-network_char_test <- function(DNet, target, n=100, method="PT", samplingdata=FALSE){
+network_char_test <- function(DNet, target, n=100, samplingdata=FALSE){
 
   g_DNet <- graph.data.frame(DNet[,1:2])
   g_DNet_char <- network_char_change(DNet=g_DNet,target=target)
@@ -100,7 +110,7 @@ network_char_test <- function(DNet, target, n=100, method="PT", samplingdata=FAL
   res_rand <- Reduce(rbind, res_rand)
   g_DNet_char_change <- g_DNet_char[,-c(1:ncol(g_DNet_char)/3*2)]
 
-  if(method=="PT"){
+  #if(method=="PT"){
     z0 <- list()
     p0 <- list()
     for (i in 3:ncol(g_DNet_char_change)){
@@ -110,7 +120,7 @@ network_char_test <- function(DNet, target, n=100, method="PT", samplingdata=FAL
       p <- (length(y[abs(y) > abs(x)])+1)/(n+1)
       z0 <- c(z0, list(z))
       p0 <- c(p0, list(p))
-    }
+   #}
 
      names(z0) <- paste0("z_", names(g_DNet_char_change)[-c(1,2)])
      names(p0) <- paste0("p_", names(g_DNet_char_change)[-c(1,2)])

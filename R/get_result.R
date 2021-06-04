@@ -3,7 +3,6 @@
 #'
 #' @title get_result
 #' @param result an object of class ScoreResult.
-#' @param pvalueCutoff p-value cutoff.
 #' @return a data.frame
 #' @export
 #' @author Yuanlong Hu
@@ -13,8 +12,8 @@
 #'   res <- drugResult$demoScoreFP
 #'   res <- get_result(res)
 
-get_result <- function(result, pvalueCutoff = 0.05){
+get_result <- function(result){
   result <- result@ScoreResult
-  result <- result[result$p_value < pvalueCutoff,]
+  #result <- result[result$p_value < pvalueCutoff,]
   return(result)
 }

@@ -65,7 +65,6 @@ network_char <- function(graph, total_network=FALSE){
 
   if(total_network){
 
-
     net_df <- data.frame(
       nodes_num = length(V(graph)),    #number of nodes
       edges_num = length(E(graph)),    #number of edges
@@ -103,7 +102,8 @@ network_char <- function(graph, total_network=FALSE){
 #'
 #'
 #' @title network_node_ks
-#' @param network_char list; network node characters
+#' @param graph list; network node characters
+#' @param target drug target
 #' @param replicate the number of conduct bootstrapping sampling replications
 #' @return a data frame
 #' @importFrom pbapply pblapply
@@ -117,7 +117,25 @@ network_char <- function(graph, total_network=FALSE){
 #' network_char <- network_char(graph)
 #' network_node_ks(network_char)
 
-network_node_ks <- function(network_char, replicate=1000){
+network_node_ks <- function(graph, target=NULL, replicate=1000){
+
+  #if(is.list(graph) & !is.null(target)) stop("The target must be null!")
+
+  if(is.list(graph) & is.null(target)){
+    network_char <- lapply(graph, function(x){
+      network_char <- suppressWarnings(network_char(x))
+      return(network_char)
+    })
+  }else{
+    target <- intersect(target, V(graph)$name)
+    graph2 <- delete.vertices(graph, target)
+    graph <- list(graph, graph2)
+    network_char <- lapply(graph, function(x){
+      network_char <- suppressWarnings(network_char(x))
+      return(network_char)
+    })
+  }
+
 
   # bootstrap
   message("----- Bootstrapping Sampling -----")
@@ -146,7 +164,7 @@ network_node_ks <- function(network_char, replicate=1000){
              function(x){
                node_i <- network_char_boot[[i]][ ,x]
                node_j <- network_char_boot[[j]][ ,x]
-               ks <- ks.test(node_i, node_j, alternative = 'two.sided')
+               ks <- suppressWarnings(ks.test(node_i, node_j, alternative = 'two.sided'))
                return(ks$p.value)
              })
 
@@ -169,11 +187,13 @@ network_node_ks <- function(network_char, replicate=1000){
 
   if(length(result)==1){
       result <- result[[1]]
+      result <- as.data.frame(result)
+      result <- as.data.frame(t(result))
     }else{
       result <- Reduce(rbind, result)
+      rownames(result) <- 1:nrow(1)
     }
 
-  result <- as.data.frame(result)
-  rownames(result) <- 1:nrow(result)
+  #result <- as.data.frame(result)
   return(result)    # p<0.05
 }
