@@ -11,68 +11,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, message = FALSE, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width = 4,
-  fig.height = 3
-)
-```
+<!-- ```{r, message = FALSE, echo = FALSE} -->
+<!-- knitr::opts_chunk$set( -->
+<!--   collapse = TRUE, -->
+<!--   comment = "#>", -->
+<!--   fig.width = 4, -->
+<!--   fig.height = 3 -->
+<!-- ) -->
+<!-- ``` -->
 
 Traditional Chinese Medicine(TCM) has a history of more than 2000 years and has accumulated a great deal of clinical experience. The herbal prescription is one of the main treatment methods of traditional Chinese medicine. How to find a candidate prescription for a disease defined by modern medicine is an urgent problem to be solved.
 
 The pathway fingerprint (Ye, et.al,2012) is a method to indicate the profile of significant pathways being influenced by drugs, which may hint drug functions. Potential therapeutic prescription can be found based on the similarity of pathway fingerprints between disease and prescription.
 
 
-```{r, message = FALSE}
-library(immcp)
-```
-`drugSample` is a demo dataset, which contains two data frame and two vector:
 
-* herb_target: The names and tagets of herbal prescription.
-* disease_network: Disease network.
-* disease_biomarker: Disease biomarkers.
-* disease_biomarker_gsea: Disease biomarkers containing logFC values.
-
-```{r}
-data("drugSample")
-str(drugSample)
-```
-
-`PrepareData` can prepare the format of input data. `CreateBasicData` can craete a `BasicData` object.
-```{r}
-drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
-herb_target <- PrepareData(drugSample$herb_target, 
-                           col1 = "herb", col2 = "target", 
-                            format = "basket", sep = ", ")
-drug_target <- CreateBasicData(drug_herb, herb_target)
-```
-
-`extrFP()` can calculate the pathway fingerprints based on `KEGG` pathawy(except "Human Diseases" and "Drug Development").
-
-
-If the `disease_biomarker` is a a vector of gene symbol, you can use `method = "enrich"`, such as `disease_biomarker`.
-If the `disease_biomarker` is a a vector of logFC values named by gene symbol, you can use `method = "gsea"`, such as `disease_biomarker_gsea`.
-
-```{r}
-FP <- extrFP(drug_target = drug_target,
-             disease_biomarker = drugSample$disease_biomarker,
-             method = "enrich")
-
-```
-
-`score_fp()` can calculate the Tanimoto coefficient of pathway fingerprint between disease and prescription as score. The score is adjusted by permutation test. The results contain:
-
-* score: Unadjusted score
-* adj_score: Adjusted score
-* p_value: p-value of permutation test 
-
-```{r}
-res <- score_fp(FP, n = 100)
-```
-
-
-```{r}
-get_result(res, pvalueCutoff = 0.05)
-```
