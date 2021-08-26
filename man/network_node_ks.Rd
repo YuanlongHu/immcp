@@ -4,10 +4,12 @@
 \alias{network_node_ks}
 \title{network_node_ks}
 \usage{
-network_node_ks(network_char, replicate = 1000)
+network_node_ks(graph, target = NULL, replicate = 1000)
 }
 \arguments{
-\item{network_char}{list; network node characters}
+\item{graph}{list; network node characters}
+
+\item{target}{drug target}
 
 \item{replicate}{the number of conduct bootstrapping sampling replications}
 }
@@ -21,8 +23,7 @@ Kolmogorov-Smirnov tests for node characters between networks
 
 data("drugSample")
 graph <- igraph::graph.data.frame(drugSample$disease_network)
-network_char <- network_char(graph)
-network_node_ks(network_char)
+network_node_ks(graph, target=drugSample$disease_network[1:20,1])
 }
 \author{
 Yuanlong Hu

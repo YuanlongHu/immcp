@@ -4,7 +4,7 @@
 #' @title score_network
 #' @param Tar A BasicData object containing drug target.
 #' @param DNet A data frame of disease network containing two columns.
-#' @param method "PT","KS"
+#' @param method "KS"
 #' @param n The number of times random permutation sampling.
 #' @return ScoreResultNet object
 #' @importFrom pbapply pblapply
@@ -25,13 +25,13 @@
 #'   drug_target <- CreateBasicData(drug_herb, herb_target)
 #'   res <- score_network(Tar = drug_target, DNet = drugSample$disease_network)
 
-score_network <- function(Tar, DNet, method=c("PT","KS"),n = 100){
+score_network <- function(Tar, DNet, method="KS",n = 100){
   Relationship <- Tar@Relationship
   Tar <- Tar@BasicData
 
   message("----- Calculating Network Characters and Tests -----")
   res <- pbapply::pblapply(Tar, function(x){
-    if(method[1]=="PT") res <- network_char_test(DNet=DNet, target=x, n=n, samplingdata=TRUE)
+   # if(method[1]=="PT") res <- network_char_test(DNet=DNet, target=x, n=n, samplingdata=TRUE)
     if(method[1]=="KS") res <- network_node_ks(graph=graph.data.frame(DNet, directed = F), target=x, replicate=n)
     return(res)
   })
@@ -39,21 +39,21 @@ score_network <- function(Tar, DNet, method=c("PT","KS"),n = 100){
   message("----- Summarizing all results -----")
 
   if(method=="KS") random <- list()
-  if(method=="PT"){
-    random <- lapply(res, function(x){
-      random <- x$random
-      return(random)
-   })
-    names(random) <- names(Tar)
-  }
+  # if(method=="PT"){
+  #   random <- lapply(res, function(x){
+  #     random <- x$random
+  #     return(random)
+  #  })
+  #   names(random) <- names(Tar)
+  # }
 
-  if(method=="PT"){
-    res <- lapply(res, function(x){
-    res <- x$res
-    return(res)
-   })
+  # if(method=="PT"){
+  #   res <- lapply(res, function(x){
+  #   res <- x$res
+  #   return(res)
+  #  })
 
-  }
+  #}
 
   res <- Reduce(rbind, res)
   rownames(res) <- names(Tar)
@@ -88,7 +88,7 @@ score_network <- function(Tar, DNet, method=c("PT","KS"),n = 100){
 #' @importFrom purrr map2
 #' @importFrom stats sd
 #' @importFrom pbapply pblapply
-#' @export
+#' @noRd
 #' @author Yuanlong Hu
 
 network_char_test <- function(DNet, target, n=100, samplingdata=FALSE){

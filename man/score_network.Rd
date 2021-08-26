@@ -4,12 +4,14 @@
 \alias{score_network}
 \title{score_network}
 \usage{
-score_network(Tar, DNet, n = 100)
+score_network(Tar, DNet, method = "KS", n = 100)
 }
 \arguments{
 \item{Tar}{A BasicData object containing drug target.}
 
 \item{DNet}{A data frame of disease network containing two columns.}
+
+\item{method}{"KS"}
 
 \item{n}{The number of times random permutation sampling.}
 }

@@ -114,8 +114,7 @@ network_char <- function(graph, total_network=FALSE){
 #'
 #' data("drugSample")
 #' graph <- igraph::graph.data.frame(drugSample$disease_network)
-#' network_char <- network_char(graph)
-#' network_node_ks(network_char)
+#' network_node_ks(graph, target=drugSample$disease_network[1:20,1])
 
 network_node_ks <- function(graph, target=NULL, replicate=1000){
 

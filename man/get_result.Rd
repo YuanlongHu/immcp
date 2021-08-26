@@ -4,12 +4,10 @@
 \alias{get_result}
 \title{get_result}
 \usage{
-get_result(result, pvalueCutoff = 0.05)
+get_result(result)
 }
 \arguments{
 \item{result}{an object of class ScoreResult.}
-
-\item{pvalueCutoff}{p-value cutoff.}
 }
 \value{
 a data.frame
