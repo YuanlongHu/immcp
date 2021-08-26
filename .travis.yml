@@ -10,9 +10,7 @@ bioc_packages:
 
 os:
 - linux
-- osx
 arch:
   - arm64
   - ppc64le
   - s390x
-osx_image: xcode10.3
