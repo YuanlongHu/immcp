@@ -2,6 +2,7 @@
 
 export(CreateBasicData)
 export(PrepareData)
+export(createNP)
 export(extrFP)
 export(getF)
 export(get_result)
