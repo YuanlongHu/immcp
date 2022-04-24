@@ -1,5 +1,5 @@
 
-# immcp: Discovery and Analysis for Candidate Prescriptions
+# immcp: Polypharmacology Toolkit for Traditional Chinese Medicine Research
 [![](https://img.shields.io/cran/v/immcp?label=CRAN)](https://CRAN.R-project.org/package=immcp)
 [![](https://img.shields.io/badge/devel%20version-1.0.0-blue)](https://github.com/YuanlongHu/immcp)
 [![](https://img.shields.io/github/license/YuanlongHu/immcp)](https://github.com/YuanlongHu/immcp/blob/master/LICENSE.md)
