@@ -64,7 +64,7 @@ to_df <- function(list){
 #'
 #'
 #' @title write_gmt
-#' @param geneset A data.frame of 2 column with term/drug and gene
+#' @param geneset A data.frame of 2 column with term/drug and gene.
 #' @param gmt_file A character of gmt file name.
 #' @return gmt file
 #' @export
@@ -90,19 +90,19 @@ write_gmt <- function(geneset, gmt_file){
 #'
 #' @title write_gmt
 #' @param gmtfile A GMT file name or URL containing gene sets.
-#' @param out_type A character vector of object name. one of "data.frame", "list", "GeneSetCollection"
-#' @return data.frame, list or GeneSetCollection
-#' @importFrom utils stack
-#' @importFrom GSEABase getGmt
+#' @param out_dataframe TRUE or FALSE
+#' @return data.frame, list
 #' @importFrom clusterProfiler read.gmt
 #' @export
 #' @author Yuanlong Hu
 
 
-read_gmt <- function(gmtfile, out_type = "data.frame"){
+read_gmt <- function(gmtfile, out_dataframe=TRUE){
 
- if (out_type == "list") geneset <- to_list(read.gmt(gmtfile))
- if (out_type == "data.frame") geneset <- read.gmt(gmtfile)
- if (out_type == "GeneSetCollection") geneset <- getGmt(gmtfile)
+ if (out_dataframe){
+   geneset <- read.gmt(gmtfile)
+ }else{
+   geneset <- to_list(read.gmt(gmtfile))
+ }
  return(geneset)
 }

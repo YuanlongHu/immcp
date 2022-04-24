@@ -4,15 +4,15 @@
 \alias{read_gmt}
 \title{write_gmt}
 \usage{
-read_gmt(gmtfile, out_type = "data.frame")
+read_gmt(gmtfile, out_dataframe = TRUE)
 }
 \arguments{
 \item{gmtfile}{A GMT file name or URL containing gene sets.}
 
-\item{out_type}{A character vector of object name. one of "data.frame", "list", "GeneSetCollection"}
+\item{out_dataframe}{TRUE or FALSE}
 }
 \value{
-data.frame, list or GeneSetCollection
+data.frame, list
 }
 \description{
 parse gmt file to a data.frame

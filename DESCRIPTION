@@ -1,44 +1,40 @@
 Package: immcp
-Title: Candidate Prescriptions Discovery and Analysis
-Version: 0.10.2
+Title: Polypharmacology Toolkit for Traditional Chinese Medicine Research
+Version: 1.0.0
 Authors@R: 
-    person(given = "Yuanlong",
-           family = "Hu",
-           role = c("aut", "cre"),
-           email = "huyuanlong1996@163.com",
+    person("Yuanlong", "Hu", , "huyuanlong1996@163.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1933-7570"))
-Description: The pathway fingerprint is a method to indicate the profile of significant pathways being influenced by drugs, which may hint drug functions. Through the similarity of pathway fingerprints, the potential relationship between disease and prescription can be found. Ye (2012) <doi: 10.1007/s13238-012-2011-z>.
-License: GPL-3
-Encoding: UTF-8
-LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
-biocViews:
+Description: Toolkit for TCM Polypharmacology Research. Based on the
+    biological descriptors and drug-disease interaction networks, it can
+    analyze the potential polypharmacological mechanisms of TCM and be
+    used for drug repositioning in TCM.
+License: GPL (>= 3)
+URL: https://github.com/YuanlongHu/immcp
+BugReports: https://github.com/YuanlongHu/immcp/issues
 Depends: 
-    R (>= 3.5.0)
-Imports: 
     igraph,
-    proxyC,
-    pbapply,
-    Matrix,
-    magrittr,
-    stats,
-    utils,
+    R (>= 4.0.0)
+Imports: 
     clusterProfiler,
-    GSEABase,
+    DOSE,
+    dplyr,
     methods,
-    ggplot2,
-    visNetwork,
-    RobustRankAggreg,
-    reshape2,
-    corrr,
-    GSVA,
-    Boruta,
-    limma,
-    purrr
+    magrittr,
+    Matrix,
+    openxlsx,
+    org.Hs.eg.db,
+    pbapply,
+    proxyC,
+    purrr,
+    rlang (>= 1.0.2),
+    stats,
+    utils
 Suggests: 
     knitr,
     rmarkdown
-VignetteBuilder: knitr
-BugReports: https://github.com/YuanlongHu/immcp/issues
-URL: https://github.com/YuanlongHu/immcp
+VignetteBuilder: 
+    knitr
+biocViews:
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2

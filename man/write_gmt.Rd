@@ -7,7 +7,7 @@
 write_gmt(geneset, gmt_file)
 }
 \arguments{
-\item{geneset}{A data.frame of 2 column with term/drug and gene}
+\item{geneset}{A data.frame of 2 column with term/drug and gene.}
 
 \item{gmt_file}{A character of gmt file name.}
 }

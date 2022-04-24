@@ -4,25 +4,20 @@
 \alias{CreateBasicData}
 \title{CreateBasicData}
 \usage{
-CreateBasicData(...)
+CreateBasicData(..., diseasenet = NULL, biomarker = NULL)
 }
 \arguments{
-\item{...}{A data frame from \code{PrepareData}.}
+\item{...}{Drug graph from \code{PrepareData}.}
+
+\item{diseasenet}{A graph of Disease-related gene from \code{PrepareData}.}
+
+\item{biomarker}{Character vector, the vector of Disease-related gene.}
 }
 \value{
-a list
+A BasicData object.
 }
 \description{
-Prepare input data.
-}
-\examples{
-
-  data("drugSample")
-  drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
-  herb_target <- PrepareData(drugSample$herb_target,
-                             col1 = "herb", col2 = "target",
-                             format = "basket", sep = ", ")
-  drug_target <- CreateBasicData(drug_herb, herb_target)
+Create BasicData Object
 }
 \author{
 Yuanlong Hu

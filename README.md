@@ -1,12 +1,15 @@
 
 # immcp: Discovery and Analysis for Candidate Prescriptions
 [![](https://img.shields.io/cran/v/immcp?label=CRAN)](https://CRAN.R-project.org/package=immcp)
-[![](https://img.shields.io/badge/devel%20version-0.10.2-blue)](https://github.com/YuanlongHu/immcp)
+[![](https://img.shields.io/badge/devel%20version-1.0.0-blue)](https://github.com/YuanlongHu/immcp)
 [![](https://img.shields.io/github/license/YuanlongHu/immcp)](https://github.com/YuanlongHu/immcp/blob/master/LICENSE.md)
 [![](https://img.shields.io/github/repo-size/YuanlongHu/immcp)](https://github.com/YuanlongHu/immcp)
 
 
-This package was developed for the framework of network pharmacology analysis and candidate herbal prescriptions discovery.
+This R package was a toolkit for TCM polypharmacology research. Based on the biological descriptors and drug-disease interaction networks, it can analyze the potential polypharmacological mechanisms of TCM and be used for drug repositioning in TCM. 
++ Extract biological descriptors by defining the genesets, and calculate the similarity of the drug to the disease characterized by the biological descriptors
++ Create and analyze Drug-Disease Network
+
 
 ## Installation
 You can install it from CRAN:

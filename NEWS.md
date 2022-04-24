@@ -1,3 +1,8 @@
+CHANGES IN VERSION 1.0.0
+------------------------
+
+* Rebuilt the structure of this R package and redeveloped it. <2022-04-24. Sun. JiNan>
+
 CHANGES IN VERSION 0.9.2
 ------------------------
 

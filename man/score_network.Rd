@@ -4,32 +4,18 @@
 \alias{score_network}
 \title{score_network}
 \usage{
-score_network(Tar, DNet, method = "KS", n = 100)
+score_network(BasicData, n = 100)
 }
 \arguments{
-\item{Tar}{A BasicData object containing drug target.}
+\item{BasicData}{A BasicData object.}
 
-\item{DNet}{A data frame of disease network containing two columns.}
-
-\item{method}{"KS"}
-
-\item{n}{The number of times random permutation sampling.}
+\item{n}{Number vector, the number of times random permutation sampling.}
 }
 \value{
-ScoreResultNet object
+A list.
 }
 \description{
 Calculate the network score
-}
-\examples{
-
-  data("drugSample")
-  drug_herb <- PrepareData(drugSample$drug_herb, col1 = "drug", col2 = "herb")
-  herb_target <- PrepareData(drugSample$herb_target,
-                             col1 = "herb", col2 = "target",
-                             format = "basket", sep = ", ")
-  drug_target <- CreateBasicData(drug_herb, herb_target)
-  res <- score_network(Tar = drug_target, DNet = drugSample$disease_network)
 }
 \author{
 Yuanlong Hu
