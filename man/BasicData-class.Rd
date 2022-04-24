@@ -12,9 +12,9 @@ This class represents the basic input data.
 \section{Slots}{
 
 \describe{
-\item{\code{drugnet}}{A directed network.}
+\item{\code{drugnet}}{A directed graph}
 
-\item{\code{vertices}}{vertices.}
+\item{\code{vertices}}{Vertices of drug graph.}
 
 \item{\code{diseasenet}}{Disease network.}
 

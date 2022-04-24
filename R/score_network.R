@@ -1,4 +1,4 @@
-#' Calculate the network score
+#' Calculating differences in disease network characteristics before and after removal of drug targets
 #'
 #'
 #' @title score_network
@@ -15,7 +15,14 @@
 #' @importFrom rlang .data
 #' @export
 #' @author Yuanlong Hu
-
+#' @examples
+#' data(drugdemo)
+#' drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
+#' herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
+#' compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
+#' disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
+#' BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
+#' res <- score_network(BasicData, n = 100)
 
 score_network <- function(BasicData, n = 100){
 
@@ -76,7 +83,7 @@ score_network <- function(BasicData, n = 100){
 #' @author Yuanlong Hu
 
 
-diff_network_char <- function(graph1, graph2, output_all=FALSE){
+diff_network_char <- function(graph1, graph2, output_all = FALSE){
 
   netchar_g1 <- network_char(graph1, T)
   netchar_g2 <- network_char(graph2, T)

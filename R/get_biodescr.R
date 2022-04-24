@@ -34,7 +34,14 @@ setMethod("extr_biodescr", signature(BasicData = "BasicData"),
 #' @importFrom rlang .data
 #' @export
 #' @author Yuanlong Hu
-
+#' @examples
+#' data(drugdemo)
+#' drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
+#' herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
+#' compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
+#' disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
+#' BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
+#' biodescr <- extr_biodescr(BasicData, geneset= "kegg")
 
 extr_biodescr.BasicData <- function(BasicData,
                                     geneset= c("kegg", "mkegg","go", "wp"),

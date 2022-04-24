@@ -8,7 +8,7 @@
 \usage{
 extr_biodescr(
   BasicData,
-  geneset = c("kegg", "mkegg", "go"),
+  geneset = c("kegg", "mkegg", "go", "wp"),
   arguments = list(minGSSize = 5, maxGSSize = 500, pvalue = 0.05, qvalue = 0.1),
   ref_type = "drug",
   ref = NULL,
@@ -55,6 +55,15 @@ A BioDescr object.
 Extract Biological descriptor
 
 Extract Biological descriptor
+}
+\examples{
+data(drugdemo)
+drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
+herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
+compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
+disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
+BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
+biodescr <- extr_biodescr(BasicData, geneset= "kegg")
 }
 \author{
 Yuanlong Hu

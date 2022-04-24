@@ -15,6 +15,12 @@
 #' @importFrom rlang !!!
 #' @export
 #' @author Yuanlong Hu
+#' @examples
+#' data(drugdemo)
+#' drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
+#' herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
+#' compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
+#' disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
 
 PrepareData <- function(..., from, to, diseaseID, format = "single", sep){
 

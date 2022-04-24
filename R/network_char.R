@@ -11,7 +11,7 @@
 
 natural_connectivity <- function(graph) {
 
-  adj_matrix <- as_adjacency_matrix(graph,sparse=F)
+  adj_matrix <- as_adjacency_matrix(graph, sparse=F)
   adj_matrix[abs(adj_matrix) != 0] <- 1
 
   lambda <- eigen(adj_matrix, only.values = TRUE)$values

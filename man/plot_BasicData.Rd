@@ -29,6 +29,16 @@ Returns NULL, invisibly.
 \description{
 Plot Disease-Drug Network
 }
+\examples{
+data(drugdemo)
+drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
+herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
+compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
+disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
+BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
+DisDrugNet <- CreateDisDrugNet(BasicData, drug = "Drug1", disease = "disease")
+plot_BasicData(DisDrugNet)
+}
 \author{
 Yuanlong Hu
 }

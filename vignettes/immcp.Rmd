@@ -24,26 +24,21 @@ This R package was a toolkit for TCM polypharmacology research. Based on the bio
 
 # 1 Create a deom data
 
-```{r,eval=FALSE}
-data(geneList, package = "DOSE")
-gene <- 
-drug_herb <- data.frame(from=c("P1", "P1", "P2", "P2"),
-                 to=c("Herb1", "Herb2","Herb1", "Herb3"))
+```{r,eval=TRUE}
+data(drugdeom)
+names(drugdemo)
+```
 
-herb_compound <- data.frame(from=c("Herb1", "Herb1","Herb1", "Herb2","Herb3"),
-                 to=c("Compound1", "Compound2","Compound3", "Compound3", "Compound4"))
-
-r3 <- list(Compound1=names(geneList)[20:22],
-           Compound2=names(geneList)[1:5],
-           Compound3=names(geneList)[20:30],
-           Compound4=names(geneList)[50:60])
-r3 <- to_df(r3)
-head(r3)
-
-r4 <- data.frame(from=sample(names(geneList)[1:300],100),
-                 to=sample(names(geneList)[1:300],100))
+```{r,eval=TRUE}
+drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
+herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
+compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
+disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
 ```
 
 
-
+```{r,eval=TRUE}
+res <- score_network(BasicData, n = 100)
+res
+```
 

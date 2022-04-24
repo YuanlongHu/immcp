@@ -14,7 +14,7 @@
 #' @export
 
 setGeneric("extr_biodescr",
-           function(BasicData, geneset= c("kegg", "mkegg","go"),
+           function(BasicData, geneset= c("kegg", "mkegg","go","wp"),
                     arguments=list(minGSSize=5,maxGSSize = 500,
                                    pvalue=0.05,qvalue=0.1),
                     ref_type="drug", ref=NULL, to_ENTREZID=TRUE){
