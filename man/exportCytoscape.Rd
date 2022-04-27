@@ -2,12 +2,12 @@
 % Please edit documentation in R/CreateDisDrugNet.R
 \name{exportCytoscape}
 \alias{exportCytoscape}
-\title{exportCytoscape}
+\title{Export an xlsx file to Cytoscape}
 \usage{
-exportCytoscape(BasicData, file)
+exportCytoscape(graph, file)
 }
 \arguments{
-\item{BasicData}{BasicData object.}
+\item{graph}{igraph object.}
 
 \item{file}{file}
 }

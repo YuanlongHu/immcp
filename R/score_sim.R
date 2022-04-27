@@ -17,6 +17,7 @@
 #' @export
 #' @author Yuanlong Hu
 #' @examples
+#' \dontrun{
 #' data(drugdemo)
 #' drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
 #' herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
@@ -25,6 +26,8 @@
 #' BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
 #' biodescr <- extr_biodescr(BasicData, geneset= "kegg")
 #' res <- score_sim(biodescr, method="jaccard", n=100)
+#' }
+
 score_sim <- function(BioDescr, method="jaccard", n=1000){
 
   bd <- as_adjacency_matrix(BioDescr@drug_geneset,

@@ -7,13 +7,18 @@
 to_df(list)
 }
 \arguments{
-\item{list}{a list containing gene sets}
+\item{list}{A list containing gene sets.}
 }
 \value{
-data frame
+A data frame.
 }
 \description{
 Convert list to data.frame
+}
+\examples{
+\dontrun{
+  to_df(list)
+}
 }
 \author{
 Yuanlong Hu

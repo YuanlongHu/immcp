@@ -8,7 +8,10 @@
 #' @return list
 #' @author Yuanlong Hu
 #' @export
-
+#' @examples
+#' \dontrun{
+#'   to_list(dataframe)
+#' }
 
 to_list <- function(dataframe, input="single", sep = ", "){
   dataframe <- dataframe[,c(1,2)]
@@ -41,12 +44,14 @@ to_list <- function(dataframe, input="single", sep = ", "){
 #'
 #'
 #' @title to_df
-#' @param list a list containing gene sets
-#' @return data frame
+#' @param list A list containing gene sets.
+#' @return A data frame.
 #' @author Yuanlong Hu
 #' @export
-
-
+#' @examples
+#' \dontrun{
+#'   to_df(list)
+#' }
 
 to_df <- function(list){
   list0 <- NULL
@@ -59,6 +64,35 @@ to_df <- function(list){
   return(list0)
 }
 
+#' Convert BioDescr object to a list of adjacency matrix
+#'
+#'
+#' @title to_biodescr
+#' @param BioDescr A BioDescr object.
+#' @return A list.
+#' @importFrom igraph as_adjacency_matrix
+#' @importFrom igraph as_data_frame
+#' @author Yuanlong Hu
+#' @export
+#' @examples
+#' \dontrun{
+#'   to_biodescr(BioDescr)
+#' }
+
+to_biodescr <- function(BioDescr){
+
+  bd <- as_adjacency_matrix(BioDescr@drug_geneset,
+                            type = "both",
+                            sparse = FALSE)
+  v <- as_data_frame(BioDescr@drug_geneset, "vertices")
+  # bd_disease <- bd[v$name[v$type=="disease"], v$name[v$type=="pathway"]]
+  # bd_drug <- bd[v$name[v$type=="drug"], v$name[v$type=="pathway"]]
+
+  bd <- bd[v$name[v$type %in% c("disease", "drug")], v$name[v$type=="pathway"]]
+  bd <- list(bd = bd,
+             bd_type = v[v$type %in% c("disease", "drug"),])
+  return(bd)
+}
 
 #' prints data frame to a gmt file
 #'

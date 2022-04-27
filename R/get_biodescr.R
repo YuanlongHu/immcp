@@ -1,21 +1,7 @@
-##' @rdname extr_biodescr
-##' @exportMethod extr_biodescr
-
-setMethod("extr_biodescr", signature(BasicData = "BasicData"),
-          function(BasicData,geneset= c("kegg", "mkegg","go","wp"),
-                   arguments= list(minGSSize=5,maxGSSize=500,
-                                   pvalue=0.05,qvalue=0.1),
-                   ref_type="drug", ref=NULL, to_ENTREZID = TRUE) {
-            extr_biodescr.BasicData(BasicData=BasicData,
-                                   geneset= geneset[1],
-                             arguments= arguments,
-                             ref_type=ref_type, ref=ref, to_ENTREZID = to_ENTREZID)
-          })
-
 #' Extract Biological descriptor
 #'
 #' @rdname extr_biodescr
-#' @title extr_biodescr
+#' @title Extract Biological descriptor
 #' @param BasicData BasicData object.
 #' @param geneset Charactor vector, one of "kegg"(KEGG), "mkegg"(KEGG Module), "go"(GO-BP), and "wp"(WikiPathways); a data frame and list.
 #' @param arguments A list of the arguments of `clusterProfiler`, including `minGSSize`, `maxGSSize`, `pvalue`, and `qvalue`.
@@ -23,6 +9,53 @@ setMethod("extr_biodescr", signature(BasicData = "BasicData"),
 #' @param ref Charactor vector, reference drug, herb, compound or target, defaults to `NULL`.
 #' @param to_ENTREZID Logical, whether to translate to ENTREZID from SYMBOL, defaults to TRUE.
 #' @return A BioDescr object.
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom rlang .data
+#' @exportMethod extr_biodescr
+#' @examples
+#' \dontrun{
+#' data(drugdemo)
+#' drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
+#' herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
+#' compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
+#' disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
+#' BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
+#' biodescr <- extr_biodescr(BasicData, geneset= "kegg")
+#' }
+
+setMethod("extr_biodescr", signature(BasicData = "BasicData"),
+          function(BasicData, geneset= c("kegg", "mkegg","go","wp"),
+                   arguments= list(minGSSize=5,maxGSSize=500,
+                                   pvalue=0.05,qvalue=0.1),
+                   ref_type="drug", ref=NULL, to_ENTREZID = TRUE) {
+
+            message("<<<<< Prepare >>>>>")
+
+            if (!is.null(ref)) {
+              ref <- BasicData@vertices %>% filter(.data$type==ref_type & .data$name %in% ref)
+            }else{
+              ref <- BasicData@vertices %>% filter(.data$type==ref_type)
+            }
+
+            Druglist <- lapply(as.list(ref$name), function(x){
+              subgraph <- subset_network(BasicData, from=x)
+              node <- subgraph@vertices
+              node <- node$name[node$type=="target"]
+              return(node)
+            })
+            names(Druglist) <- ref$name
+
+            res <- extr_biodescr_internal(Druglist = Druglist,
+                                          DisBiomarker = BasicData@biomarker,
+                                          geneset= geneset[1],
+                                          arguments= arguments,
+                                          ref_type=ref_type, ref=ref,
+                                          to_ENTREZID = to_ENTREZID)
+            return(res)
+          })
+
+
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
@@ -32,42 +65,19 @@ setMethod("extr_biodescr", signature(BasicData = "BasicData"),
 #' @importFrom igraph as_data_frame
 #' @importFrom pbapply pblapply
 #' @importFrom rlang .data
-#' @export
-#' @author Yuanlong Hu
-#' @examples
-#' data(drugdemo)
-#' drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
-#' herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
-#' compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
-#' disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
-#' BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
-#' biodescr <- extr_biodescr(BasicData, geneset= "kegg")
 
-extr_biodescr.BasicData <- function(BasicData,
-                                    geneset= c("kegg", "mkegg","go", "wp"),
-                                    arguments= list(minGSSize=5,maxGSSize=500,
-                                                    pvalue=0.05,qvalue=0.1),
-                                    ref_type="drug", ref=NULL, to_ENTREZID = TRUE){
 
-  message("<<<<< Prepare >>>>>")
-
-  if (!is.null(ref)) {
-    ref <- BasicData@vertices %>% filter(.data$type==ref_type & .data$name %in% ref)
-  }else{
-    ref <- BasicData@vertices %>% filter(.data$type==ref_type)
-  }
-
-  nodelist <- lapply(as.list(ref$name), function(x){
-    subgraph <- subset_network(BasicData, from=x)
-    node <- subgraph@vertices
-    node <- node$name[node$type=="target"]
-    return(node)
-  })
-  names(nodelist) <- ref$name
+extr_biodescr_internal <- function(Druglist, DisBiomarker,
+                                  geneset= c("kegg", "mkegg","go", "wp"),
+                                  arguments= list(minGSSize = 5, maxGSSize = 500,
+                                                    pvalue = 0.05, qvalue = 0.1),
+                                  ref_type = "drug", ref = NULL, to_ENTREZID = TRUE){
 
   message("<<<<< Extract >>>>>")
   message("> Extract biological descriptor of Disease")
-  pathway_disease <- pblapply(BasicData@biomarker, function(x){
+
+  # "DisBiomarker" is a list of disease-related gene.
+  pathway_disease <- pblapply(DisBiomarker, function(x){
     res <- enrich_f(x, geneset=geneset,
                     arguments=arguments,
                     to_ENTREZID=to_ENTREZID)
@@ -75,15 +85,13 @@ extr_biodescr.BasicData <- function(BasicData,
     return(res)
     })
   message("> Extract biological descriptor of Drug")
-  pathway_drug <- pblapply(nodelist, function(x){
+  pathway_drug <- pblapply(Druglist, function(x){
     res <- enrich_f(x, geneset=geneset,
                     arguments=arguments,
                     to_ENTREZID=to_ENTREZID)
     res <- res[,c("ID", "geneID", "Description")]
     return(res)
   })
-  # message("> Merge biological descriptor")
-  # pathway <- c(list(disease=pathway_disease), pathway)
 
   message("<<<<< Output >>>>>")
   # a igraph object
@@ -129,13 +137,13 @@ extr_biodescr.BasicData <- function(BasicData,
 
   res <- new("BioDescr",
              drug_geneset = pathway,
-             geneset_gene = list(disease=pathway_disease2,
-                                 drug=pathway_drug2),
-             anno = IDtoDescription,
-             BasicData = BasicData
+             geneset_gene = list(disease = pathway_disease2,
+                                 drug = pathway_drug2),
+             anno = IDtoDescription
   )
   return(res)
 }
+
 
 #' Enrich Analysis
 #'

@@ -1,8 +1,5 @@
-#' Extract Biological descriptor
-#'
-#'
-#' @title extr_biodescr
-#' @rdname extr_biodescr
+#' @title Extract Biological descriptor
+#' @rdname extr_biodescr-method
 #' @param BasicData BasicData object.
 #' @param geneset Charactor vector, one of "kegg"(KEGG), "mkegg"(KEGG Module), "go"(GO-BP), and "wp"(WikiPathways); a data frame and list.
 #' @param arguments A list of the arguments of `clusterProfiler`, including `minGSSize`, `maxGSSize`, `pvalue`, and `qvalue`.
@@ -23,21 +20,24 @@ setGeneric("extr_biodescr",
 
 )
 
-#' Subgraph of a Drug graph
-#'
-#'
-#' @title subset_network
-#' @rdname subset_network
-#' @param BasicData A BasicData object.
-#' @param from The source vertex.
-#' @param to The target vertex.
-#' @return A BasicData object.
-#' @export
+
+
+
+#' @title Plot Disease-Drug Network
+#' @rdname plot_graph-method
 #' @author Yuanlong Hu
+#' @export
 
-setGeneric("subset_network",
-          function(BasicData, from, to=NULL){
-              standardGeneric("subset_network")
-             })
+setGeneric("plot_graph",
+           function(graph,
+                    drug, disease,
+                    vis = "visNetwork",
+                    color=c(drug="blue",
+                            herb="lightblue",
+                            target="orange"),
+                    width = 1, ...){
+             standardGeneric("plot_graph")
+           }
 
+)
 

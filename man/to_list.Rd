@@ -19,6 +19,11 @@ list
 \description{
 Create a new list from a data.frame of drug target and disease biomarker as input
 }
+\examples{
+\dontrun{
+  to_list(dataframe)
+}
+}
 \author{
 Yuanlong Hu
 }

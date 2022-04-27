@@ -28,7 +28,12 @@ Imports:
     purrr,
     rlang (>= 1.0.2),
     stats,
-    utils
+    utils,
+    visNetwork (>= 0.3.1),
+    arules,
+    ggplot2,
+    ggheatmap,
+    factoextra
 Suggests: 
     knitr,
     rmarkdown

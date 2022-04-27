@@ -20,6 +20,7 @@ a list
 Calculating drug-disease similarity based on biological descriptors
 }
 \examples{
+\dontrun{
 data(drugdemo)
 drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
 herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
@@ -28,6 +29,7 @@ disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", 
 BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
 biodescr <- extr_biodescr(BasicData, geneset= "kegg")
 res <- score_sim(biodescr, method="jaccard", n=100)
+}
 }
 \author{
 Yuanlong Hu

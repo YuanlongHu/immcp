@@ -14,7 +14,7 @@ CreateDisDrugNet(BasicData, drug, disease)
 \item{disease}{Character vector, the disease.}
 }
 \value{
-A BasicData object.
+A igraph object.
 }
 \description{
 Create Disease-Drug Network

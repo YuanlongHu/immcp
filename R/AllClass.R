@@ -33,7 +33,6 @@ setClass("BasicData",
 #' @slot drug_geneset from drug to geneset.
 #' @slot geneset_gene from geneset to gene for each drug.
 #' @slot anno Geneset ID and description.
-#' @slot BasicData BasicData object.
 #' @exportClass BioDescr
 #' @author Yuanlong Hu
 
@@ -41,6 +40,25 @@ setClass("BioDescr",
          slots = list(
            drug_geneset = "igraph",
            geneset_gene = "list",
-           anno = "data.frame",
-           BasicData = "BasicData"
+           anno = "data.frame"
+         ))
+
+
+#' Class \code{HerbResult}
+#' This class represents the biological descriptor data.
+#'
+#'
+#' @name HerbResult-class
+#' @docType class
+#' @slot Drug_Herb Drug-herb relationship.
+#' @slot Rule Rule.
+#' @slot Herb Herb information.
+#' @exportClass HerbResult
+#' @author Yuanlong Hu
+
+setClass("HerbResult",
+         slots = list(
+           Drug_Herb = "data.frame",
+           Rule = "data.frame",
+           Herb  = "data.frame"
          ))
