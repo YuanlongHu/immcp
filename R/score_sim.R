@@ -1,11 +1,12 @@
 #' Calculating drug-disease similarity based on biological descriptors
 #'
 #'
-#' @title score_sim
+#' @title Calculating similarity between drug and disease
+#' @rdname score_sim
 #' @param BioDescr BioDescr object.
-#' @param method method, default "jaccard".
-#' @param n number
-#' @return a list
+#' @param method method to compute similarity, default "jaccard". See `proxyC::simil`.
+#' @param n number.
+#' @return A list.
 #' @importFrom dplyr %>%
 #' @importFrom Matrix Matrix
 #' @importFrom proxyC simil
@@ -25,10 +26,10 @@
 #' disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
 #' BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
 #' biodescr <- extr_biodescr(BasicData, geneset= "kegg")
-#' res <- score_sim(biodescr, method="jaccard", n=100)
+#' res <- score_sim(biodescr, method="jaccard", n=1000)
 #' }
 
-score_sim <- function(BioDescr, method="jaccard", n=1000){
+score_sim <- function(BioDescr, method = "jaccard", n=1000){
 
   bd <- as_adjacency_matrix(BioDescr@drug_geneset,
                             type = "both",
@@ -125,6 +126,7 @@ sample_bd <- function(a, b, method="jaccard"){
 #' @title test_simil
 #' @param bd_disease bd_disease
 #' @param bd_drug bd_drug
+#' @param n Number
 #' @return a list
 #' @importFrom dplyr %>%
 #' @importFrom pbapply pblapply
