@@ -12,11 +12,9 @@ This class represents the biological descriptor data.
 \section{Slots}{
 
 \describe{
-\item{\code{Drug_Herb}}{Drug-herb relationship.}
+\item{\code{Drug_Herb}}{Data frame, Drug-herb relationship.}
 
-\item{\code{Rule}}{Rule.}
-
-\item{\code{Herb}}{Herb information.}
+\item{\code{Herb_Herb}}{Herb-herb association Rule Graph, it is a directed graph.}
 }}
 
 \author{

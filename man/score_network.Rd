@@ -4,12 +4,12 @@
 \alias{score_network}
 \title{score_network}
 \usage{
-score_network(BasicData, n = 100)
+score_network(BasicData, n = 1000)
 }
 \arguments{
 \item{BasicData}{A BasicData object.}
 
-\item{n}{Number vector, the number of times random permutation sampling.}
+\item{n}{Number vector, the number of times random permutation sampling, default to 1000.}
 }
 \value{
 A list.

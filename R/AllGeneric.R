@@ -25,17 +25,27 @@ setGeneric("extr_biodescr",
 
 #' @title Plot Disease-Drug Network
 #' @rdname plot_graph-method
+#' @param graph graph.
+#' @param Isolated  Whether to delect Isolated nodes.
+#' @param drug drug.
+#' @param disease disease.
+#' @param vis one of "igraph", "visNetwork" and "shiny".
+#' @param color Nodes Color
+#' @param width Edges width
+#' @param size Nodes size
+#' @param ... Arguments
+#' @return Returns NULL, invisibly.
 #' @author Yuanlong Hu
 #' @export
 
 setGeneric("plot_graph",
            function(graph,
-                    drug, disease,
+                    drug, disease,Isolated = TRUE,
                     vis = "visNetwork",
-                    color=c(drug="blue",
-                            herb="lightblue",
-                            target="orange"),
-                    width = 1, ...){
+                    color = c(drug = "blue",
+                            herb = "lightblue",
+                            target = "orange"),
+                    width = 1, size = 20, ...){
              standardGeneric("plot_graph")
            }
 

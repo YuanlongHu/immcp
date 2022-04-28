@@ -3,7 +3,7 @@
 #'
 #' @title score_network
 #' @param BasicData A BasicData object.
-#' @param n Number vector, the number of times random permutation sampling.
+#' @param n Number vector, the number of times random permutation sampling, default to 1000.
 #' @return A list.
 #' @importFrom pbapply pblapply
 #' @importFrom igraph neighbors
@@ -24,7 +24,7 @@
 #' BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
 #' res <- score_network(BasicData, n = 100)
 
-score_network <- function(BasicData, n = 100){
+score_network <- function(BasicData, n = 1000){
 
   drug_list <- BasicData@vertices %>% filter(.data$type=="drug")
   drug_list <- drug_list$name

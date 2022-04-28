@@ -1,15 +1,4 @@
-#' Plot Disease-Drug Network
-#'
 #' @rdname plot_graph-method
-#' @title Plot Disease-Drug Network
-#' @param graph graph.
-#' @param drug drug.
-#' @param disease disease.
-#' @param vis one of "igraph", "visNetwork" and "shiny".
-#' @param color Color
-#' @param width width
-#' @param ... Arguments
-#' @return Returns NULL, invisibly.
 #' @exportMethod plot_graph
 
 setMethod("plot_graph", signature(graph = "BasicData"),
@@ -19,8 +8,7 @@ setMethod("plot_graph", signature(graph = "BasicData"),
                    color= c(drug="blue",
                             herb="lightblue",
                             target="orange"),
-                   width = 1,
-                   ...){
+                   width = 1, size = 1, ...){
 
             DisDrugNet <- CreateDisDrugNet(BasicData = graph,
                                            drug = drug, disease = disease)
@@ -36,9 +24,35 @@ setMethod("plot_graph", signature(graph = "igraph"),
                    color= c(drug = "blue",
                             herb = "lightblue",
                             target = "orange"),
-                   width = 1, ...){
+                   width = 1, size=1, ...){
 
-            plot_graph_internal(graph, vis = vis, color=color, width = width, ...)
+            plot_graph_internal(graph, vis = vis, color = color, width = width, ...)
+          })
+
+#' @rdname plot_graph-method
+#' @importFrom igraph E
+#' @importFrom igraph V
+#' @importFrom igraph delete.vertices
+#' @importFrom igraph degree
+#' @exportMethod plot_graph
+
+setMethod("plot_graph", signature(graph = "HerbResult"),
+          function(graph, Isolated = TRUE,
+                   vis = "visNetwork",
+                   color= "lightblue",
+                   width = 1, size = 20,...){
+
+            graph <- graph@Herb_Herb
+            if(Isolated) graph <- delete.vertices(graph, which(degree(graph)==0))
+
+            if (size == "frequency") size <- V(graph)$frequency_relative*30
+
+            if (width == "support") width <- E(graph)$support*10
+            if (width == "confidence") width <- E(graph)$confidence*10
+            if (width == "coverage") width <- E(graph)$coverage*10
+            if (width == "lift") width <- E(graph)$lift*1.1
+
+            plot_graph_internal(graph, vis = vis, color=c(herb = color), width = width, size = size ,...)
           })
 
 #' @importFrom dplyr %>%
@@ -63,6 +77,7 @@ plot_graph_internal <- function(graph,
                                         herb = "lightblue",
                                         target = "orange"),
                                 width = 1,
+                                size = 1,
                                 ...){
 
   # set color
@@ -73,12 +88,14 @@ plot_graph_internal <- function(graph,
 
   if (vis == "igraph") {
     E(net)$width <- width
+    V(net)$size <- size
     plot.igraph(net, ...)
   }
 
   if (vis == "visNetwork"){
     data_visNetwork <- toVisNetworkData(net)
-    data_visNetwork$edges$width <- width
+    if(nrow(data_visNetwork$edges)>0) data_visNetwork$edges$width <- width
+    if(nrow(data_visNetwork$nodes)>0) data_visNetwork$nodes$size <- size
     p <- visNetwork(nodes = data_visNetwork$nodes,
                     edges = data_visNetwork$edges,
                     height = "700px", width = "100%") %>%
@@ -91,7 +108,8 @@ plot_graph_internal <- function(graph,
 
   if (vis == "shiny"){
     data_visNetwork <- toVisNetworkData(net)
-    data_visNetwork$edges$width <- width
+    if(nrow(data_visNetwork$edges)>0) data_visNetwork$edges$width <- width
+    if(nrow(data_visNetwork$nodes)>0) data_visNetwork$nodes$size <- size
     visNetwork(nodes = data_visNetwork$nodes,
                edges = data_visNetwork$edges,
                height = "700px", width = "100%") %>%

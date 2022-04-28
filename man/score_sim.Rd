@@ -2,19 +2,19 @@
 % Please edit documentation in R/score_sim.R
 \name{score_sim}
 \alias{score_sim}
-\title{score_sim}
+\title{Calculating similarity between drug and disease}
 \usage{
 score_sim(BioDescr, method = "jaccard", n = 1000)
 }
 \arguments{
 \item{BioDescr}{BioDescr object.}
 
-\item{method}{method, default "jaccard".}
+\item{method}{method to compute similarity, default "jaccard". See \code{proxyC::simil}.}
 
-\item{n}{number}
+\item{n}{number.}
 }
 \value{
-a list
+A list.
 }
 \description{
 Calculating drug-disease similarity based on biological descriptors
@@ -28,7 +28,7 @@ compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="
 disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
 BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
 biodescr <- extr_biodescr(BasicData, geneset= "kegg")
-res <- score_sim(biodescr, method="jaccard", n=100)
+res <- score_sim(biodescr, method="jaccard", n=1000)
 }
 }
 \author{

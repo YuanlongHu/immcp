@@ -2,25 +2,34 @@
 % Please edit documentation in R/score_rule.R
 \name{score_rule}
 \alias{score_rule}
-\title{score_rule}
+\title{Mining herb-herb associations with Apriori}
 \usage{
-score_rule(BasicData, support = 0.1, confidence = 0.8, maxlen = 2)
+score_rule(BasicData, drug = NULL, support = 0.1, confidence = 0.8)
 }
 \arguments{
 \item{BasicData}{BasicData object.}
 
-\item{support}{cutoff of support}
+\item{drug}{Charactor vector of drug names to analyze, default to \code{NULL}.}
 
-\item{confidence}{cutoff of confidence}
+\item{support}{A numeric value for the minimal support of an item set, default to 0.1.}
 
-\item{maxlen}{maxlen}
+\item{confidence}{A numeric value for the minimal confidence of an item set, default to 0.8.}
 }
 \value{
-Returns NULL, invisibly.
+A HerbResult object.
 }
 \description{
-Plot Disease-Drug Network
+Mine herb-herb association rules of prescription using the Apriori algorithm.
 }
 \author{
 Yuanlong Hu
+\dontrun{
+data(drugdemo)
+drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
+herb_compound <- PrepareData(drugdemo$herb_compound, from = "herb", to="compound")
+compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
+disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
+BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
+res <- score_rule(BasicData, support = 0.1,confidence = 0.8)
+}
 }

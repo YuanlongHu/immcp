@@ -16,8 +16,11 @@
 
 subset_network <- function(BasicData, from, to=NULL){
 
+  if(is.null(to)) to <- V(BasicData@drugnet)$name
+
   v <- lapply(as.list(from), function(x){
     all_simple_paths(BasicData@drugnet, from=x,
+                     to = to,
                    mode = "out")
 
   })

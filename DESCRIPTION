@@ -1,6 +1,6 @@
 Package: immcp
 Title: Polypharmacology Toolkit for Traditional Chinese Medicine Research
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person("Yuanlong", "Hu", , "huyuanlong1996@163.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-1933-7570"))

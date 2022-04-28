@@ -50,15 +50,13 @@ setClass("BioDescr",
 #'
 #' @name HerbResult-class
 #' @docType class
-#' @slot Drug_Herb Drug-herb relationship.
-#' @slot Rule Rule.
-#' @slot Herb Herb information.
+#' @slot Drug_Herb Data frame, Drug-herb relationship.
+#' @slot Herb_Herb Herb-herb association Rule Graph, it is a directed graph.
 #' @exportClass HerbResult
 #' @author Yuanlong Hu
 
 setClass("HerbResult",
          slots = list(
            Drug_Herb = "data.frame",
-           Rule = "data.frame",
-           Herb  = "data.frame"
+           Herb_Herb = "igraph"
          ))
