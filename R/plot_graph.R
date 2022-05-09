@@ -3,16 +3,17 @@
 
 setMethod("plot_graph", signature(graph = "BasicData"),
           function(graph,
-                   drug, disease,
+                   drug = NULL, disease = NULL,
                    vis = "visNetwork",
-                   color= c(drug="blue",
-                            herb="lightblue",
-                            target="orange"),
-                   width = 1, size = 1, ...){
+                   color= c(drug="#cca4e3",
+                            herb="#ff461f",
+                            compound="#ffc773",
+                            target="#70f3ff"),
+                   width = 1, size = 20, ...){
 
             DisDrugNet <- CreateDisDrugNet(BasicData = graph,
                                            drug = drug, disease = disease)
-            plot_graph_internal(graph=DisDrugNet, vis = vis, color=color, width = width, ...)
+            plot_graph_internal(graph=DisDrugNet, vis = vis, color=color, width = width, size = size, ...)
           })
 
 #' @rdname plot_graph-method
@@ -21,12 +22,13 @@ setMethod("plot_graph", signature(graph = "BasicData"),
 setMethod("plot_graph", signature(graph = "igraph"),
           function(graph,
                    vis = "visNetwork",
-                   color= c(drug = "blue",
-                            herb = "lightblue",
-                            target = "orange"),
-                   width = 1, size=1, ...){
+                   color = c(drug = "#cca4e3",
+                            herb = "#ff461f",
+                            compound="#ffc773",
+                            target = "#70f3ff"),
+                   width = 1, size=20, ...){
 
-            plot_graph_internal(graph, vis = vis, color = color, width = width, ...)
+            plot_graph_internal(graph, vis = vis, color = color, width = width, size = size, ...)
           })
 
 #' @rdname plot_graph-method
@@ -39,7 +41,7 @@ setMethod("plot_graph", signature(graph = "igraph"),
 setMethod("plot_graph", signature(graph = "HerbResult"),
           function(graph, Isolated = TRUE,
                    vis = "visNetwork",
-                   color= "lightblue",
+                   color= "#70f3ff",
                    width = 1, size = 20,...){
 
             graph <- graph@Herb_Herb
@@ -71,14 +73,7 @@ setMethod("plot_graph", signature(graph = "HerbResult"),
 #' @importFrom visNetwork visEdges
 #' @importFrom visNetwork visNetworkEditor
 
-plot_graph_internal <- function(graph,
-                                vis = "visNetwork",
-                                color=c(drug = "blue",
-                                        herb = "lightblue",
-                                        target = "orange"),
-                                width = 1,
-                                size = 1,
-                                ...){
+plot_graph_internal <- function(graph, vis, color, width, size, ...){
 
   # set color
   net <- graph

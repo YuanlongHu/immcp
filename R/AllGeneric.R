@@ -39,15 +39,12 @@ setGeneric("extr_biodescr",
 #' @export
 
 setGeneric("plot_graph",
-           function(graph,
-                    drug, disease,Isolated = TRUE,
-                    vis = "visNetwork",
-                    color = c(drug = "blue",
-                            herb = "lightblue",
-                            target = "orange"),
-                    width = 1, size = 20, ...){
+           function(graph, drug, disease, Isolated=TRUE, vis = "visNetwork",
+                    color = c(drug = "#cca4e3",
+                              herb = "#ff461f",
+                              compound="#ffc773",
+                              target = "#70f3ff"),
+                    width = 1, size=20, ...){
              standardGeneric("plot_graph")
-           }
-
-)
+           })
 

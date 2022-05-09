@@ -13,7 +13,8 @@ plot_graph(
   disease,
   Isolated = TRUE,
   vis = "visNetwork",
-  color = c(drug = "blue", herb = "lightblue", target = "orange"),
+  color = c(drug = "#cca4e3", herb = "#ff461f", compound = "#ffc773", target =
+    "#70f3ff"),
   width = 1,
   size = 20,
   ...
@@ -25,7 +26,8 @@ plot_graph(
   disease,
   Isolated = TRUE,
   vis = "visNetwork",
-  color = c(drug = "blue", herb = "lightblue", target = "orange"),
+  color = c(drug = "#cca4e3", herb = "#ff461f", compound = "#ffc773", target =
+    "#70f3ff"),
   width = 1,
   size = 20,
   ...
@@ -37,7 +39,8 @@ plot_graph(
   disease,
   Isolated = TRUE,
   vis = "visNetwork",
-  color = c(drug = "blue", herb = "lightblue", target = "orange"),
+  color = c(drug = "#cca4e3", herb = "#ff461f", compound = "#ffc773", target =
+    "#70f3ff"),
   width = 1,
   size = 20,
   ...
@@ -49,7 +52,8 @@ plot_graph(
   disease,
   Isolated = TRUE,
   vis = "visNetwork",
-  color = c(drug = "blue", herb = "lightblue", target = "orange"),
+  color = c(drug = "#cca4e3", herb = "#ff461f", compound = "#ffc773", target =
+    "#70f3ff"),
   width = 1,
   size = 20,
   ...
