@@ -44,12 +44,12 @@ CreateDisDrugNet <- function(BasicData, drug, disease){
 
   if (length(drug) == 1) {
     drugnet <- delete.vertices(DrugNet@drugnet, v = drug)
-    DisDrugNet <- union2(DisNet, as.undirected(drugnet)) %>%
-      as.undirected()
+    DisDrugNet <- union2(as.undirected(DisNet, mode = "each",edge.attr.comb = "mean"),
+                         as.undirected(drugnet, mode = "each",edge.attr.comb = "mean"))
 
   }else{
-    DisDrugNet <- union2(DisNet, as.undirected(DrugNet@drugnet))%>%
-      as.undirected()
+    DisDrugNet <- union2(as.undirected(DisNet, mode = "each",edge.attr.comb = "mean"),
+                         as.undirected(drugnet, mode = "each",edge.attr.comb = "mean"))
   }
 
   return(DisDrugNet)

@@ -22,7 +22,7 @@ vignette: >
 
 This R package was a toolkit for TCM polypharmacology research. Based on the biological descriptors and drug-disease interaction networks, it can analyze the potential polypharmacological mechanisms of TCM and be used for drug repositioning in TCM. 
 
-# 1 Create a deom data
+# 1 Prepare data
 
 ```{r,eval=FALSE}
 library(immcp)
@@ -38,8 +38,9 @@ disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", 
 BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
 ```
 
-
+# 2 Network Visualization
 ```{r,eval=FALSE}
-res <- score_network(BasicData, n = 100)
+DisDrugNet <- CreateDisDrugNet(BasicData, drug = "Drug1",     disease = "disease")
+plot_graph(DisDrugNet, size = 20)
 ```
 

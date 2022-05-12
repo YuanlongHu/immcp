@@ -16,6 +16,7 @@
 #' @importFrom igraph graph.data.frame
 #' @export
 #' @author Yuanlong Hu
+#' @examples
 #' \dontrun{
 #' data(drugdemo)
 #' drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")

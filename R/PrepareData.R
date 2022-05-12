@@ -12,6 +12,8 @@
 #' @importFrom dplyr %>%
 #' @importFrom dplyr distinct
 #' @importFrom igraph graph.data.frame
+#' @importFrom igraph simplify
+#' @importFrom purrr map2
 #' @importFrom rlang !!!
 #' @export
 #' @author Yuanlong Hu
@@ -29,7 +31,30 @@ PrepareData <- function(..., from, to, diseaseID, format = "single", sep){
   if (! from %in% c("drug","herb","compound","target")) stop("The 'to' must be one of 'drug', 'herb', 'compound', or 'target'")
   if (! to %in% c("drug","herb","compound","target")) stop("The 'from' must be one of 'drug', 'herb', 'compound', or 'target'")
 
-  g <-  lapply(data, function(x){
+
+
+  if (from == "target" & to == "target"){
+    if(length(data) != length(diseaseID)) stop("The length of this diseaseID is not consistent with the input data !")
+    g <-  map2(data, diseaseID, function(x, y){
+      if (! is.data.frame(x)) stop("Input data must be a data.frame")
+
+      if (format == "basket") data <- to_list(x[,1:2], input = format, sep = sep) %>% to_df()
+      if (format == "single") data <- x[,1:2]
+      names(data) <- c("from", "to")
+      # create a data frame of vertices
+      vertices_from <- data.frame(name= unique(data$from),type= from)
+      vertices_to <- data.frame(name= unique(data$to),type= to)
+      vertices <- rbind(vertices_from, vertices_to) %>% distinct()
+      # create a undirected network
+      # from disease to target, from target to target
+      vertices <- rbind(vertices, data.frame(name=y, type="disease"))
+      data <- rbind(data, data.frame(from=y, to=unique(unlist(data))))
+      net <- graph.data.frame(data, directed = FALSE, vertices = vertices)
+      return(net)
+    })
+  }else{
+
+   g <-  lapply(data, function(x){
     if (! is.data.frame(x)) stop("Input data must be a data.frame")
 
     if (format == "basket") data <- to_list(x[,1:2], input = format, sep = sep) %>% to_df()
@@ -39,24 +64,19 @@ PrepareData <- function(..., from, to, diseaseID, format = "single", sep){
     vertices_from <- data.frame(name= unique(data$from),type= from)
     vertices_to <- data.frame(name= unique(data$to),type= to)
     vertices <- rbind(vertices_from, vertices_to) %>% distinct()
-
   # create a undirected network
   # from disease to target, from target to target
-
-  if (from == "target" & to == "target") {
-    vertices <- rbind(vertices, data.frame(name=diseaseID, type="disease"))
-    data <- rbind(data, data.frame(from=diseaseID, to=unique(unlist(data))))
-    net <- graph.data.frame(data, directed = FALSE, vertices = vertices)
-  }else{
-    net <- graph.data.frame(data, directed = TRUE, vertices = vertices)
-  }
+  net <- graph.data.frame(data, directed = TRUE, vertices = vertices)
   return(net)
   })
+  }
 
   if(length(g)>1) {
-    g <- union2(!!!g)
+    g <- Reduce(union2, g)
   }else{
     g <- g[[1]]
   }
+
+  g <- simplify(g, edge.attr.comb="first")
   return(g)
 }

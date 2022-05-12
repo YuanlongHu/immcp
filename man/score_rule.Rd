@@ -21,8 +21,7 @@ A HerbResult object.
 \description{
 Mine herb-herb association rules of prescription using the Apriori algorithm.
 }
-\author{
-Yuanlong Hu
+\examples{
 \dontrun{
 data(drugdemo)
 drug_herb <- PrepareData(drugdemo$drug_herb, from = "drug", to="herb")
@@ -32,4 +31,7 @@ disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", 
 BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
 res <- score_rule(BasicData, support = 0.1,confidence = 0.8)
 }
+}
+\author{
+Yuanlong Hu
 }
