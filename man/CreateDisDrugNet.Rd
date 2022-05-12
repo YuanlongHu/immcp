@@ -9,7 +9,7 @@ CreateDisDrugNet(BasicData, drug, disease)
 \arguments{
 \item{BasicData}{BasicData object.}
 
-\item{drug}{Character vector, the drug。}
+\item{drug}{Character vector, the drug.}
 
 \item{disease}{Character vector, the disease.}
 }

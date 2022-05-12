@@ -3,7 +3,7 @@
 #'
 #' @title CreateDisDrugNet
 #' @param BasicData BasicData object.
-#' @param drug Character vector, the drug。
+#' @param drug Character vector, the drug.
 #' @param disease Character vector, the disease.
 #' @return A igraph object.
 #' @importFrom dplyr %>%

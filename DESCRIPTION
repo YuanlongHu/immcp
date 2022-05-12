@@ -1,16 +1,16 @@
 Package: immcp
-Title: Polypharmacology Toolkit for Traditional Chinese Medicine Research
-Version: 1.0.2
+Title: Poly-Pharmacology Toolkit for Traditional Chinese Medicine Research
+Version: 1.0.3
 Authors@R: 
     person(given = "Yuanlong",
     family = "Hu",
     email = "huyuanlong1996@163.com",
     role = c("aut", "cre"),
     comment = c(ORCID = "0000-0003-1933-7570"))
-Description: Toolkit for Polypharmacology Research of Traditional Chinese Medicine. Based on the
+Description: Toolkit for Poly-pharmacology Research of Traditional Chinese Medicine. Based on the
     biological descriptors and drug-disease interaction networks, it can
-    analyze the potential polypharmacological mechanisms of Traditional Chinese Medicine and be
-    used for drug repositioning in Traditional Chinese Medicine.
+    analyze the potential poly-pharmacological mechanisms of Traditional Chinese Medicine and be
+    used for drug-repositioning in Traditional Chinese Medicine.
 License: GPL (>= 3)
 URL: https://github.com/YuanlongHu/immcp
 BugReports: https://github.com/YuanlongHu/immcp/issues
