@@ -37,10 +37,10 @@ CreateBasicData <- function(..., diseasenet=NULL, biomarker=NULL){
       return(biomarker)
     })
   }
-  v <- as_data_frame(net, "vertices")
+  #v <- as_data_frame(net, "vertices")
   res <- new("BasicData",
              drugnet = net,
-             vertices = v,
+             #vertices = v,
              diseasenet = diseasenet,
              biomarker = biomarker # a list of biomarker, the disease name
   )

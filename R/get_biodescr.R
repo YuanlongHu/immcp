@@ -12,6 +12,7 @@
 #' @importFrom dplyr %>%
 #' @importFrom dplyr filter
 #' @importFrom rlang .data
+#' @importFrom igraph as_data_frame
 #' @exportMethod extr_biodescr
 #' @examples
 #' \dontrun{
@@ -33,14 +34,19 @@ setMethod("extr_biodescr", signature(BasicData = "BasicData"),
             message("<<<<< Prepare >>>>>")
 
             if (!is.null(ref)) {
-              ref <- BasicData@vertices %>% filter(.data$type==ref_type & .data$name %in% ref)
+              #ref <- BasicData@vertices %>% filter(.data$type==ref_type & .data$name %in% ref)
+              ref <- as_data_frame(BasicData@drugnet, "vertices") %>%
+                filter(.data$type==ref_type & .data$name %in% ref)
             }else{
-              ref <- BasicData@vertices %>% filter(.data$type==ref_type)
+              #ref <- BasicData@vertices %>% filter(.data$type == ref_type)
+              ref <- as_data_frame(BasicData@drugnet, "vertices") %>%
+                filter(.data$type == ref_type)
             }
 
             Druglist <- lapply(as.list(ref$name), function(x){
               subgraph <- subset_network(BasicData, from=x)
-              node <- subgraph@vertices
+              #node <- subgraph@vertices
+              node <- as_data_frame(subgraph@drugnet, "vertices")
               node <- node$name[node$type=="target"]
               return(node)
             })

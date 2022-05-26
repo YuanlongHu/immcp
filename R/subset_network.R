@@ -22,7 +22,6 @@ subset_network <- function(BasicData, from, to=NULL){
     all_simple_paths(BasicData@drugnet, from=x,
                      to = to,
                    mode = "out")
-
   })
 
   v <- Reduce(c, v) %>%
@@ -30,7 +29,7 @@ subset_network <- function(BasicData, from, to=NULL){
     unlist() %>% unique()
 
   BasicData@drugnet <- induced_subgraph(BasicData@drugnet, v)
-  BasicData@vertices <- BasicData@vertices %>%
-                          filter(.data$name %in% V(BasicData@drugnet)$name)
+  # BasicData@vertices <- BasicData@vertices %>%
+  #                         filter(.data$name %in% V(BasicData@drugnet)$name)
   return(BasicData)
 }

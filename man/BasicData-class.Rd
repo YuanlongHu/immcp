@@ -14,8 +14,6 @@ This class represents the basic input data.
 \describe{
 \item{\code{drugnet}}{A directed graph}
 
-\item{\code{vertices}}{Vertices of drug graph.}
-
 \item{\code{diseasenet}}{Disease network.}
 
 \item{\code{biomarker}}{Disease-related gene.}

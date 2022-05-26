@@ -29,7 +29,8 @@
 
 score_rule <- function(BasicData, drug = NULL, support = 0.1,confidence = 0.8){
 
-  vertices <- BasicData@vertices
+  vertices <- as_data_frame(BasicData@drugnet, "vertices")
+  #vertices <- BasicData@vertices
 
   druglist <- lapply(as.list(vertices$name[vertices$type == "drug"]), function(x){
     x <- subset_network(BasicData, from = x, to = vertices$name[vertices$type == "herb"])

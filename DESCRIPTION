@@ -1,6 +1,6 @@
 Package: immcp
 Title: Poly-Pharmacology Toolkit for Traditional Chinese Medicine Research
-Version: 1.0.3
+Version: 1.0.4
 Authors@R: 
     person(given = "Yuanlong",
     family = "Hu",

@@ -10,6 +10,7 @@
 #' @importFrom igraph induced_subgraph
 #' @importFrom igraph delete.vertices
 #' @importFrom igraph vcount
+#' @importFrom igraph as_data_frame
 #' @importFrom dplyr %>%
 #' @importFrom dplyr filter
 #' @importFrom rlang .data
@@ -26,11 +27,16 @@
 
 score_network <- function(BasicData, n = 1000){
 
-  drug_list <- BasicData@vertices %>% filter(.data$type=="drug")
+  #drug_list <- BasicData@vertices %>% filter(.data$type=="drug")
+
+  drug_list <- as_data_frame(BasicData@drugnet, "vertices") %>%
+    filter(.data$type=="drug")
   drug_list <- drug_list$name
   g_drug_list <- lapply(as.list(drug_list), function(x){
       BasicData <- subset_network(BasicData = BasicData, from = x)
-      drugtarget <- BasicData@vertices %>% filter(.data$type == "target")
+      #drugtarget <- BasicData@vertices %>% filter(.data$type == "target")
+      drugtarget <- as_data_frame(BasicData@drugnet, "vertices") %>%
+        filter(.data$type == "target")
       drugtarget$name
   })
   names(g_drug_list) <- drug_list

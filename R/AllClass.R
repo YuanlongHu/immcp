@@ -10,7 +10,6 @@ selectMethod("show", "igraph")
 #' @name BasicData-class
 #' @docType class
 #' @slot drugnet A directed graph
-#' @slot vertices Vertices of drug graph.
 #' @slot diseasenet Disease network.
 #' @slot biomarker Disease-related gene.
 #' @exportClass BasicData
@@ -19,7 +18,7 @@ selectMethod("show", "igraph")
 setClass("BasicData",
          slots = list(
            drugnet = "igraph",
-           vertices = "data.frame",
+           #vertices = "data.frame",
            diseasenet = "igraph",
            biomarker = "list"
          ))
