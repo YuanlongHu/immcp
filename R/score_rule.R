@@ -7,6 +7,7 @@
 #' @param drug Charactor vector of drug names to analyze, default to `NULL`.
 #' @param support A numeric value for the minimal support of an item set, default to 0.1.
 #' @param confidence A numeric value for the minimal confidence of an item set, default to 0.8.
+#' @param lift A numeric value for the minimal lift of an item set, default to 1.
 #' @return A HerbResult object.
 #' @importFrom dplyr %>%
 #' @importFrom arules apriori
@@ -24,10 +25,10 @@
 #' compound_target <- PrepareData(drugdemo$compound_target, from = "compound", to="target")
 #' disease <- PrepareData(drugdemo$disease, diseaseID = "disease",from = "target", to="target")
 #' BasicData <- CreateBasicData(drug_herb, herb_compound, compound_target, diseasenet = disease)
-#' res <- score_rule(BasicData, support = 0.1,confidence = 0.8)
+#' res <- score_rule(BasicData, support = 0.1,confidence = 0.8, lift = 1)
 #' }
 
-score_rule <- function(BasicData, drug = NULL, support = 0.1,confidence = 0.8){
+score_rule <- function(BasicData, drug = NULL, support = 0.1,confidence = 0.8, lift = 1){
 
   vertices <- as_data_frame(BasicData@drugnet, "vertices")
   #vertices <- BasicData@vertices
@@ -46,7 +47,7 @@ score_rule <- function(BasicData, drug = NULL, support = 0.1,confidence = 0.8){
   data <- as(split(druglist$to, druglist$from),"transactions")
   rules <-  suppressMessages(apriori(data,parameter=parameter) %>%
     inspect())
-  rules <- rules[rules$lift > 1,-2]
+  rules <- rules[rules$lift > lift, -2]
   rules$lhs <- gsub("[{*}]", "", rules$lhs)
   rules$rhs <- gsub("[{*}]", "", rules$rhs)
   names(rules)[1] <- "from"
