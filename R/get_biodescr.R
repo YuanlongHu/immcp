@@ -194,7 +194,7 @@ if (is.data.frame(geneset)) {
                     TERM2GENE = geneset, # a data.frame of 2 column with term and gene
                     minGSSize = arguments$minGSSize,
                     maxGSSize = arguments$maxGSSize,
-                    pvalueCutoff = 1,qvalueCutoff = 1)
+                    pvalueCutoff = arguments$pvalue,qvalueCutoff = arguments$qvalue)
 
   }else if(is.list(geneset)){
 
@@ -203,16 +203,16 @@ if (is.data.frame(geneset)) {
                     TERM2GENE = geneset, # a data.frame of 2 column with term and gene
                     minGSSize = arguments$minGSSize,
                     maxGSSize = arguments$maxGSSize,
-                    pvalueCutoff = 1,qvalueCutoff = 1)
+                    pvalueCutoff = arguments$pvalue,qvalueCutoff = arguments$qvalue)
 
   }else if(geneset=="kegg"){
     res <- enrichKEGG(
       target_character,
       organism = "hsa",keyType = "kegg",
-      pvalueCutoff = 1,
+      pvalueCutoff = arguments$pvalue,
       minGSSize = arguments$minGSSize,
       maxGSSize = arguments$maxGSSize,
-      qvalueCutoff = 1,
+      qvalueCutoff = arguments$qvalue,
       use_internal_data = FALSE
     ) %>%
       setReadable(org.Hs.eg.db, keyType="ENTREZID")
@@ -220,8 +220,8 @@ if (is.data.frame(geneset)) {
     res <- enrichMKEGG(
       target_character,
       organism = "hsa",keyType = "kegg",
-      pvalueCutoff = 1,minGSSize = 5,
-      maxGSSize = 500,qvalueCutoff = 1
+      pvalueCutoff = arguments$pvalue,minGSSize = arguments$minGSSize,
+      maxGSSize = arguments$maxGSSize,qvalueCutoff = arguments$qvalue
     ) %>%
       setReadable(org.Hs.eg.db, keyType="ENTREZID")
   }else if(geneset=="go"){
@@ -229,8 +229,8 @@ if (is.data.frame(geneset)) {
       target_character,
       OrgDb='org.Hs.eg.db',
       keyType = "ENTREZID", ont = "BP",
-      pvalueCutoff = 1, qvalueCutoff = 1,
-      minGSSize = 10, maxGSSize = 500,
+      pvalueCutoff = arguments$pvalue, qvalueCutoff = arguments$qvalue,
+      minGSSize = arguments$minGSSize, maxGSSize = arguments$maxGSSize,
       readable = TRUE
     )
   }else if(geneset=="wp"){
@@ -238,11 +238,10 @@ if (is.data.frame(geneset)) {
     res <- enrichWP(target_character, organism = "Homo sapiens",
                     minGSSize = arguments$minGSSize,
                     maxGSSize = arguments$maxGSSize,
-                    pvalueCutoff = 1,qvalueCutoff = 1)
+                    pvalueCutoff = arguments$pvalue,qvalueCutoff = arguments$qvalue)
   }
 if (out_dataframe) {
-    res <- res@result %>%
-       filter(.data$pvalue < arguments$pvalue & .data$qvalue < arguments$qvalue)
+    res <- res@result
   }
   return(res)
 }
